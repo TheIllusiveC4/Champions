@@ -6,6 +6,7 @@ import c4.champions.common.capability.IChampionship;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 
 import java.util.Random;
 
@@ -50,7 +51,12 @@ public abstract class AffixBase implements IAffix {
 
     @Override
     public void onAttack(EntityLiving entity, IChampionship cap, EntityLivingBase target, DamageSource source, float
-            amount) {
+            amount, LivingAttackEvent evt) {
+
+    }
+
+    @Override
+    public void onAttacked(EntityLiving entity, IChampionship cap, DamageSource source, float amount, LivingAttackEvent evt) {
 
     }
 

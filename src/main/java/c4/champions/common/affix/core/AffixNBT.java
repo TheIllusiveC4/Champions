@@ -18,7 +18,7 @@ public abstract class AffixNBT {
     private IChampionship championship;
     private String identifier;
 
-    private AffixNBT() {}
+    protected AffixNBT() {}
 
     public void readData(IChampionship championship, String identifier) {
         this.championship = championship;

@@ -5,6 +5,7 @@ import c4.champions.common.capability.CapabilityChampionship;
 import c4.champions.common.capability.IChampionship;
 import c4.champions.common.util.ChampionHelper;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -45,7 +46,30 @@ public class AffixEvents {
                     AffixBase affix = AffixRegistry.getAffix(aff);
 
                     if (affix != null) {
-                        affix.onAttacked(living, chp, evt);
+                        affix.onAttacked(living, chp, evt.getSource(), evt.getAmount(), evt);
+                    }
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onLivingAttack(LivingAttackEvent evt) {
+
+        if (evt.getSource().getTrueSource() instanceof EntityLivingBase) {
+            EntityLivingBase entityLivingBase = (EntityLivingBase)evt.getSource().getTrueSource();
+            if (ChampionHelper.isValidChampion(entityLivingBase)) {
+                EntityLiving living = (EntityLiving)entityLivingBase;
+                IChampionship chp = CapabilityChampionship.getChampionship(living);
+
+                if (chp != null) {
+
+                    for (String aff : chp.getAffixes()) {
+                        AffixBase affix = AffixRegistry.getAffix(aff);
+
+                        if (affix != null) {
+                            affix.onAttack(living, chp, evt.getEntityLiving(), evt.getSource(), evt.getAmount(), evt);
+                        }
                     }
                 }
             }

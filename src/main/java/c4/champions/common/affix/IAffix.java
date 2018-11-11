@@ -17,9 +17,10 @@ public interface IAffix {
 
     void onUpdate(EntityLiving entity, IChampionship cap);
 
-    void onAttack(EntityLiving entity, IChampionship cap, EntityLivingBase target, DamageSource source, float amount);
+    void onAttack(EntityLiving entity, IChampionship cap, EntityLivingBase target, DamageSource source, float amount,
+                  LivingAttackEvent evt);
 
-    void onAttacked(EntityLiving entity, IChampionship cap, LivingAttackEvent evt);
+    void onAttacked(EntityLiving entity, IChampionship cap, DamageSource source, float amount, LivingAttackEvent evt);
 
     float onHurt(EntityLiving entity, IChampionship cap, DamageSource source, float amount, float newAmount);
 

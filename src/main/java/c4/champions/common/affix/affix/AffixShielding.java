@@ -6,6 +6,7 @@ import c4.champions.common.affix.core.AffixNBT;
 import c4.champions.common.capability.IChampionship;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.util.DamageSource;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 
 public class AffixShielding extends AffixBase {
@@ -25,7 +26,8 @@ public class AffixShielding extends AffixBase {
     }
 
     @Override
-    public void onAttacked(EntityLiving entity, IChampionship cap, LivingAttackEvent evt) {
+    public void onAttacked(EntityLiving entity, IChampionship cap, DamageSource source, float amount, LivingAttackEvent
+                           evt) {
         AffixNBT.Boolean shielding = AffixNBT.getData(cap, getIdentifier(), AffixNBT.Boolean.class);
 
         if (shielding.mode) {
