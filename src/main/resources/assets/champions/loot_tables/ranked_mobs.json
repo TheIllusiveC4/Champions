@@ -1,0 +1,104 @@
+{
+  "pools": [
+    {
+      "name": "tier#1",
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "item",
+          "name": "minecraft:book",
+          "weight": 1,
+          "conditions": [
+            {
+              "condition": "entity_properties",
+              "entity": "this",
+              "properties": {
+                "champions:tier": 1
+              }
+            }
+          ],
+          "functions": [
+            {
+              "function": "enchant_randomly"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "tier#2",
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "item",
+          "name": "minecraft:book",
+          "weight": 1,
+          "conditions": [
+            {
+              "condition": "entity_properties",
+              "entity": "this",
+              "properties": {
+                "champions:tier": 2
+              }
+            }
+          ],
+          "functions": [
+            {
+              "function": "enchant_randomly"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "tier#3",
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "item",
+          "name": "minecraft:book",
+          "weight": 1,
+          "conditions": [
+            {
+              "condition": "entity_properties",
+              "entity": "this",
+              "properties": {
+                "champions:tier": 3
+              }
+            }
+          ],
+          "functions": [
+            {
+              "function": "enchant_randomly"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "tier#4",
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "item",
+          "name": "minecraft:book",
+          "weight": 1,
+          "conditions": [
+            {
+              "condition": "entity_properties",
+              "entity": "this",
+              "properties": {
+                "champions:tier": 4
+              }
+            }
+          ],
+          "functions": [
+            {
+              "function": "enchant_randomly"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
