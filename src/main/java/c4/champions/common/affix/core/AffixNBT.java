@@ -2,7 +2,13 @@ package c4.champions.common.affix.core;
 
 import c4.champions.Champions;
 import c4.champions.common.capability.IChampionship;
+import c4.champions.network.NetworkHandler;
+import c4.champions.network.PacketSyncAffix;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.WorldServer;
 import org.apache.logging.log4j.Level;
 
 import javax.annotation.Nonnull;
@@ -24,8 +30,23 @@ public abstract class AffixNBT {
 
     public abstract NBTTagCompound writeToNBT();
 
-    public void saveData() {
+    public void saveData(final EntityLiving living) {
         championship.setAffixData(identifier, writeToNBT());
+        syncToTracking(living);
+    }
+
+    private void syncToTracking(final EntityLiving living) {
+        if (living.world instanceof WorldServer) {
+            WorldServer world = (WorldServer)living.world;
+
+            for (EntityPlayer player : world.getEntityTracker().getTrackingPlayers(living)) {
+
+                if (player instanceof EntityPlayerMP && championship.getRank() != null) {
+                    NetworkHandler.INSTANCE.sendTo(new PacketSyncAffix(living.getEntityId(),
+                            championship.getRank().getTier(), championship.getAffixData()), (EntityPlayerMP)player);
+                }
+            }
+        }
     }
 
     public static <T extends AffixNBT> T getData(@Nonnull IChampionship championship, String affix, Class<T> clazz) {

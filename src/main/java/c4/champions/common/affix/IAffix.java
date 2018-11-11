@@ -5,6 +5,7 @@ import c4.champions.common.capability.IChampionship;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 
 public interface IAffix {
 
@@ -17,6 +18,8 @@ public interface IAffix {
     void onUpdate(EntityLiving entity, IChampionship cap);
 
     void onAttack(EntityLiving entity, IChampionship cap, EntityLivingBase target, DamageSource source, float amount);
+
+    void onAttacked(EntityLiving entity, IChampionship cap, LivingAttackEvent evt);
 
     float onHurt(EntityLiving entity, IChampionship cap, DamageSource source, float amount, float newAmount);
 

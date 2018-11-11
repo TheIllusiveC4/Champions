@@ -5,7 +5,8 @@ import c4.champions.common.affix.core.AffixCategory;
 import c4.champions.common.affix.core.AffixNBT;
 import c4.champions.common.capability.IChampionship;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.util.DamageSource;
+import net.minecraft.init.SoundEvents;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 
 public class AffixShielding extends AffixBase {
 
@@ -19,13 +20,18 @@ public class AffixShielding extends AffixBase {
         if (!entity.world.isRemote && entity.ticksExisted % 100 == 0) {
             AffixNBT.Boolean shielding = AffixNBT.getData(cap, getIdentifier(), AffixNBT.Boolean.class);
             shielding.mode = !shielding.mode;
-            shielding.saveData();
+            shielding.saveData(entity);
         }
     }
 
     @Override
-    public float onHurt(EntityLiving entity, IChampionship cap, DamageSource source, float amount, float newAmount) {
+    public void onAttacked(EntityLiving entity, IChampionship cap, LivingAttackEvent evt) {
         AffixNBT.Boolean shielding = AffixNBT.getData(cap, getIdentifier(), AffixNBT.Boolean.class);
-        return shielding.mode ? 0 : newAmount;
+
+        if (shielding.mode) {
+            entity.world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents
+                    .ENTITY_PLAYER_ATTACK_NODAMAGE, entity.getSoundCategory(), 1.0F, 1.0F);
+            evt.setCanceled(true);
+        }
     }
 }
