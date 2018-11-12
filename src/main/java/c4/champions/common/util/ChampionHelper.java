@@ -56,12 +56,35 @@ public class ChampionHelper {
         return finalTier == 0 ? RankManager.getEmptyRank() : ranks.get(finalTier);
     }
 
-    public static Set<String> generateAffixes(Rank rank, EntityLiving entityLivingIn) {
+    public static Set<String> generateAffixes(Rank rank, EntityLiving entityLivingIn, String... presets) {
         int size = rank.getAffixes();
         int tier = rank.getTier();
         Set<String> affixList = Sets.newHashSet();
         Map<AffixCategory, Set<String>> categoryMap = AffixRegistry.getCategoryMap().entrySet().stream().collect(
                 Collectors.toMap(Map.Entry::getKey, e -> Sets.newHashSet(e.getValue())));
+
+        //Handle any preset affixes
+        if (presets.length > 0) {
+            Set<String> curatedPresets = Sets.newHashSet(presets);
+
+            for (String s : curatedPresets) {
+                AffixBase aff = AffixRegistry.getAffix(s);
+
+                if (aff != null) {
+                    AffixCategory cat = aff.getCategory();
+                    Set<String> availableAffixes = categoryMap.get(cat);
+
+                    if (availableAffixes.contains(s)) {
+                        availableAffixes.remove(s);
+                        affixList.add(s);
+
+                        if (availableAffixes.isEmpty() || cat != AffixCategory.OFFENSE) {
+                            categoryMap.remove(cat);
+                        }
+                    }
+                }
+            }
+        }
 
         while (!categoryMap.isEmpty() && affixList.size() < size) {
             //Get random category

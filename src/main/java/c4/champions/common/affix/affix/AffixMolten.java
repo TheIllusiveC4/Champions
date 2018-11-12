@@ -84,6 +84,10 @@ public class AffixMolten extends AffixBase {
                 data.pos = pos;
                 data.saveData(entity);
             }
+
+            if (entity.isWet()) {
+                entity.attackEntityFrom(DamageSource.DROWN, 1.0F);
+            }
         }
 
         if (!entity.isImmuneToFire()) {

@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import net.minecraft.nbt.NBTTagCompound;
 
+import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Set;
 
@@ -33,7 +34,7 @@ public class Championship implements IChampionship {
 
     @Override
     public void setAffixData(String identifier, NBTTagCompound compound) {
-        affixData.put(identifier, compound);
+        affixData.replace(identifier, compound);
     }
 
     @Override
@@ -57,6 +58,7 @@ public class Championship implements IChampionship {
     }
 
     @Override
+    @Nullable
     public NBTTagCompound getAffixData(String identifier) {
         return affixData.get(identifier);
     }

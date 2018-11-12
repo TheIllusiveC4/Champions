@@ -18,7 +18,7 @@ public class AffixShielding extends AffixBase {
     @Override
     public void onUpdate(EntityLiving entity, IChampionship cap) {
 
-        if (!entity.world.isRemote && entity.ticksExisted % 100 == 0) {
+        if (!entity.world.isRemote && entity.ticksExisted % 40 == 0 && entity.getRNG().nextFloat() < 0.5f) {
             AffixNBT.Boolean shielding = AffixNBT.getData(cap, getIdentifier(), AffixNBT.Boolean.class);
             shielding.mode = !shielding.mode;
             shielding.saveData(entity);

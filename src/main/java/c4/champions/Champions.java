@@ -2,7 +2,7 @@ package c4.champions;
 
 import c4.champions.common.EventHandlerCommon;
 import c4.champions.common.affix.AffixEvents;
-import c4.champions.common.affix.affix.Affixes;
+import c4.champions.common.affix.Affixes;
 import c4.champions.common.affix.filter.AffixFilterManager;
 import c4.champions.common.capability.CapabilityChampionship;
 import c4.champions.common.loot.EntityHasTier;

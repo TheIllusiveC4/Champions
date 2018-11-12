@@ -1,6 +1,6 @@
 package c4.champions.client.layer;
 
-import c4.champions.common.affix.affix.Affixes;
+import c4.champions.common.affix.Affixes;
 import c4.champions.common.affix.core.AffixNBT;
 import c4.champions.common.capability.CapabilityChampionship;
 import c4.champions.common.capability.IChampionship;
