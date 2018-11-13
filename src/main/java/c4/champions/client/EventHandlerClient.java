@@ -3,6 +3,7 @@ package c4.champions.client;
 import c4.champions.Champions;
 import c4.champions.common.capability.CapabilityChampionship;
 import c4.champions.common.capability.IChampionship;
+import c4.champions.common.init.ChampionsRegistry;
 import c4.champions.common.util.ChampionHelper;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.client.Minecraft;
@@ -13,12 +14,26 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.MovementInput;
+import net.minecraftforge.client.event.InputUpdateEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.Set;
 
 public class EventHandlerClient {
+
+    @SubscribeEvent
+    public void jailed(InputUpdateEvent evt) {
+
+        if (evt.getEntityLiving().isPotionActive(ChampionsRegistry.jailed)) {
+            MovementInput input = evt.getMovementInput();
+            input.sneak = false;
+            input.jump = false;
+            input.moveForward = 0;
+            input.moveStrafe = 0;
+        }
+    }
 
     @SubscribeEvent
     public void renderAffixedName(RenderLivingEvent.Specials.Pre evt) {

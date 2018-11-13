@@ -14,6 +14,7 @@ public class Affixes {
     public static AffixBase dampening;
     public static AffixBase horde;
     public static AffixBase infested;
+    public static AffixBase jailer;
 
     public static void registerAffixes() {
         molten = new AffixMolten();
@@ -25,5 +26,6 @@ public class Affixes {
         dampening = new AffixDampening();
         horde = new AffixHorde();
         infested = new AffixInfested();
+        jailer = new AffixJailer();
     }
 }
