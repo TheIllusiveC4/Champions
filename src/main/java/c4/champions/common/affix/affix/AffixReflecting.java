@@ -25,7 +25,7 @@ public class AffixReflecting extends AffixBase {
                 return newAmount;
             }
             DamageSource reflect = source.setMagicDamage();
-            entityLivingBase.attackEntityFrom(reflect, amount * entity.getRNG().nextFloat());
+            entityLivingBase.attackEntityFrom(reflect, amount * (entity.getRNG().nextFloat() * 0.6f + 0.2f));
         }
         return newAmount;
     }

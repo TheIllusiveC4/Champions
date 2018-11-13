@@ -7,6 +7,8 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
 
 import java.util.Random;
 
@@ -68,6 +70,16 @@ public abstract class AffixBase implements IAffix {
     @Override
     public float onDamaged(EntityLiving entity, IChampionship cap, DamageSource source, float amount, float newAmount) {
         return newAmount;
+    }
+
+    @Override
+    public void onKnockback(EntityLiving entity, IChampionship cap, LivingKnockBackEvent evt) {
+
+    }
+
+    @Override
+    public void onDeath(EntityLiving entity, IChampionship cap, DamageSource source, LivingDeathEvent evt) {
+
     }
 
     @Override

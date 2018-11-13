@@ -10,6 +10,10 @@ public class Affixes {
     public static AffixBase blasting;
     public static AffixBase reflecting;
     public static AffixBase vortex;
+    public static AffixBase juggernaut;
+    public static AffixBase dampening;
+    public static AffixBase horde;
+    public static AffixBase infested;
 
     public static void registerAffixes() {
         molten = new AffixMolten();
@@ -17,5 +21,9 @@ public class Affixes {
         blasting = new AffixBlasting();
         reflecting = new AffixReflecting();
         vortex = new AffixVortex();
+        juggernaut = new AffixJuggernaut();
+        dampening = new AffixDampening();
+        horde = new AffixHorde();
+        infested = new AffixInfested();
     }
 }

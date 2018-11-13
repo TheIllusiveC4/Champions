@@ -126,4 +126,44 @@ public class AffixEvents {
             }
         }
     }
+
+    @SubscribeEvent
+    public void onLivingKnockback(LivingKnockBackEvent evt) {
+
+        if (ChampionHelper.isValidChampion(evt.getOriginalAttacker())) {
+            EntityLiving living = (EntityLiving)evt.getOriginalAttacker();
+            IChampionship chp = CapabilityChampionship.getChampionship(living);
+
+            if (chp != null) {
+
+                for (String aff : chp.getAffixes()) {
+                    AffixBase affix = AffixRegistry.getAffix(aff);
+
+                    if (affix != null) {
+                        affix.onKnockback(living, chp, evt);
+                    }
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onLivingDeath(LivingDeathEvent evt) {
+
+        if (ChampionHelper.isValidChampion(evt.getEntityLiving())) {
+            EntityLiving living = (EntityLiving)evt.getEntityLiving();
+            IChampionship chp = CapabilityChampionship.getChampionship(living);
+
+            if (chp != null) {
+
+                for (String aff : chp.getAffixes()) {
+                    AffixBase affix = AffixRegistry.getAffix(aff);
+
+                    if (affix != null) {
+                        affix.onDeath(living, chp, evt.getSource(), evt);
+                    }
+                }
+            }
+        }
+    }
 }

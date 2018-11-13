@@ -6,6 +6,8 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
 
 public interface IAffix {
 
@@ -25,6 +27,10 @@ public interface IAffix {
     float onHurt(EntityLiving entity, IChampionship cap, DamageSource source, float amount, float newAmount);
 
     float onDamaged(EntityLiving entity, IChampionship cap, DamageSource source, float amount, float newAmount);
+
+    void onDeath(EntityLiving entity, IChampionship cap, DamageSource source, LivingDeathEvent evt);
+
+    void onKnockback(EntityLiving entity, IChampionship cap, LivingKnockBackEvent evt);
 
     boolean canApply(EntityLiving entity);
 
