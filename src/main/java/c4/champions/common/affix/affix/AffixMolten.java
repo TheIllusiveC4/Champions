@@ -73,17 +73,6 @@ public class AffixMolten extends AffixBase {
             if (entity.ticksExisted % 20 == 0) {
                 entity.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 40, 0, true, false));
             }
-            Position data = Position.getData(cap, this.getIdentifier(), Position.class);
-            BlockPos pos = entity.getPosition();
-
-            if (data.pos.getX() != pos.getX() || data.pos.getZ() != pos.getZ()) {
-
-                if (ForgeEventFactory.getMobGriefingEvent(entity.world, entity)) {
-                    setFireNearby(entity, entity.world, pos);
-                }
-                data.pos = pos;
-                data.saveData(entity);
-            }
 
             if (entity.isWet()) {
                 entity.attackEntityFrom(DamageSource.DROWN, 1.0F);
@@ -104,36 +93,5 @@ public class AffixMolten extends AffixBase {
             amount, LivingAttackEvent evt) {
         target.setFire(10);
         source.setMagicDamage();
-    }
-
-    private static void setFireNearby(EntityLiving entity, World worldIn, BlockPos pos) {
-        float f = 2;
-
-        for (BlockPos.MutableBlockPos blockpos$mutableblockpos1 : BlockPos.getAllInBoxMutable(pos.add((double)(-f),
-                0.0D, (double)(-f)), pos.add((double)f, 0.0D, (double)f))) {
-
-            if (blockpos$mutableblockpos1.distanceSqToCenter(entity.posX, entity.posY, entity.posZ) <= (double)(f * f)) {
-                IBlockState iblockstate = worldIn.getBlockState(blockpos$mutableblockpos1);
-
-                if (iblockstate.getMaterial() == Material.AIR) {
-                    worldIn.setBlockState(blockpos$mutableblockpos1, Blocks.FIRE.getDefaultState());
-                }
-            }
-        }
-    }
-
-    public static class Position extends AffixNBT {
-
-        BlockPos pos;
-
-        @Override
-        public void readFromNBT(NBTTagCompound tag) {
-            pos = NBTUtil.getPosFromTag(tag);
-        }
-
-        @Override
-        public NBTTagCompound writeToNBT() {
-            return NBTUtil.createPosTag(pos);
-        }
     }
 }
