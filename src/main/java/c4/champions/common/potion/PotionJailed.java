@@ -2,7 +2,6 @@ package c4.champions.common.potion;
 
 import c4.champions.Champions;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.potion.Potion;
 
 public class PotionJailed extends Potion {

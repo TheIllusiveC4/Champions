@@ -1,6 +1,5 @@
 champions.affix.shielding=Shielding
 champions.affix.molten=Molten
-champions.affix.blasting=Blasting
 champions.affix.reflecting=Reflecting
 champions.affix.vortex=Vortex
 champions.affix.juggernaut=Juggernaut
@@ -8,3 +7,6 @@ champions.affix.dampening=Dampening
 champions.affix.horde=Horde
 champions.affix.infested=Infested
 champions.affix.jailer=Jailer
+champions.affix.arctic=Arctic
+
+champions.jailed=Jailed

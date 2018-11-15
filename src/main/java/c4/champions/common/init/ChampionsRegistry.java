@@ -1,6 +1,7 @@
 package c4.champions.common.init;
 
 import c4.champions.Champions;
+import c4.champions.common.entity.EntityArcticSpark;
 import c4.champions.common.entity.EntityJail;
 import c4.champions.common.potion.PotionJailed;
 import net.minecraft.potion.Potion;
@@ -31,8 +32,14 @@ public class ChampionsRegistry {
                 .entity(EntityJail.class)
                 .id(new ResourceLocation(Champions.MODID, "entity_jail"), id++)
                 .name(Champions.MODID + ".entity_jail")
-                .tracker(256, 20, false)
+                .tracker(160, Integer.MAX_VALUE, false)
                 .build();
-        evt.getRegistry().register(entry);
+        EntityEntry entry1 = EntityEntryBuilder.create()
+                .entity(EntityArcticSpark.class)
+                .id(new ResourceLocation(Champions.MODID, "arctic_spark"), id++)
+                .name(Champions.MODID + ".arctic_spark")
+                .tracker(80, 3, true)
+                .build();
+        evt.getRegistry().registerAll(entry, entry1);
     }
 }
