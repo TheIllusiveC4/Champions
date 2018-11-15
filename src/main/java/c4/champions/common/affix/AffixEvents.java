@@ -12,11 +12,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class AffixEvents {
 
     @SubscribeEvent
-    public void onLivingSetAttack(LivingSetAttackTargetEvent evt) {
-
-    }
-
-    @SubscribeEvent
     public void onLivingUpdate(LivingEvent.LivingUpdateEvent evt) {
 
         if (ChampionHelper.isValidChampion(evt.getEntityLiving())) {
