@@ -21,7 +21,7 @@ public class AffixJailer extends AffixBase {
     public void onAttack(EntityLiving entity, IChampionship cap, EntityLivingBase target, DamageSource source, float
             amount, LivingAttackEvent evt) {
 
-        if (!entity.world.isRemote && entity.getRNG().nextFloat() < 0.25f &&
+        if (!entity.world.isRemote && entity.getRNG().nextFloat() < 0.2f &&
                 !target.isPotionActive(ChampionsRegistry.jailed)) {
             target.addPotionEffect(new PotionEffect(ChampionsRegistry.jailed, 5, 0, false, false));
             EntityJail jail = new EntityJail(entity.world, target.posX, target.posY, target.posZ);

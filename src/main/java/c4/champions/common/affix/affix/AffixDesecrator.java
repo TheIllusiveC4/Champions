@@ -3,17 +3,20 @@ package c4.champions.common.affix.affix;
 import c4.champions.common.affix.core.AffixBase;
 import c4.champions.common.affix.core.AffixCategory;
 import c4.champions.common.capability.IChampionship;
-import c4.champions.common.entity.EntityArcticSpark;
+import net.minecraft.entity.EntityAreaEffectCloud;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.init.MobEffects;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.EnumDifficulty;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 
-public class AffixArctic extends AffixBase {
+public class AffixDesecrator extends AffixBase {
 
-    public AffixArctic() {
-        super("arctic", AffixCategory.CC);
+    public AffixDesecrator() {
+        super("desecrator", AffixCategory.OFFENSE);
     }
 
     @Override
@@ -21,13 +24,21 @@ public class AffixArctic extends AffixBase {
         entity.tasks.addTask(0, new AIAttack(entity));
     }
 
+    @Override
+    public void onAttacked(EntityLiving entity, IChampionship cap, DamageSource source, float amount, LivingAttackEvent evt) {
+
+        if (source.getImmediateSource() instanceof EntityAreaEffectCloud && source.getTrueSource() == entity) {
+            evt.setCanceled(true);
+        }
+    }
+
     class AIAttack extends EntityAIBase {
 
         private final EntityLiving entity;
         private int attackTime;
 
-        public AIAttack(EntityLiving entity) {
-            this.entity = entity;
+        public AIAttack(EntityLiving entityLiving) {
+            this.entity = entityLiving;
         }
 
         @Override
@@ -52,12 +63,17 @@ public class AffixArctic extends AffixBase {
                 if (entitylivingbase != null) {
                     entity.getLookHelper().setLookPositionWithEntity(entitylivingbase, 180.0F, 180.0F);
                     if (this.attackTime <= 0) {
-                        this.attackTime = 20 + entity.getRNG().nextInt(5) * 10;
-                        EntityArcticSpark spark = new EntityArcticSpark(entity.world, entity, entitylivingbase,
-                                entity.getHorizontalFacing().getAxis());
-                        entity.world.spawnEntity(spark);
-                        entity.playSound(SoundEvents.ENTITY_SHULKER_SHOOT, 2.0F, (entity.getRNG().nextFloat() -
-                                entity.getRNG().nextFloat()) * 0.2F + 1.0F);
+                        this.attackTime = 70 + entity.getRNG().nextInt(5) * 10;
+                        EntityAreaEffectCloud cloud = new EntityAreaEffectCloud(entitylivingbase.world,
+                                entitylivingbase.posX, entitylivingbase.posY, entitylivingbase.posZ);
+                        cloud.setOwner(this.entity);
+                        cloud.setRadius(5.0F);
+                        cloud.setDuration(200);
+                        cloud.setRadiusOnUse(-0.5F);
+                        cloud.setWaitTime(10);
+                        cloud.setRadiusPerTick(-cloud.getRadius() / (float)cloud.getDuration());
+                        cloud.addEffect(new PotionEffect(MobEffects.INSTANT_DAMAGE, 1, 1));
+                        entity.world.spawnEntity(cloud);
                     }
                 }
                 super.updateTask();
