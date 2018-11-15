@@ -19,18 +19,16 @@ public class Rank {
     private final int affixes;
     private final int growthFactor;
     private final float chance;
-    private final int followers;
 
     public Rank() {
-        this(0, 0, 0, 0, 0, 0);
+        this(0, 0, 0, 0, 0);
     }
 
-    public Rank(int tier, int affixes, int growthFactor, float chance, int followers, int color) {
+    public Rank(int tier, int affixes, int growthFactor, float chance, int color) {
         this.tier = tier;
         this.affixes = affixes;
         this.growthFactor = growthFactor;
         this.chance = chance;
-        this.followers = followers;
         this.color = color;
     }
 
@@ -52,10 +50,6 @@ public class Rank {
 
     public float getChance() {
         return chance;
-    }
-
-    public int getFollowers() {
-        return followers;
     }
 
     public void applyGrowth(EntityLivingBase entityLivingBase) {
