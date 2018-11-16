@@ -59,7 +59,7 @@ public class LayerRank implements LayerRenderer<EntityLiving>
             float r = (float)((color>>16)&0xFF)/255f;
             float g = (float)((color>>8)&0xFF)/255f;
             float b = (float)((color)&0xFF)/255f;
-            GlStateManager.color(r, g, b, 1.0F);
+            GlStateManager.color(r, g, b, 0.5F);
             GlStateManager.matrixMode(5890);
             GlStateManager.loadIdentity();
             float f3 = 0.33333334F;

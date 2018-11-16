@@ -57,7 +57,6 @@ public class PacketSyncAffix implements IMessage {
     }
 
     public static class PacketSyncHandler implements IMessageHandler<PacketSyncAffix, IMessage> {
-        // Do note that the default constructor is required, but implicitly defined in this case
 
         @Override
         public IMessage onMessage(PacketSyncAffix message, MessageContext ctx) {

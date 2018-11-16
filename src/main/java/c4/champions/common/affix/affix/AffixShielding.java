@@ -20,7 +20,7 @@ public class AffixShielding extends AffixBase {
 
         if (!entity.world.isRemote && entity.ticksExisted % 40 == 0) {
             AffixNBT.Boolean shielding = AffixNBT.getData(cap, getIdentifier(), AffixNBT.Boolean.class);
-            float chance = shielding.mode ? 0.8f : 0.5f;
+            float chance = shielding.mode ? 0.8f : 0.3f;
 
             if (entity.getRNG().nextFloat() < chance) {
                 shielding.mode = !shielding.mode;
