@@ -17,7 +17,6 @@ public class ConfigHandler {
 
         public double health = 0.35d;
         public double attackDamage = 0.5d;
-        public double movementSpeed = 0.1d;
         public double armor = 5.0d;
         public double armorToughness = 2.0d;
         public double knockbackResist = 0.2d;
@@ -27,6 +26,7 @@ public class ConfigHandler {
     public static class Client {
 
         public String[] colors = new String[]{};
+        public boolean renderGUI = true;
     }
 
     @Mod.EventBusSubscriber(modid = Champions.MODID)

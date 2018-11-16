@@ -75,7 +75,6 @@ public class Rank {
         }
 
         applyModifierIfExists(entityLivingBase, SharedMonsterAttributes.ATTACK_DAMAGE, ConfigHandler.growth.attackDamage, 2);
-        applyModifierIfExists(entityLivingBase, SharedMonsterAttributes.MOVEMENT_SPEED, ConfigHandler.growth.movementSpeed, 2);
         applyModifierIfExists(entityLivingBase, SharedMonsterAttributes.ARMOR, ConfigHandler.growth.armor, 0);
         applyModifierIfExists(entityLivingBase, SharedMonsterAttributes.ARMOR_TOUGHNESS, ConfigHandler.growth.armorToughness, 0);
         applyModifierIfExists(entityLivingBase, SharedMonsterAttributes.KNOCKBACK_RESISTANCE, ConfigHandler.growth.knockbackResist, 0);

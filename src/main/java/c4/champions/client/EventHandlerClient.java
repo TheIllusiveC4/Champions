@@ -2,6 +2,7 @@ package c4.champions.client;
 
 import c4.champions.common.capability.CapabilityChampionship;
 import c4.champions.common.capability.IChampionship;
+import c4.champions.common.config.ConfigHandler;
 import c4.champions.common.init.ChampionsRegistry;
 import c4.champions.common.util.ChampionHelper;
 import net.minecraft.entity.Entity;
@@ -31,7 +32,7 @@ public class EventHandlerClient {
     @SubscribeEvent
     public void renderChampionHealth(RenderGameOverlayEvent.Pre evt) {
 
-        if (evt.getType() == RenderGameOverlayEvent.ElementType.BOSSHEALTH) {
+        if (ConfigHandler.client.renderGUI && evt.getType() == RenderGameOverlayEvent.ElementType.BOSSHEALTH) {
             RayTraceResult mouseOver = ClientUtil.getMouseOver(evt.getPartialTicks(), 50);
 
             if (mouseOver != null && mouseOver.typeOfHit == RayTraceResult.Type.ENTITY) {
