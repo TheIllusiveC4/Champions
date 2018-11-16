@@ -67,7 +67,7 @@ public class AffixDesecrator extends AffixBase {
                         EntityAreaEffectCloud cloud = new EntityAreaEffectCloud(entitylivingbase.world,
                                 entitylivingbase.posX, entitylivingbase.posY, entitylivingbase.posZ);
                         cloud.setOwner(this.entity);
-                        cloud.setRadius(5.0F);
+                        cloud.setRadius(4.0F);
                         cloud.setDuration(200);
                         cloud.setRadiusOnUse(-0.5F);
                         cloud.setWaitTime(10);

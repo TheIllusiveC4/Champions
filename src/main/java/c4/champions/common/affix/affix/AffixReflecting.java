@@ -24,7 +24,7 @@ public class AffixReflecting extends AffixBase {
                     .getIsThornsDamage()) {
                 return newAmount;
             }
-            entityLivingBase.attackEntityFrom(source, amount * (entity.getRNG().nextFloat() * 0.4f + 0.2f));
+            entityLivingBase.attackEntityFrom(source, amount * (entity.getRNG().nextFloat() * 0.25f + 0.1f));
         }
         return newAmount;
     }
