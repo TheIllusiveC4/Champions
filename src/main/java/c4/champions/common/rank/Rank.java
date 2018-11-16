@@ -1,11 +1,13 @@
 package c4.champions.common.rank;
 
+import c4.champions.Champions;
 import c4.champions.common.config.ConfigHandler;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import org.apache.logging.log4j.Level;
 
 import java.util.UUID;
 
@@ -37,6 +39,17 @@ public class Rank {
     }
 
     public int getColor() {
+        String[] colors = ConfigHandler.client.colors;
+        if (colors.length >= tier && tier > 0) {
+            String s = colors[tier - 1];
+
+            try {
+                return Integer.parseInt(s);
+            } catch (NumberFormatException e) {
+                Champions.logger.log(Level.ERROR, "Non-integer in color config! " + s);
+                return color;
+            }
+        }
         return color;
     }
 
