@@ -6,6 +6,7 @@ import c4.champions.common.capability.IChampionship;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
@@ -40,5 +41,10 @@ public class AffixDampening extends AffixBase {
             }
             evt.setCanceled(true);
         }
+    }
+
+    @Override
+    public boolean canApply(EntityLiving entity) {
+        return !(entity instanceof EntityWither);
     }
 }
