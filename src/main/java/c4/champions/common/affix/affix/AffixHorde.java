@@ -50,4 +50,9 @@ public class AffixHorde extends AffixBase {
             horde.saveData(entity);
         }
     }
+
+    @Override
+    public boolean canApply(EntityLiving entity) {
+        return entity.isNonBoss();
+    }
 }

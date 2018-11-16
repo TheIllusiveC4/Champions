@@ -34,5 +34,7 @@ public interface IAffix {
 
     boolean canApply(EntityLiving entity);
 
+    boolean isCompatibleWith(IAffix affix);
+
     int getTier();
 }

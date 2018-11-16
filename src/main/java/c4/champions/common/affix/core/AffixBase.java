@@ -88,6 +88,11 @@ public abstract class AffixBase implements IAffix {
     }
 
     @Override
+    public boolean isCompatibleWith(IAffix affix) {
+        return affix != this;
+    }
+
+    @Override
     public int getTier() {
         return tier;
     }

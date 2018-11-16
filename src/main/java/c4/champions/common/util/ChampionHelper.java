@@ -58,9 +58,11 @@ public class ChampionHelper {
         Map<AffixCategory, Set<String>> categoryMap = AffixRegistry.getCategoryMap().entrySet().stream().collect(
                 Collectors.toMap(Map.Entry::getKey, e -> Sets.newHashSet(e.getValue())));
 
+        Set<String> curatedPresets = Sets.newHashSet(presets);
+        curatedPresets.addAll(AffixFilterManager.getPresetAffixesForEntity(entityLivingIn));
+
         //Handle any preset affixes
-        if (presets.length > 0) {
-            Set<String> curatedPresets = Sets.newHashSet(presets);
+        if (curatedPresets.size() > 0) {
 
             for (String s : curatedPresets) {
                 AffixBase aff = AffixRegistry.getAffix(s);
@@ -71,9 +73,27 @@ public class ChampionHelper {
 
                     if (availableAffixes.contains(s)) {
                         availableAffixes.remove(s);
-                        affixList.add(s);
+                        boolean added = false;
+                        AffixBase affix = AffixRegistry.getAffix(s);
+                        if (affix != null && affix.canApply(entityLivingIn) && AffixFilterManager.isValidAffix(affix,
+                                entityLivingIn, tier)) {
+                            boolean flag = true;
+                            //Check for incompatible affixes
+                            for (String s1 : affixList) {
 
-                        if (availableAffixes.isEmpty() || cat != AffixCategory.OFFENSE) {
+                                if (!affix.isCompatibleWith(AffixRegistry.getAffix(s1))) {
+                                    flag = false;
+                                    break;
+                                }
+                            }
+
+                            if (flag) {
+                                affixList.add(s);
+                                added = true;
+                            }
+                        }
+
+                        if (added && (availableAffixes.isEmpty() || cat != AffixCategory.OFFENSE)) {
                             categoryMap.remove(cat);
                         }
                     }
@@ -102,9 +122,22 @@ public class ChampionHelper {
                 //Filter through for validity
                 AffixBase affix = AffixRegistry.getAffix(id);
 
-                if (affix != null && AffixFilterManager.isValidAffix(affix, entityLivingIn, tier)) {
-                    affixList.add(id);
-                    added = true;
+                if (affix != null && affix.canApply(entityLivingIn) && AffixFilterManager.isValidAffix(affix,
+                        entityLivingIn, tier)) {
+                    boolean flag = true;
+                    //Check for incompatible affixes
+                    for (String s : affixList) {
+
+                        if (!affix.isCompatibleWith(AffixRegistry.getAffix(s))) {
+                            flag = false;
+                            break;
+                        }
+                    }
+
+                    if (flag) {
+                        affixList.add(id);
+                        added = true;
+                    }
                 }
 
                 //Remove entire category only if the affix was actually added and the category is limited

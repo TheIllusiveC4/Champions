@@ -5,12 +5,15 @@ public class AffixFilter {
     private final String identifier;
     private final boolean enabled;
     private final String[] entityBlacklist;
+    private final String[] alwaysOnEntity;
     private final int tier;
 
-    public AffixFilter(String identifier, boolean enabled, String[] entityBlacklist, int tier) {
+    public AffixFilter(String identifier, boolean enabled, String[] entityBlacklist, String[] alwaysOnEntity, int
+            tier) {
         this.identifier = identifier;
         this.enabled = enabled;
         this.entityBlacklist = entityBlacklist;
+        this.alwaysOnEntity = alwaysOnEntity;
         this.tier = tier;
     }
 
@@ -20,6 +23,10 @@ public class AffixFilter {
 
     public String[] getEntityBlacklist() {
         return entityBlacklist;
+    }
+
+    public String[] getAlwaysOnEntity() {
+        return alwaysOnEntity;
     }
 
     public boolean isEnabled() {
