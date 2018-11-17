@@ -25,4 +25,8 @@ public interface IChampionship {
     ImmutableMap<String, NBTTagCompound> getAffixData();
 
     void setAffixData(Map<String, NBTTagCompound> affixes);
+
+    void setName(String name);
+
+    String getName();
 }

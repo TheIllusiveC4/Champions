@@ -133,7 +133,7 @@ public class ClientUtil {
         GlStateManager.enableBlend();
         client.getTextureManager().bindTexture(GUI_BARS_TEXTURES);
         render(k, j, living.getHealth() / living.getMaxHealth());
-        String s = living.getDisplayName().getFormattedText();
+        String s = living.hasCustomName() ? living.getDisplayName().getFormattedText() : chp.getName();
         client.fontRenderer.drawStringWithShadow(s, (float)(i / 2 - client.fontRenderer.getStringWidth(s) / 2),
                 (float)(j - 9), color);
         GlStateManager.color(1, 1, 1, 1);

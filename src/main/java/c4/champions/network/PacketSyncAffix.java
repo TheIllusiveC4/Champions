@@ -25,12 +25,14 @@ public class PacketSyncAffix implements IMessage {
     private int tier;
     private Map<String, NBTTagCompound> affixData;
     private int num;
+    private String name;
 
-    public PacketSyncAffix(int entityId, int tier, Map<String, NBTTagCompound> affixData) {
+    public PacketSyncAffix(int entityId, int tier, Map<String, NBTTagCompound> affixData, String name) {
         this.entityId = entityId;
         this.tier = tier;
         this.affixData = affixData;
         this.num = affixData.size();
+        this.name = name;
     }
 
     @Override
@@ -43,6 +45,7 @@ public class PacketSyncAffix implements IMessage {
             data.putIfAbsent(ByteBufUtils.readUTF8String(buf), ByteBufUtils.readTag(buf));
         }
         this.affixData = data;
+        this.name = ByteBufUtils.readUTF8String(buf);
     }
 
     @Override
@@ -54,6 +57,7 @@ public class PacketSyncAffix implements IMessage {
             ByteBufUtils.writeUTF8String(buf, entry.getKey());
             ByteBufUtils.writeTag(buf, entry.getValue());
         }
+        ByteBufUtils.writeUTF8String(buf, name);
     }
 
     public static class PacketSyncHandler implements IMessageHandler<PacketSyncAffix, IMessage> {
@@ -69,6 +73,7 @@ public class PacketSyncAffix implements IMessage {
                     if (chp != null) {
                         chp.setRank(RankManager.getRankForTier(message.tier));
                         chp.setAffixData(message.affixData);
+                        chp.setName(message.name);
                     }
                 }
             });

@@ -9,12 +9,14 @@ import c4.champions.common.rank.Rank;
 import c4.champions.common.rank.RankManager;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityBeacon;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import org.apache.logging.log4j.Level;
 
@@ -49,6 +51,15 @@ public class ChampionHelper {
             }
         }
         return finalTier == 0 ? RankManager.getEmptyRank() : ranks.get(finalTier);
+    }
+
+    public static String generateRandomName() {
+        int randomPrefix = rand.nextInt(16);
+        int randomSuffix = rand.nextInt(16);
+        String header = Champions.MODID + ".%s.%d";
+        String prefix = new TextComponentTranslation(String.format(header, "prefix", randomPrefix)).getFormattedText();
+        String suffix = new TextComponentTranslation(String.format(header, "suffix", randomSuffix)).getFormattedText();
+        return prefix + suffix;
     }
 
     public static Set<String> generateAffixes(Rank rank, EntityLiving entityLivingIn, String... presets) {

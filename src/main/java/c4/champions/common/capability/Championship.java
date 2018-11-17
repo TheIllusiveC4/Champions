@@ -14,6 +14,7 @@ public class Championship implements IChampionship {
 
     private Map<String, NBTTagCompound> affixData = Maps.newHashMap();
     private Rank rank = null;
+    private String name;
 
     public Championship() {}
 
@@ -61,5 +62,15 @@ public class Championship implements IChampionship {
     @Nullable
     public NBTTagCompound getAffixData(String identifier) {
         return affixData.get(identifier);
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 }

@@ -40,6 +40,7 @@ public final class CapabilityChampionship {
     private static final String AFFIX_TAG = "affixes";
     private static final String TIER_TAG = "tier";
     private static final String DATA_TAG = "data";
+    private static final String NAME_TAG = "name";
 
     @Nullable
     @SuppressWarnings("ConstantConditions")
@@ -70,6 +71,7 @@ public final class CapabilityChampionship {
                             list.appendTag(tag);
                         }
                         compound.setTag(AFFIX_TAG, list);
+                        compound.setString(NAME_TAG, instance.getName());
                     }
                     compound.setInteger(TIER_TAG, rank.getTier());
                 }
@@ -83,14 +85,18 @@ public final class CapabilityChampionship {
                 if (compound.hasKey(TIER_TAG)) {
                     int tier = compound.getInteger(TIER_TAG);
                     instance.setRank(RankManager.getRankForTier(tier));
-                    NBTTagList list = compound.getTagList(AFFIX_TAG, Constants.NBT.TAG_COMPOUND);
-                    Map<String, NBTTagCompound> affixes = Maps.newHashMap();
 
-                    for (int i = 0; i < list.tagCount(); i++) {
-                        NBTTagCompound tag = list.getCompoundTagAt(i);
-                        affixes.put(tag.getString("identifier"), tag.getCompoundTag(DATA_TAG));
+                    if (tier > 0) {
+                        NBTTagList list = compound.getTagList(AFFIX_TAG, Constants.NBT.TAG_COMPOUND);
+                        Map<String, NBTTagCompound> affixes = Maps.newHashMap();
+
+                        for (int i = 0; i < list.tagCount(); i++) {
+                            NBTTagCompound tag = list.getCompoundTagAt(i);
+                            affixes.put(tag.getString("identifier"), tag.getCompoundTag(DATA_TAG));
+                        }
+                        instance.setAffixData(affixes);
+                        instance.setName(compound.getString(NAME_TAG));
                     }
-                    instance.setAffixData(affixes);
                 }
             }
         }, Championship::new);
@@ -175,6 +181,7 @@ public final class CapabilityChampionship {
                         if (rank.getTier() > 0) {
                             Set<String> affixes = ChampionHelper.generateAffixes(rank, living);
                             chp.setAffixes(affixes);
+                            chp.setName(ChampionHelper.generateRandomName());
                         }
                     }
 
@@ -203,7 +210,7 @@ public final class CapabilityChampionship {
 
                     if (chp != null && chp.getRank() != null && chp.getRank().getTier() > 0) {
                         NetworkHandler.INSTANCE.sendTo(new PacketSyncAffix(entity.getEntityId(),
-                                chp.getRank().getTier(), chp.getAffixData()), playerMP);
+                                chp.getRank().getTier(), chp.getAffixData(), chp.getName()), playerMP);
                     }
                 }
             }

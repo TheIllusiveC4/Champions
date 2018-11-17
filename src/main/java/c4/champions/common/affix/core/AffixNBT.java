@@ -43,7 +43,8 @@ public abstract class AffixNBT {
 
                 if (player instanceof EntityPlayerMP && championship.getRank() != null) {
                     NetworkHandler.INSTANCE.sendTo(new PacketSyncAffix(living.getEntityId(),
-                            championship.getRank().getTier(), championship.getAffixData()), (EntityPlayerMP)player);
+                            championship.getRank().getTier(), championship.getAffixData(), championship.getName()),
+                            (EntityPlayerMP)player);
                 }
             }
         }
