@@ -2,7 +2,7 @@
 {
   "modid": "champions",
   "name": "Champions",
-  "description": "Example placeholder mod.",
+  "description": "Creates elite mobs of different rarities, with enhanced stats and extra abilities.",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",

@@ -9,9 +9,9 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.0"
-group = "com.yourname.modid"
-archivesBaseName = "modid"
+version = "${version_minecraft}-${version_mod}"
+group = "${mod_group}.${mod_id}"
+archivesBaseName = "${mod_id}"
 
 sourceCompatibility = targetCompatibility = '1.8'
 compileJava {
@@ -19,9 +19,20 @@ compileJava {
 }
 
 minecraft {
-    version = "1.12.2-14.23.5.2768"
+    version = "${version_minecraft}-${version_forge}"
     runDir = "run"
-    mappings = "stable_39"
+    mappings = "${version_mcp}"
+    replace '@VERSION@', project.version
+    replace '@FINGERPRINT@', project.findProperty('signSHA1')
+    replaceIn("${mod_class}.java")
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDirs += 'docs'
+        }
+    }
 }
 
 processResources {
@@ -38,3 +49,21 @@ processResources {
         exclude 'mcmod.info'
     }
 }
+
+task signJar(type: SignJar, dependsOn: reobfJar) {
+
+    onlyIf {
+        project.hasProperty('keyStore')
+    }
+
+    keyStore = project.findProperty('keyStore')
+    alias = project.findProperty('keyStoreAlias')
+    storePass = project.findProperty('keyStorePass')
+    keyPass = project.findProperty('keyStoreKeyPass')
+    inputFile = jar.archivePath
+    outputFile = jar.archivePath
+}
+
+build.dependsOn signJar
+
+
