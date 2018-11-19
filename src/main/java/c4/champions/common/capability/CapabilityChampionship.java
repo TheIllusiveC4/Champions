@@ -183,15 +183,17 @@ public final class CapabilityChampionship {
                             chp.setAffixes(affixes);
                             chp.setName(ChampionHelper.generateRandomName());
                         }
+                        chp.getRank().applyGrowth(living);
                     }
 
-                    chp.getRank().applyGrowth(living);
+                    if (chp.getRank().getTier() > 0) {
 
-                    for (String s : chp.getAffixes()) {
-                        IAffix affix = AffixRegistry.getAffix(s);
+                        for (String s : chp.getAffixes()) {
+                            IAffix affix = AffixRegistry.getAffix(s);
 
-                        if (affix != null) {
-                            affix.onSpawn(living, chp);
+                            if (affix != null) {
+                                affix.onSpawn(living, chp);
+                            }
                         }
                     }
                 }

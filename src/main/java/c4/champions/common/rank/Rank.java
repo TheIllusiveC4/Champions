@@ -4,7 +4,6 @@ import c4.champions.Champions;
 import c4.champions.common.config.ConfigHandler;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import org.apache.logging.log4j.Level;
@@ -66,26 +65,27 @@ public class Rank {
     }
 
     public void applyGrowth(EntityLivingBase entityLivingBase) {
-        double oldMax = entityLivingBase.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).getAttributeValue();
-        applyModifierIfExists(entityLivingBase, SharedMonsterAttributes.MAX_HEALTH, ConfigHandler.growth.health, 2);
-        double newMax = entityLivingBase.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).getAttributeValue();
-
-        if (oldMax != newMax) {
-            entityLivingBase.setHealth(entityLivingBase.getMaxHealth());
-        }
-
-        applyModifierIfExists(entityLivingBase, SharedMonsterAttributes.ATTACK_DAMAGE, ConfigHandler.growth.attackDamage, 2);
-        applyModifierIfExists(entityLivingBase, SharedMonsterAttributes.ARMOR, ConfigHandler.growth.armor, 0);
-        applyModifierIfExists(entityLivingBase, SharedMonsterAttributes.ARMOR_TOUGHNESS, ConfigHandler.growth.armorToughness, 0);
-        applyModifierIfExists(entityLivingBase, SharedMonsterAttributes.KNOCKBACK_RESISTANCE, ConfigHandler.growth.knockbackResist, 0);
+        applyGrowth(entityLivingBase, SharedMonsterAttributes.MAX_HEALTH, ConfigHandler.growth.health, 2);
+        entityLivingBase.setHealth(entityLivingBase.getMaxHealth());
+        applyGrowth(entityLivingBase, SharedMonsterAttributes.ATTACK_DAMAGE, ConfigHandler.growth.attackDamage, 2);
+        applyGrowth(entityLivingBase, SharedMonsterAttributes.ARMOR, ConfigHandler.growth.armor, 0);
+        applyGrowth(entityLivingBase, SharedMonsterAttributes.ARMOR_TOUGHNESS, ConfigHandler.growth.armorToughness, 0);
+        applyGrowth(entityLivingBase, SharedMonsterAttributes.KNOCKBACK_RESISTANCE, ConfigHandler.growth.knockbackResist, 0);
     }
 
-    private void applyModifierIfExists(EntityLivingBase entityLivingBase, IAttribute attribute, double amount,
-                                       int operation) {
+    private void applyGrowth(EntityLivingBase entityLivingBase, IAttribute attribute, double amount,
+                             int operation) {
         IAttributeInstance att = entityLivingBase.getEntityAttribute(attribute);
         if (att != null) {
-            att.removeModifier(GROWTH);
-            att.applyModifier(new AttributeModifier(GROWTH, GROWTH_NAME, amount * growthFactor, operation));
+            double oldMax = entityLivingBase.getEntityAttribute(attribute).getBaseValue();
+            double newMax = 0;
+
+            switch (operation) {
+                case 0: newMax = oldMax + amount; break;
+                case 1: newMax = oldMax * amount; break;
+                case 2: newMax = oldMax * (1 + amount); break;
+            }
+            entityLivingBase.getEntityAttribute(attribute).setBaseValue(newMax);
         }
     }
 }
