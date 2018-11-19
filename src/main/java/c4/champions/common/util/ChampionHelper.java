@@ -9,7 +9,6 @@ import c4.champions.common.rank.Rank;
 import c4.champions.common.rank.RankManager;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.monster.IMob;

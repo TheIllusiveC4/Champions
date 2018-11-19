@@ -2,14 +2,16 @@ package c4.champions.proxy;
 
 import c4.champions.Champions;
 import c4.champions.client.EventHandlerClient;
-import c4.champions.client.layer.LayerRank;
+import c4.champions.client.fx.ParticleRank;
 import c4.champions.client.layer.LayerShielding;
 import c4.champions.client.renderer.RenderArcticSpark;
 import c4.champions.common.entity.EntityArcticSpark;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -45,9 +47,19 @@ public class ClientProxy implements IProxy {
 
             if (render instanceof RenderLiving) {
                 RenderLiving livingRender = (RenderLiving)render;
-                livingRender.addLayer(new LayerShielding(livingRender, livingRender.getMainModel()));
-                livingRender.addLayer(new LayerRank(livingRender, livingRender.getMainModel()));
+                ModelBase model = livingRender.getMainModel();
+                livingRender.addLayer(new LayerShielding(livingRender, model));
             }
         }
+    }
+
+    @Override
+    public void generateRankParticles(EntityLiving living, int color) {
+        Minecraft.getMinecraft().effectRenderer.addEffect(
+                new ParticleRank(living.world,
+                        living.posX + (living.getRNG().nextDouble() - 0.5D) * (double)living.width,
+                        living.posY + living.getRNG().nextDouble() * (double)living.height,
+                        living.posZ + (living.getRNG().nextDouble() - 0.5D) * (double)living.width, 0, 0, 0,
+                        color));
     }
 }

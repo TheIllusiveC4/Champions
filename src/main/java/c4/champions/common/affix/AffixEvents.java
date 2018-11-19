@@ -1,5 +1,6 @@
 package c4.champions.common.affix;
 
+import c4.champions.Champions;
 import c4.champions.common.affix.core.AffixBase;
 import c4.champions.common.capability.CapabilityChampionship;
 import c4.champions.common.capability.IChampionship;
@@ -26,6 +27,10 @@ public class AffixEvents {
                     if (affix != null) {
                         affix.onUpdate(living, chp);
                     }
+                }
+
+                if (ChampionHelper.isElite(chp.getRank())) {
+                    Champions.proxy.generateRankParticles(living, chp.getRank().getColor());
                 }
             }
         }
