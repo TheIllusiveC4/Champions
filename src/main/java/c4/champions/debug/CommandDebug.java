@@ -79,6 +79,7 @@ public class CommandDebug extends CommandBase {
                     } else {
                         chp.setAffixes(argAffix);
                     }
+                    chp.setName(ChampionHelper.generateRandomName());
                 }
             }
             player.world.spawnEntity(living);
