@@ -42,6 +42,11 @@ public abstract class AffixBase implements IAffix {
     }
 
     @Override
+    public void onInitialSpawn(EntityLiving entity, IChampionship cap) {
+
+    }
+
+    @Override
     public void onSpawn(EntityLiving entity, IChampionship cap) {
 
     }

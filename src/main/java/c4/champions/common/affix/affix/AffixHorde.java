@@ -2,7 +2,6 @@ package c4.champions.common.affix.affix;
 
 import c4.champions.common.affix.core.AffixBase;
 import c4.champions.common.affix.core.AffixCategory;
-import c4.champions.common.affix.core.AffixNBT;
 import c4.champions.common.capability.CapabilityChampionship;
 import c4.champions.common.capability.IChampionship;
 import c4.champions.common.rank.RankManager;
@@ -19,35 +18,28 @@ public class AffixHorde extends AffixBase {
     }
 
     @Override
-    public void onSpawn(EntityLiving entity, IChampionship cap) {
+    public void onInitialSpawn(EntityLiving entity, IChampionship cap) {
+        int size = 2 + cap.getRank().getTier() * 2;
 
-        AffixNBT.Boolean horde = AffixNBT.getData(cap, getIdentifier(), AffixNBT.Boolean.class);
+        for (int i = 0; i < size; i++) {
+            ResourceLocation rl = EntityList.getKey(entity);
+            if (rl != null) {
+                Entity hordeEntity = EntityList.createEntityByIDFromName(rl, entity.world);
 
-        if (!horde.mode) {
-            int size = 2 + cap.getRank().getTier() * 2;
+                if (hordeEntity != null) {
 
-            for (int i = 0; i < size; i++) {
-                ResourceLocation rl = EntityList.getKey(entity);
-                if (rl != null) {
-                    Entity hordeEntity = EntityList.createEntityByIDFromName(rl, entity.world);
+                    if (ChampionHelper.isValidChampion(hordeEntity)) {
+                        IChampionship chp = CapabilityChampionship.getChampionship((EntityLiving) hordeEntity);
 
-                    if (hordeEntity != null) {
-
-                        if (ChampionHelper.isValidChampion(hordeEntity)) {
-                            IChampionship chp = CapabilityChampionship.getChampionship((EntityLiving) hordeEntity);
-
-                            if (chp != null) {
-                                chp.setRank(RankManager.getEmptyRank());
-                            }
+                        if (chp != null) {
+                            chp.setRank(RankManager.getEmptyRank());
                         }
-                        hordeEntity.setPosition(entity.posX + entity.getRNG().nextInt(4) - 2, entity.posY,
-                                entity.posZ + entity.getRNG().nextInt(4) - 2);
-                        entity.world.spawnEntity(hordeEntity);
                     }
+                    hordeEntity.setPosition(entity.posX + entity.getRNG().nextInt(4) - 2, entity.posY,
+                            entity.posZ + entity.getRNG().nextInt(4) - 2);
+                    entity.world.spawnEntity(hordeEntity);
                 }
             }
-            horde.mode = true;
-            horde.saveData(entity);
         }
     }
 

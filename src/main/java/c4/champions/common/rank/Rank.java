@@ -79,6 +79,7 @@ public class Rank {
         if (att != null) {
             double oldMax = entityLivingBase.getEntityAttribute(attribute).getBaseValue();
             double newMax = 0;
+            amount *= tier;
 
             switch (operation) {
                 case 0: newMax = oldMax + amount; break;

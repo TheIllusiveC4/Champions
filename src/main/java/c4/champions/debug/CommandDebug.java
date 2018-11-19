@@ -1,6 +1,8 @@
 package c4.champions.debug;
 
 import c4.champions.Champions;
+import c4.champions.common.affix.AffixRegistry;
+import c4.champions.common.affix.IAffix;
 import c4.champions.common.capability.CapabilityChampionship;
 import c4.champions.common.capability.IChampionship;
 import c4.champions.common.rank.Rank;
@@ -80,6 +82,15 @@ public class CommandDebug extends CommandBase {
                         chp.setAffixes(argAffix);
                     }
                     chp.setName(ChampionHelper.generateRandomName());
+                    chp.getRank().applyGrowth(living);
+
+                    for (String s : chp.getAffixes()) {
+                        IAffix affix = AffixRegistry.getAffix(s);
+
+                        if (affix != null) {
+                            affix.onInitialSpawn(living, chp);
+                        }
+                    }
                 }
             }
             player.world.spawnEntity(living);

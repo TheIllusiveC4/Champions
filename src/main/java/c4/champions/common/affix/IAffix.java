@@ -15,6 +15,8 @@ public interface IAffix {
 
     AffixCategory getCategory();
 
+    void onInitialSpawn(EntityLiving entity, IChampionship cap);
+
     void onSpawn(EntityLiving entity, IChampionship cap);
 
     void onUpdate(EntityLiving entity, IChampionship cap);
