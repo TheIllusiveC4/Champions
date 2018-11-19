@@ -1,3 +1,6 @@
+#################
+#    Affixes    #
+#################
 champions.affix.shielding=Shielding
 champions.affix.molten=Molten
 champions.affix.reflecting=Reflecting
@@ -10,8 +13,43 @@ champions.affix.arctic=Arctic
 champions.affix.desecrator=Desecrator
 champions.affix.hasty=Hasty
 
+#################
+#    Effects    #
+#################
 champions.jailed=Jailed
 
+#################
+#    Config     #
+#################
+
+champions.general.dimensionpermission=Dimension Permission Mode
+champions.general.dimensionpermission.tooltip=Set whether the dimension configuration is blacklisted or whitelisted
+champions.general.dimensionlist=Dimension List
+champions.general.dimensionlist.tooltip=Set which dimensions, listed as number ids, are blacklisted or whitelisted for champion mobs, leave blank to disable this option
+
+champions.general.client=Client Settings
+champions.general.client.tooltip=Settings that are only client-side
+champions.general.client.colors=Rank Colors
+champions.general.client.colors.tooltip=A list of colors, as numbers, for each rank
+
+champions.general.growth=Growth Settings
+champions.general.growth.tooltip=Settings that affect the growth rate of champion mobs
+champions.general.growth.health=Health
+champions.general.growth.health.tooltip=The percent increase in health multiplied by the growth factor
+champions.general.growth.attackdamage=Attack Damage
+champions.general.growth.attackdamage.tooltip=The percent increase in attack damage multiplied by the growth factor
+champions.general.growth.armor=Armor
+champions.general.growth.armor.tooltip=The increase in armor multiplied by the growth factor
+champions.general.growth.armortoughness=Armor Toughness
+champions.general.growth.armortoughness.tooltip=The increase in armor toughness multiplied by the growth factor
+champions.general.growth.knockbackresist=Knockback Resistance
+champions.general.growth.knockbackresist.tooltip=The increase in knockback resistance multiplied by the growth factor
+champions.general.growth.exp=Experience
+champions.general.growth.exp.tooltip=The increase in experience multiplied by the growth factor
+
+#################
+#     Names     #
+#################
 champions.prefix.0=Nihlus
 champions.prefix.1=Saren
 champions.prefix.2=Infectus

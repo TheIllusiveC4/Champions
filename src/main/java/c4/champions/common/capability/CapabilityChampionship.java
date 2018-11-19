@@ -157,8 +157,9 @@ public final class CapabilityChampionship {
 
         @SubscribeEvent
         public static void attachCapabilities(final AttachCapabilitiesEvent<Entity> evt) {
+            Entity entity = evt.getObject();
 
-            if (ChampionHelper.isValidChampion(evt.getObject())) {
+            if (ChampionHelper.isValidChampion(entity) && ChampionHelper.isValidDimension(entity.dimension)) {
                 evt.addCapability(ID, createProvider(new Championship()));
             }
         }

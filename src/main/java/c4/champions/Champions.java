@@ -7,6 +7,7 @@ import c4.champions.common.affix.filter.AffixFilterManager;
 import c4.champions.common.capability.CapabilityChampionship;
 import c4.champions.common.loot.EntityHasTier;
 import c4.champions.common.rank.RankManager;
+import c4.champions.common.util.ChampionHelper;
 import c4.champions.debug.CommandDebug;
 import c4.champions.network.NetworkHandler;
 import c4.champions.proxy.IProxy;
@@ -59,6 +60,7 @@ public class Champions
     public void postInit(FMLPostInitializationEvent evt) {
         RankManager.readRanksFromJson();
         AffixFilterManager.readAffixFiltersFromJson();
+        ChampionHelper.parseDimensionConfigs();
         proxy.postInit(evt);
     }
 

@@ -32,7 +32,7 @@ public class EventHandlerClient {
     @SubscribeEvent
     public void renderChampionHealth(RenderGameOverlayEvent.Pre evt) {
 
-        if (ConfigHandler.client.renderGUI && evt.getType() == RenderGameOverlayEvent.ElementType.BOSSHEALTH) {
+        if (evt.getType() == RenderGameOverlayEvent.ElementType.BOSSHEALTH) {
             RayTraceResult mouseOver = ClientUtil.getMouseOver(evt.getPartialTicks(), 50);
 
             if (mouseOver != null && mouseOver.typeOfHit == RayTraceResult.Type.ENTITY) {

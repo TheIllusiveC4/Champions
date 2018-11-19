@@ -5,6 +5,7 @@ import c4.champions.common.affix.AffixRegistry;
 import c4.champions.common.affix.core.AffixBase;
 import c4.champions.common.affix.core.AffixCategory;
 import c4.champions.common.affix.filter.AffixFilterManager;
+import c4.champions.common.config.ConfigHandler;
 import c4.champions.common.rank.Rank;
 import c4.champions.common.rank.RankManager;
 import com.google.common.collect.ImmutableMap;
@@ -29,6 +30,8 @@ import java.util.stream.Collectors;
 public class ChampionHelper {
 
     public static Random rand = new Random();
+
+    private static Set<Integer> dimensions = Sets.newHashSet();
 
     public static boolean isValidChampion(final Entity entity) {
         return entity instanceof EntityLiving && entity instanceof IMob;
@@ -202,5 +205,31 @@ public class ChampionHelper {
             }
         }
         return false;
+    }
+
+    public static boolean isValidDimension(int dim) {
+
+        if (dimensions.isEmpty()) {
+            return true;
+        } else if (ConfigHandler.dimensionPermission == ConfigHandler.PermissionMode.BLACKLIST) {
+            return !dimensions.contains(dim);
+        } else {
+            return dimensions.contains(dim);
+        }
+    }
+
+    public static void parseDimensionConfigs() {
+
+        if (ConfigHandler.dimensionList.length > 0) {
+
+            for (String s : ConfigHandler.dimensionList) {
+
+                try {
+                    dimensions.add(Integer.parseInt(s));
+                } catch (NumberFormatException e) {
+                    Champions.logger.log(Level.ERROR, "Non-integer found in dimension config! " + s);
+                }
+            }
+        }
     }
 }
