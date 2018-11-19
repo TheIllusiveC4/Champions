@@ -22,7 +22,7 @@ public class AffixHasty extends AffixBase {
     @Override
     public void onInitialSpawn(EntityLiving entity, IChampionship cap) {
         IAttributeInstance speed = entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
-        speed.setBaseValue(speed.getBaseValue() * 1.5f);
+        speed.setBaseValue(speed.getBaseValue() + 0.5);
     }
 
     @Override

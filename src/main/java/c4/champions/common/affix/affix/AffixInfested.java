@@ -74,4 +74,9 @@ public class AffixInfested extends AffixBase {
         entitysilverfish.spawnExplosionParticle();
         return entitysilverfish;
     }
+
+    @Override
+    public boolean canApply(EntityLiving entity) {
+        return !(entity instanceof EntitySilverfish);
+    }
 }
