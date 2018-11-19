@@ -7,6 +7,7 @@ import c4.champions.common.config.ConfigHandler;
 import c4.champions.common.util.ChampionHelper;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -17,6 +18,7 @@ import net.minecraft.world.storage.loot.LootContext;
 import net.minecraft.world.storage.loot.LootTable;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.List;
@@ -67,6 +69,25 @@ public class EventHandlerCommon {
             if (chp != null && ChampionHelper.isElite(chp.getRank())) {
                 evt.setDroppedExperience((int)(chp.getRank().getGrowthFactor() * ConfigHandler.growth.exp * evt
                         .getOriginalExperience()));
+            }
+        }
+    }
+
+    //Increase attack damage for attackers even if they don't have the attack damage attribute
+    @SubscribeEvent
+    public void livingDamage(LivingHurtEvent evt) {
+
+        if (evt.getSource().getTrueSource() instanceof EntityLiving) {
+            EntityLiving entity = (EntityLiving)evt.getSource().getTrueSource();
+
+            if (entity.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE) == null
+                    && ChampionHelper.isValidChampion(entity)) {
+                IChampionship chp = CapabilityChampionship.getChampionship(entity);
+
+                if (chp != null && ChampionHelper.isElite(chp.getRank())) {
+                    evt.setAmount(evt.getAmount() * (float)(1 + ConfigHandler.growth.attackDamage * chp.getRank()
+                            .getTier()));
+                }
             }
         }
     }
