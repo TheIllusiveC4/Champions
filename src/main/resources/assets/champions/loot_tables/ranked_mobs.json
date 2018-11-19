@@ -15,6 +15,9 @@
               "properties": {
                 "champions:tier": 1
               }
+            },
+            {
+              "condition": "killed_by_player"
             }
           ],
           "functions": [
@@ -40,6 +43,9 @@
               "properties": {
                 "champions:tier": 2
               }
+            },
+            {
+              "condition": "killed_by_player"
             }
           ],
           "functions": [
@@ -65,6 +71,9 @@
               "properties": {
                 "champions:tier": 3
               }
+            },
+            {
+              "condition": "killed_by_player"
             }
           ],
           "functions": [
@@ -90,6 +99,9 @@
               "properties": {
                 "champions:tier": 4
               }
+            },
+            {
+              "condition": "killed_by_player"
             }
           ],
           "functions": [
