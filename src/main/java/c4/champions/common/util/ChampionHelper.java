@@ -78,8 +78,8 @@ public class ChampionHelper {
     }
 
     public static String generateRandomName() {
-        int randomPrefix = rand.nextInt(16);
-        int randomSuffix = rand.nextInt(16);
+        int randomPrefix = rand.nextInt(24);
+        int randomSuffix = rand.nextInt(24);
         String header = Champions.MODID + ".%s.%d";
         String prefix = new TextComponentTranslation(String.format(header, "prefix", randomPrefix)).getFormattedText();
         String suffix = new TextComponentTranslation(String.format(header, "suffix", randomSuffix)).getFormattedText();
