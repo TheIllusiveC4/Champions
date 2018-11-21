@@ -21,7 +21,6 @@ package c4.champions.client;
 
 import c4.champions.common.capability.CapabilityChampionship;
 import c4.champions.common.capability.IChampionship;
-import c4.champions.common.config.ConfigHandler;
 import c4.champions.common.init.ChampionsRegistry;
 import c4.champions.common.util.ChampionHelper;
 import net.minecraft.entity.Entity;
@@ -33,8 +32,6 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class EventHandlerClient {
-
-    private static final int NAME_DISTANCE = 24;
 
     @SubscribeEvent
     public void onMovementInput(InputUpdateEvent evt) {

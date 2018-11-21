@@ -12,6 +12,7 @@ champions.affix.jailer=Jailer
 champions.affix.arctic=Arctic
 champions.affix.desecrator=Desecrator
 champions.affix.hasty=Hasty
+champions.affix.lively=Lively
 
 #################
 #    Effects    #
@@ -21,7 +22,6 @@ champions.jailed=Jailed
 #################
 #    Config     #
 #################
-
 champions.general.dimensionpermission=Dimension Permission Mode
 champions.general.dimensionpermission.tooltip=Set whether the dimension configuration is blacklisted or whitelisted
 champions.general.dimensionlist=Dimension List

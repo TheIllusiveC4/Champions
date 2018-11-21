@@ -35,6 +35,7 @@ public class Affixes {
     public static AffixBase arctic;
     public static AffixBase desecrator;
     public static AffixBase hasty;
+    public static AffixBase lively;
 
     public static void registerAffixes() {
         molten = new AffixMolten();
@@ -48,5 +49,6 @@ public class Affixes {
         arctic = new AffixArctic();
         desecrator = new AffixDesecrator();
         hasty = new AffixHasty();
+        lively = new AffixLively();
     }
 }

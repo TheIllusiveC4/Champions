@@ -97,4 +97,21 @@ public abstract class AffixNBT {
             return compound;
         }
     }
+
+    public static class Integer extends AffixNBT {
+
+        public int num;
+
+        @Override
+        public void readFromNBT(NBTTagCompound tag) {
+            num = tag.getInteger("num");
+        }
+
+        @Override
+        public NBTTagCompound writeToNBT() {
+            NBTTagCompound compound = new NBTTagCompound();
+            compound.setInteger("num", num);
+            return compound;
+        }
+    }
 }
