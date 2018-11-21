@@ -30,10 +30,12 @@ import c4.champions.common.rank.RankManager;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityBeacon;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
@@ -51,9 +53,10 @@ public class ChampionHelper {
     public static Random rand = new Random();
 
     private static Set<Integer> dimensions = Sets.newHashSet();
+    private static Set<ResourceLocation> mobs = Sets.newHashSet();
 
     public static boolean isValidChampion(final Entity entity) {
-        return entity instanceof EntityLiving && entity instanceof IMob;
+        return entity instanceof EntityLiving && entity instanceof IMob && isValidEntity(entity);
     }
 
     public static Rank generateRank(final EntityLiving entityLivingIn) {
@@ -226,6 +229,20 @@ public class ChampionHelper {
         return false;
     }
 
+    public static boolean isValidEntity(Entity entity) {
+        ResourceLocation rl = EntityList.getKey(entity);
+
+        if (rl == null) {
+            return false;
+        } else if (mobs.isEmpty()) {
+            return true;
+        } else if (ConfigHandler.mobPermission == ConfigHandler.PermissionMode.BLACKLIST) {
+            return !mobs.contains(rl);
+        } else {
+            return mobs.contains(rl);
+        }
+    }
+
     public static boolean isValidDimension(int dim) {
 
         if (dimensions.isEmpty()) {
@@ -237,7 +254,7 @@ public class ChampionHelper {
         }
     }
 
-    public static void parseDimensionConfigs() {
+    public static void parseConfigs() {
 
         if (ConfigHandler.dimensionList.length > 0) {
 
@@ -247,6 +264,19 @@ public class ChampionHelper {
                     dimensions.add(Integer.parseInt(s));
                 } catch (NumberFormatException e) {
                     Champions.logger.log(Level.ERROR, "Non-integer found in dimension config! " + s);
+                }
+            }
+        }
+
+        if (ConfigHandler.mobList.length > 0) {
+
+            for (String s : ConfigHandler.mobList) {
+                ResourceLocation rl = new ResourceLocation(s);
+
+                if (EntityList.getEntityNameList().contains(rl)) {
+                    mobs.add(rl);
+                } else {
+                    Champions.logger.log(Level.ERROR, "Invalid entity found in mob config! " + s);
                 }
             }
         }

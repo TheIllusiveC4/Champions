@@ -43,6 +43,16 @@ public class ConfigHandler {
     @RequiresMcRestart
     public static String[] dimensionList = new String[]{};
 
+    @Name("Mob Permission Mode")
+    @Comment("Set whether the mob configuration is blacklisted or whitelisted")
+    @RequiresMcRestart
+    public static PermissionMode mobPermission = PermissionMode.BLACKLIST;
+
+    @Name("Mob List")
+    @Comment("Set which mobs are blacklisted or whitelisted for champion mobs, leave blank to disable this option")
+    @RequiresMcRestart
+    public static String[] mobList = new String[]{};
+
     @Name("Client Settings")
     @Comment("Settings that are only client-side")
     public static Client client = new Client();
