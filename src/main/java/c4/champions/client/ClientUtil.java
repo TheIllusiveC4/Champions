@@ -24,6 +24,7 @@ import c4.champions.common.capability.IChampionship;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -48,6 +49,8 @@ public class ClientUtil {
 
     private static final Minecraft client = FMLClientHandler.instance().getClient();
     private static final ResourceLocation GUI_BARS_TEXTURES = new ResourceLocation("textures/gui/bars.png");
+    private static final ResourceLocation GUI_STAR = new ResourceLocation(Champions.MODID, "textures/gui/staricon" +
+            ".png");
 
     public static RayTraceResult getMouseOver(float partialTicks, float distance) {
         Entity entity = client.getRenderViewEntity();
@@ -142,7 +145,7 @@ public class ClientUtil {
         ScaledResolution scaledresolution = new ScaledResolution(client);
         int i = scaledresolution.getScaledWidth();
         int k = i / 2 - 91;
-        int j = 12;
+        int j = 22;
         int color = chp.getRank().getColor();
         float r = (float)((color>>16)&0xFF)/255f;
         float g = (float)((color>>8)&0xFF)/255f;
@@ -152,6 +155,24 @@ public class ClientUtil {
         GlStateManager.enableBlend();
         client.getTextureManager().bindTexture(GUI_BARS_TEXTURES);
         render(k, j, living.getHealth() / living.getMaxHealth());
+        client.getTextureManager().bindTexture(GUI_STAR);
+        int num = chp.getRank().getTier();
+
+        if (num <= 18) {
+            int startX = i / 2 - 5 - 5 * (num - 1);
+            for (int tier = 0; tier < num; tier++) {
+                Gui.drawModalRectWithCustomSizedTexture(startX, 3, 0, 0, 9, 9, 9, 9);
+                startX += 10;
+            }
+        } else {
+            int startX = i / 2 - 5;
+            String count = "x" + num;
+            Gui.drawModalRectWithCustomSizedTexture(startX - client.fontRenderer.getStringWidth(count) / 2, 3, 0, 0,
+                    9, 9, 9, 9);
+            client.fontRenderer.drawStringWithShadow(count, startX + 10 - client.fontRenderer.getStringWidth(count) /
+                    2, 4, 16777215);
+
+        }
         String s = living.hasCustomName() ? living.getDisplayName().getFormattedText() : chp.getName();
         client.fontRenderer.drawStringWithShadow(s, (float)(i / 2 - client.fontRenderer.getStringWidth(s) / 2),
                 (float)(j - 9), color);
@@ -180,19 +201,19 @@ public class ClientUtil {
 
     private static void drawTexturedModalRect(int x, int y, int textureX, int textureY, int width, int height)
     {
-        float f = 0.00390625F;
-        float f1 = 0.00390625F;
+        float u = 0.00390625F;
+        float v = 0.00390625F;
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuffer();
         bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
-        bufferbuilder.pos((double)(x), (double)(y + height), 0).tex((double)((float)(textureX) * 0.00390625F)
-                , (double)((float)(textureY + height) * 0.00390625F)).endVertex();
+        bufferbuilder.pos((double)(x), (double)(y + height), 0).tex((double)((float)(textureX) * u)
+                , (double)((float)(textureY + height) * v)).endVertex();
         bufferbuilder.pos((double)(x + width), (double)(y + height), 0).tex((double)((float)(textureX + width) *
-                0.00390625F), (double)((float)(textureY + height) * 0.00390625F)).endVertex();
+                u), (double)((float)(textureY + height) * v)).endVertex();
         bufferbuilder.pos((double)(x + width), (double)(y), 0).tex((double)((float)(textureX + width) *
-                0.00390625F), (double)((float)(textureY) * 0.00390625F)).endVertex();
-        bufferbuilder.pos((double)(x), (double)(y), 0).tex((double)((float)(textureX) * 0.00390625F),
-                (double)((float)(textureY) * 0.00390625F)).endVertex();
+                u), (double)((float)(textureY) * v)).endVertex();
+        bufferbuilder.pos((double)(x), (double)(y), 0).tex((double)((float)(textureX) * u),
+                (double)((float)(textureY) * v)).endVertex();
         tessellator.draw();
     }
 }
