@@ -63,6 +63,8 @@ public class Champions
     @EventHandler
     public void preInit(FMLPreInitializationEvent evt) {
         logger = evt.getModLog();
+        LootTableList.register(new ResourceLocation(Champions.MODID, "ranked_mobs"));
+        EntityPropertyManager.registerProperty(new EntityHasTier.Serializer());
         proxy.preInit(evt);
     }
 
@@ -71,8 +73,6 @@ public class Champions
         NetworkHandler.register();
         CapabilityChampionship.register();
         Affixes.registerAffixes();
-        LootTableList.register(new ResourceLocation(Champions.MODID, "ranked_mobs"));
-        EntityPropertyManager.registerProperty(new EntityHasTier.Serializer());
         MinecraftForge.EVENT_BUS.register(new AffixEvents());
         MinecraftForge.EVENT_BUS.register(new EventHandlerCommon());
         proxy.init(evt);
@@ -82,7 +82,7 @@ public class Champions
     public void postInit(FMLPostInitializationEvent evt) {
         RankManager.readRanksFromJson();
         AffixFilterManager.readAffixFiltersFromJson();
-        ChampionHelper.parseDimensionConfigs();
+        ChampionHelper.parseConfigs();
         proxy.postInit(evt);
     }
 
