@@ -145,7 +145,7 @@ public class ClientUtil {
         ScaledResolution scaledresolution = new ScaledResolution(client);
         int i = scaledresolution.getScaledWidth();
         int k = i / 2 - 91;
-        int j = 22;
+        int j = 21;
         int color = chp.getRank().getColor();
         float r = (float)((color>>16)&0xFF)/255f;
         float g = (float)((color>>8)&0xFF)/255f;
@@ -161,16 +161,16 @@ public class ClientUtil {
         if (num <= 18) {
             int startX = i / 2 - 5 - 5 * (num - 1);
             for (int tier = 0; tier < num; tier++) {
-                Gui.drawModalRectWithCustomSizedTexture(startX, 3, 0, 0, 9, 9, 9, 9);
+                Gui.drawModalRectWithCustomSizedTexture(startX, 1, 0, 0, 9, 9, 9, 9);
                 startX += 10;
             }
         } else {
             int startX = i / 2 - 5;
             String count = "x" + num;
-            Gui.drawModalRectWithCustomSizedTexture(startX - client.fontRenderer.getStringWidth(count) / 2, 3, 0, 0,
+            Gui.drawModalRectWithCustomSizedTexture(startX - client.fontRenderer.getStringWidth(count) / 2, 1, 0, 0,
                     9, 9, 9, 9);
             client.fontRenderer.drawStringWithShadow(count, startX + 10 - client.fontRenderer.getStringWidth(count) /
-                    2, 4, 16777215);
+                    2, 2, 16777215);
 
         }
         String s = living.hasCustomName() ? living.getDisplayName().getFormattedText() : chp.getName();

@@ -17,11 +17,12 @@
  * License along with Champions.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package c4.champions.debug;
+package c4.champions.command;
 
 import c4.champions.Champions;
 import c4.champions.common.affix.AffixRegistry;
 import c4.champions.common.affix.IAffix;
+import c4.champions.common.affix.core.AffixBase;
 import c4.champions.common.capability.CapabilityChampionship;
 import c4.champions.common.capability.IChampionship;
 import c4.champions.common.rank.Rank;
@@ -31,6 +32,7 @@ import com.google.common.collect.Sets;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -45,20 +47,26 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-public class CommandDebug extends CommandBase {
+public class CommandSpawnChampion extends CommandBase {
 
-    public CommandDebug() {}
+    public CommandSpawnChampion() {}
 
     @Override
     @Nonnull
     public String getName() {
-        return Champions.MODID;
+        return "spawnchampion";
+    }
+
+    @Override
+    public int getRequiredPermissionLevel()
+    {
+        return 2;
     }
 
     @Override
     @Nonnull
     public String getUsage(@Nonnull ICommandSender sender) {
-        return Champions.MODID + " <entity> <tier> <affixes...>";
+        return Champions.MODID + ".commands.spawnchampion.usage";
     }
 
     @Override
@@ -66,26 +74,39 @@ public class CommandDebug extends CommandBase {
             throws CommandException {
 
         if (args.length < 2) {
-            return;
+            throw new WrongUsageException(getUsage(sender));
         }
         Entity entity = EntityList.createEntityByIDFromName(new ResourceLocation(args[0]), sender.getEntityWorld());
 
         if (entity == null || !(entity instanceof EntityLiving)) {
-            return;
+            throw new CommandException(Champions.MODID + ".commands.spawnchampion.entityError", args[0]);
         }
 
         EntityLiving living = (EntityLiving)entity;
 
-        int tier = Integer.parseInt(args[1]);
+        int tier;
+
+        try {
+            tier = Integer.parseInt(args[1]);
+        } catch (NumberFormatException e) {
+            throw new CommandException(Champions.MODID + ".commands.spawnchampion.tierError", args[1]);
+        }
         Set<String> argAffix = Sets.newHashSet();
 
         for (int i = 2; i < args.length; i++) {
+            String affix = args[i];
+            AffixBase affixBase = AffixRegistry.getAffix(affix);
+
+            if (affixBase == null) {
+                throw new CommandException(Champions.MODID + ".commands.spawnchampion.affixError", args[i]);
+            }
             argAffix.add(args[i]);
         }
 
         if (sender instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer)sender;
-            living.setPosition(player.posX + 1, player.posY, player.posZ);
+            BlockPos pos = player.getPosition().offset(player.getHorizontalFacing(), 2);
+            living.setPosition(pos.getX(), pos.getY(), pos.getZ());
             IChampionship chp = CapabilityChampionship.getChampionship(living);
 
             if (chp != null) {
@@ -113,13 +134,8 @@ public class CommandDebug extends CommandBase {
                 }
             }
             player.world.spawnEntity(living);
+            notifyCommandListener(sender, this, Champions.MODID + ".commands.spawnchampion.success", pos);
         }
-
-    }
-
-    @Override
-    public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
-        return true;
     }
 
     @Override

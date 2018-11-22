@@ -24,10 +24,10 @@ import c4.champions.common.affix.AffixEvents;
 import c4.champions.common.affix.Affixes;
 import c4.champions.common.affix.filter.AffixFilterManager;
 import c4.champions.common.capability.CapabilityChampionship;
+import c4.champions.command.CommandSpawnChampion;
 import c4.champions.common.loot.EntityHasTier;
 import c4.champions.common.rank.RankManager;
 import c4.champions.common.util.ChampionHelper;
-import c4.champions.debug.CommandDebug;
 import c4.champions.network.NetworkHandler;
 import c4.champions.proxy.IProxy;
 import net.minecraft.util.ResourceLocation;
@@ -93,9 +93,6 @@ public class Champions
 
     @EventHandler
     public void serverLoad(FMLServerStartingEvent evt) {
-
-        if (DEBUG) {
-            evt.registerServerCommand(new CommandDebug());
-        }
+        evt.registerServerCommand(new CommandSpawnChampion());
     }
 }
