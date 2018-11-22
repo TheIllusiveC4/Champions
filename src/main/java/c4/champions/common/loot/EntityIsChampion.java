@@ -25,7 +25,7 @@ import c4.champions.common.capability.IChampionship;
 import c4.champions.common.util.ChampionHelper;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -36,39 +36,59 @@ import net.minecraft.world.storage.loot.properties.EntityProperty;
 import javax.annotation.Nonnull;
 import java.util.Random;
 
-public class EntityHasTier implements EntityProperty {
+public class EntityIsChampion implements EntityProperty {
 
     private final int tier;
+    private final int minTier;
+    private final int maxTier;
 
-    public EntityHasTier(int tierIn)
-    {
+    public EntityIsChampion(int tierIn, int minTierIn, int maxTierIn) {
         this.tier = tierIn;
+        this.minTier = minTierIn;
+        this.maxTier = maxTierIn;
     }
 
     public boolean testProperty(@Nonnull Random random, @Nonnull Entity entityIn) {
 
         if (ChampionHelper.isValidChampion(entityIn)) {
             IChampionship chp = CapabilityChampionship.getChampionship((EntityLiving)entityIn);
-            return chp != null && ChampionHelper.isElite(chp.getRank()) && chp.getRank().getTier() >= tier;
+
+            if (chp != null && ChampionHelper.isElite(chp.getRank())) {
+                int tier = chp.getRank().getTier();
+
+                if (this.tier == 0) {
+                    return (minTier == 0 || tier >= minTier) && (maxTier == 0 || tier <= maxTier);
+                } else {
+                    return this.tier == tier;
+                }
+            }
         }
         return false;
     }
 
-    public static class Serializer extends EntityProperty.Serializer<EntityHasTier> {
+    public static class Serializer extends EntityProperty.Serializer<EntityIsChampion> {
 
         public Serializer() {
-            super(new ResourceLocation(Champions.MODID, "tier"), EntityHasTier.class);
+            super(new ResourceLocation(Champions.MODID, "is_champion"), EntityIsChampion.class);
         }
 
         @Nonnull
-        public JsonElement serialize(@Nonnull EntityHasTier property, @Nonnull JsonSerializationContext serializationContext) {
-            return new JsonPrimitive(property.tier);
+        public JsonElement serialize(@Nonnull EntityIsChampion property, @Nonnull JsonSerializationContext serializationContext) {
+            JsonObject json = new JsonObject();
+            json.addProperty("tier", property.tier);
+            json.addProperty("min_tier", property.minTier);
+            json.addProperty("max_tier", property.maxTier);
+            return json;
         }
 
         @Nonnull
-        public EntityHasTier deserialize(@Nonnull JsonElement element, @Nonnull JsonDeserializationContext
+        public EntityIsChampion deserialize(@Nonnull JsonElement element, @Nonnull JsonDeserializationContext
                 deserializationContext) {
-            return new EntityHasTier(JsonUtils.getInt(element, "tier"));
+            JsonObject json = element.getAsJsonObject();
+            int tier = JsonUtils.getInt(json, "tier", 0);
+            int minTier = JsonUtils.getInt(json, "min_tier", 0);
+            int maxTier = JsonUtils.getInt(json, "max_tier", 0);
+            return new EntityIsChampion(tier, minTier, maxTier);
         }
     }
 }

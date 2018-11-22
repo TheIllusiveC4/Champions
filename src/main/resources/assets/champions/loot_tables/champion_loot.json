@@ -13,7 +13,7 @@
               "condition": "entity_properties",
               "entity": "this",
               "properties": {
-                "champions:tier": 1
+                "champions:is_champion": {}
               }
             },
             {
@@ -41,7 +41,9 @@
               "condition": "entity_properties",
               "entity": "this",
               "properties": {
-                "champions:tier": 2
+                "champions:is_champion": {
+                  "min_tier": 2
+                }
               }
             },
             {
@@ -69,7 +71,9 @@
               "condition": "entity_properties",
               "entity": "this",
               "properties": {
-                "champions:tier": 3
+                "champions:is_champion": {
+                  "min_tier": 3
+                }
               }
             },
             {
@@ -97,7 +101,9 @@
               "condition": "entity_properties",
               "entity": "this",
               "properties": {
-                "champions:tier": 4
+                "champions:is_champion": {
+                  "min_tier": 4
+                }
               }
             },
             {

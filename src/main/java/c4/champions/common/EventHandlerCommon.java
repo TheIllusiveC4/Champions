@@ -44,6 +44,8 @@ import java.util.List;
 
 public class EventHandlerCommon {
 
+    private static final ResourceLocation CHAMPION_LOOT = new ResourceLocation(Champions.MODID, "champion_loot");
+
     @SubscribeEvent
     public void livingDrops(LivingDropsEvent evt) {
         EntityLivingBase entity = evt.getEntityLiving();
@@ -55,8 +57,7 @@ public class EventHandlerCommon {
 
                 if (entity.world instanceof WorldServer) {
                     WorldServer world = (WorldServer) entity.world;
-                    LootTable table = world.getLootTableManager().getLootTableFromLocation(new ResourceLocation
-                            (Champions.MODID, "ranked_mobs"));
+                    LootTable table = world.getLootTableManager().getLootTableFromLocation(CHAMPION_LOOT);
                     DamageSource source = evt.getSource();
                     LootContext.Builder builder = new LootContext.Builder(world).withDamageSource(evt.getSource()).withLootedEntity(entity);
 

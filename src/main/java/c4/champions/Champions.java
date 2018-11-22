@@ -19,13 +19,13 @@
 
 package c4.champions;
 
+import c4.champions.command.CommandSpawnChampion;
 import c4.champions.common.EventHandlerCommon;
 import c4.champions.common.affix.AffixEvents;
 import c4.champions.common.affix.Affixes;
 import c4.champions.common.affix.filter.AffixFilterManager;
 import c4.champions.common.capability.CapabilityChampionship;
-import c4.champions.command.CommandSpawnChampion;
-import c4.champions.common.loot.EntityHasTier;
+import c4.champions.common.loot.EntityIsChampion;
 import c4.champions.common.rank.RankManager;
 import c4.champions.common.util.ChampionHelper;
 import c4.champions.network.NetworkHandler;
@@ -63,8 +63,8 @@ public class Champions
     @EventHandler
     public void preInit(FMLPreInitializationEvent evt) {
         logger = evt.getModLog();
-        LootTableList.register(new ResourceLocation(Champions.MODID, "ranked_mobs"));
-        EntityPropertyManager.registerProperty(new EntityHasTier.Serializer());
+        LootTableList.register(new ResourceLocation(Champions.MODID, "champion_loot"));
+        EntityPropertyManager.registerProperty(new EntityIsChampion.Serializer());
         proxy.preInit(evt);
     }
 
