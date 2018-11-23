@@ -22,23 +22,54 @@ package c4.champions.common.potion;
 import c4.champions.Champions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.MobEffects;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class PotionJailed extends Potion {
+import javax.annotation.Nonnull;
+import java.util.List;
 
-    private static final ResourceLocation ICON = new ResourceLocation(Champions.MODID, "textures/gui/jailed.png");
+public class PotionPlague extends Potion {
 
-    public PotionJailed() {
-        super(true, 0);
-        this.setPotionName(Champions.MODID + ".jailed");
-        this.setRegistryName(Champions.MODID, "jailed");
-        this.registerPotionAttributeModifier(SharedMonsterAttributes.KNOCKBACK_RESISTANCE,
-                "2e1d5db6-1bb0-49a7-907d-2e5531d04736", 1, 0);
+    private static final ResourceLocation ICON = new ResourceLocation(Champions.MODID, "textures/gui/plague.png");
+
+    public PotionPlague() {
+        super(true, 2046740);
+        this.setPotionName(Champions.MODID + ".plague");
+        this.setRegistryName(Champions.MODID, "plague");
+    }
+
+    @Override
+    public boolean isReady(int duration, int amplifier) {
+        return true;
+    }
+
+    @Override
+    public void performEffect(@Nonnull EntityLivingBase entityLivingBaseIn, int amplifier) {
+
+        if (!entityLivingBaseIn.world.isRemote) {
+            List<EntityLivingBase> entities = entityLivingBaseIn.world.getEntitiesWithinAABB(EntityLivingBase.class,
+                    entityLivingBaseIn.getEntityBoundingBox().grow(4, 4, 4));
+
+            if (!entities.isEmpty()) {
+
+                for (EntityLivingBase ent : entities) {
+
+                    if (!ent.isPotionActive(MobEffects.WITHER) || (ent.isPotionActive(MobEffects.WITHER) && ent
+                            .getActivePotionEffect(MobEffects.WITHER).getDuration() <= 20)) {
+                        ent.addPotionEffect(new PotionEffect(MobEffects.WITHER, 200, 0));
+                    }
+
+                    if (!ent.isPotionActive(this) && ent != entityLivingBaseIn) {
+                        ent.addPotionEffect(new PotionEffect(this, 300));
+                    }
+                }
+            }
+        }
     }
 
     @Override

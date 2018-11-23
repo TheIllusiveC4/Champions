@@ -13,11 +13,13 @@ champions.affix.arctic=Arctic
 champions.affix.desecrator=Desecrator
 champions.affix.hasty=Hasty
 champions.affix.lively=Lively
+champions.affix.plagued=Plagued
 
 #################
 #    Effects    #
 #################
 champions.jailed=Jailed
+champions.plague=Plague
 
 #################
 #    Config     #

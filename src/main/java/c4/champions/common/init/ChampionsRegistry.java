@@ -23,6 +23,7 @@ import c4.champions.Champions;
 import c4.champions.common.entity.EntityArcticSpark;
 import c4.champions.common.entity.EntityJail;
 import c4.champions.common.potion.PotionJailed;
+import c4.champions.common.potion.PotionPlague;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
@@ -39,9 +40,13 @@ public class ChampionsRegistry {
     @GameRegistry.ObjectHolder("jailed")
     public static final Potion jailed = null;
 
+    @GameRegistry.ObjectHolder("plague")
+    public static final Potion plague = null;
+
     @SubscribeEvent
     public static void registerPotion(RegistryEvent.Register<Potion> evt) {
         evt.getRegistry().register(new PotionJailed());
+        evt.getRegistry().register(new PotionPlague());
     }
 
     @SubscribeEvent
