@@ -29,6 +29,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldEntitySpawner;
+import net.minecraft.world.chunk.Chunk;
+
+import java.util.Random;
 
 public class AffixHorde extends AffixBase {
 
@@ -39,31 +45,65 @@ public class AffixHorde extends AffixBase {
     @Override
     public void onInitialSpawn(EntityLiving entity, IChampionship cap) {
         int size = 2 + cap.getRank().getTier() * 2;
-
-        for (int i = 0; i < size; i++) {
-            ResourceLocation rl = EntityList.getKey(entity);
-            if (rl != null) {
-                Entity hordeEntity = EntityList.createEntityByIDFromName(rl, entity.world);
-
-                if (hordeEntity != null) {
-
-                    if (ChampionHelper.isValidChampion(hordeEntity)) {
-                        IChampionship chp = CapabilityChampionship.getChampionship((EntityLiving) hordeEntity);
-
-                        if (chp != null) {
-                            chp.setRank(RankManager.getEmptyRank());
-                        }
-                    }
-                    hordeEntity.setPosition(entity.posX + entity.getRNG().nextInt(4) - 2, entity.posY,
-                            entity.posZ + entity.getRNG().nextInt(4) - 2);
-                    entity.world.spawnEntity(hordeEntity);
-                }
-            }
-        }
+        Chunk chunk = entity.world.getChunk(entity.getPosition());
+        performHordeSpawning(entity.world, entity, entity.getRNG(), chunk.x * 16 + 8, chunk.z * 16 + 8, size);
     }
 
     @Override
     public boolean canApply(EntityLiving entity) {
         return entity.isNonBoss();
+    }
+
+    private static void performHordeSpawning(World worldIn, EntityLiving parent, Random randomIn,
+                                             int centerX, int centerZ, int hordeSize) {
+        int diameterX = 5;
+        int diameterZ = 5;
+        int j = centerX + randomIn.nextInt(diameterX);
+        int k = centerZ + randomIn.nextInt(diameterZ);
+        int l = j;
+        int i1 = k;
+
+        for (int j1 = 0; j1 < hordeSize; ++j1) {
+            boolean flag = false;
+
+            ResourceLocation rl = EntityList.getKey(parent);
+            if (rl != null) {
+                Entity entity = EntityList.createEntityByIDFromName(rl, worldIn);
+
+                if (entity != null && ChampionHelper.isValidChampion(entity)) {
+                    EntityLiving hordeEntity = (EntityLiving)entity;
+                    IChampionship chp = CapabilityChampionship.getChampionship(hordeEntity);
+
+                    if (chp != null) {
+                        chp.setRank(RankManager.getEmptyRank());
+                    }
+
+                    for (int k1 = 0; !flag && k1 < 4; ++k1) {
+                        BlockPos blockpos = worldIn.getTopSolidOrLiquidBlock(new BlockPos(j, 0, k));
+
+                        if (WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntityLiving.SpawnPlacementType.ON_GROUND,
+                                worldIn, blockpos)) {
+
+                            if (net.minecraftforge.event.ForgeEventFactory.canEntitySpawn(hordeEntity,
+                                    worldIn, j + 0.5f, (float) blockpos.getY(), k + 0.5f, null)
+                                    == net.minecraftforge.fml.common.eventhandler.Event.Result.DENY) {
+                                continue;
+                            }
+                            hordeEntity.setLocationAndAngles((double) ((float) j + 0.5F), (double) blockpos.getY(),
+                                    (double) ((float) k + 0.5F), randomIn.nextFloat() * 360.0F, 0.0F);
+                            worldIn.spawnEntity(hordeEntity);
+                            hordeEntity.onInitialSpawn(worldIn.getDifficultyForLocation(new BlockPos(hordeEntity)), null);
+                            flag = true;
+                        }
+
+                        j += randomIn.nextInt(5) - randomIn.nextInt(5);
+
+                        for (k += randomIn.nextInt(5) - randomIn.nextInt(5); j < centerX || j >= centerX + diameterX || k < centerZ || k >= centerZ + diameterX; k = i1 + randomIn.nextInt(5) - randomIn.nextInt(5)) {
+                            j = l + randomIn.nextInt(5) - randomIn.nextInt(5);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
