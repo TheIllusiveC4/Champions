@@ -28,24 +28,26 @@ import c4.champions.common.config.ConfigHandler;
 import c4.champions.common.rank.Rank;
 import c4.champions.common.rank.RankManager;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.monster.IMob;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityBeacon;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Tuple;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import org.apache.logging.log4j.Level;
 
 import java.lang.reflect.Field;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ChampionHelper {
@@ -54,6 +56,7 @@ public class ChampionHelper {
 
     private static Set<Integer> dimensions = Sets.newHashSet();
     private static Set<ResourceLocation> mobs = Sets.newHashSet();
+    private static Map<Integer, List<Tuple<ItemStack, Boolean>>> drops = Maps.newHashMap();
 
     public static boolean isValidChampion(final Entity entity) {
         return entity instanceof EntityLiving && entity instanceof IMob && isValidEntity(entity);
@@ -283,5 +286,70 @@ public class ChampionHelper {
                 }
             }
         }
+
+        if (ConfigHandler.lootDrops.length > 0) {
+
+            for (String s : ConfigHandler.lootDrops) {
+                String[] parsed = s.split(";");
+
+                if (parsed.length > 0) {
+                    int tier;
+                    ItemStack stack = ItemStack.EMPTY;
+                    int metadata = 0;
+                    int stackSize = 1;
+                    boolean enchant = false;
+
+                    if (parsed.length < 2) {
+                        Champions.logger.log(Level.ERROR, s + " needs at least a tier and an item name");
+                        continue;
+                    }
+
+                    try {
+                        tier = Integer.parseInt(parsed[0]);
+                    } catch (NumberFormatException e) {
+                        Champions.logger.log(Level.ERROR, parsed[0] + " is not a valid tier");
+                        continue;
+                    }
+
+                    Item item = Item.getByNameOrId(parsed[1]);
+
+                    if (item == null) {
+                        Champions.logger.log(Level.ERROR, "Item not found!" + parsed[1]);
+                        continue;
+                    }
+
+                    if (parsed.length > 2) {
+
+                        try {
+                            metadata = Integer.parseInt(parsed[2]);
+                        } catch (NumberFormatException e) {
+                            Champions.logger.log(Level.ERROR, parsed[2] + " is not a valid metadata");
+                        }
+
+                        if (parsed.length > 3) {
+
+                            try {
+                                stackSize = Integer.parseInt(parsed[3]);
+                            } catch (NumberFormatException e) {
+                                Champions.logger.log(Level.ERROR, parsed[3] + " is not a valid stack size");
+                            }
+
+                            if (parsed.length > 4) {
+
+                                if (parsed[4].equalsIgnoreCase("true")) {
+                                    enchant = true;
+                                }
+                            }
+                        }
+                    }
+                    stack = new ItemStack(item, stackSize, metadata);
+                    drops.computeIfAbsent(tier, list -> Lists.newArrayList()).add(new Tuple<>(stack, enchant));
+                }
+            }
+        }
+    }
+
+    public static List<Tuple<ItemStack, Boolean>> getDrops(int tier) {
+        return drops.getOrDefault(tier, Lists.newArrayList());
     }
 }

@@ -53,6 +53,16 @@ public class ConfigHandler {
     @RequiresMcRestart
     public static String[] mobList = new String[]{};
 
+    @Name("Loot Source")
+    @Comment("Set whether champion mobs drop loot from the loot table, config, or both")
+    public static LootSource lootSource = LootSource.LOOT_TABLE;
+
+    @Name("Loot Drops")
+    @Comment("Sets the loot drops from champions if loot source is set to CONFIG, format is tier;modid:name;metadata;" +
+            "stacksize;enchant(true/false)")
+    @RequiresMcRestart
+    public static String[] lootDrops = new String[]{};
+
     @Name("Client Settings")
     @Comment("Settings that are only client-side")
     public static Client client = new Client();
@@ -98,6 +108,12 @@ public class ConfigHandler {
     public enum PermissionMode {
         BLACKLIST,
         WHITELIST;
+    }
+
+    public enum LootSource {
+        LOOT_TABLE,
+        CONFIG,
+        BOTH
     }
 
     @Mod.EventBusSubscriber(modid = Champions.MODID)

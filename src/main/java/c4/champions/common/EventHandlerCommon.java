@@ -24,6 +24,7 @@ import c4.champions.common.capability.CapabilityChampionship;
 import c4.champions.common.capability.IChampionship;
 import c4.champions.common.config.ConfigHandler;
 import c4.champions.common.util.ChampionHelper;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -32,6 +33,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.storage.loot.LootContext;
 import net.minecraft.world.storage.loot.LootTable;
@@ -56,23 +58,42 @@ public class EventHandlerCommon {
             if (chp != null && ChampionHelper.isElite(chp.getRank())) {
 
                 if (entity.world instanceof WorldServer) {
-                    WorldServer world = (WorldServer) entity.world;
-                    LootTable table = world.getLootTableManager().getLootTableFromLocation(CHAMPION_LOOT);
-                    DamageSource source = evt.getSource();
-                    LootContext.Builder builder = new LootContext.Builder(world).withDamageSource(evt.getSource()).withLootedEntity(entity);
 
-                    if (source.getTrueSource() instanceof EntityPlayer) {
-                        EntityPlayer player = (EntityPlayer) source.getTrueSource();
-                        builder.withPlayer(player).withLuck(player.getLuck());
+                    if (ConfigHandler.lootSource != ConfigHandler.LootSource.CONFIG) {
+                        WorldServer world = (WorldServer) entity.world;
+                        LootTable table = world.getLootTableManager().getLootTableFromLocation(CHAMPION_LOOT);
+                        DamageSource source = evt.getSource();
+                        LootContext.Builder builder = new LootContext.Builder(world).withDamageSource(evt.getSource()).withLootedEntity(entity);
+
+
+                        if (source.getTrueSource() instanceof EntityPlayer) {
+                            EntityPlayer player = (EntityPlayer) source.getTrueSource();
+                            builder.withPlayer(player).withLuck(player.getLuck());
+                        }
+                        LootContext ctx = builder.build();
+                        List<ItemStack> stacks = table.generateLootForPools(world.rand, ctx);
+
+                        for (ItemStack stack : stacks) {
+                            EntityItem entityitem = new EntityItem(entity.world, entity.posX, entity.posY, entity.posZ,
+                                    stack);
+                            entityitem.setDefaultPickupDelay();
+                            evt.getDrops().add(entityitem);
+                        }
                     }
-                    LootContext ctx = builder.build();
-                    List<ItemStack> stacks = table.generateLootForPools(world.rand, ctx);
 
-                    for (ItemStack stack : stacks) {
-                        EntityItem entityitem = new EntityItem(entity.world, entity.posX, entity.posY, entity.posZ,
-                                stack);
-                        entityitem.setDefaultPickupDelay();
-                        evt.getDrops().add(entityitem);
+                    if (ConfigHandler.lootSource != ConfigHandler.LootSource.LOOT_TABLE) {
+
+                        for (Tuple<ItemStack, Boolean> dropEntry : ChampionHelper.getDrops(chp.getRank().getTier())) {
+                            ItemStack drop = dropEntry.getFirst().copy();
+
+                            if (dropEntry.getSecond()) {
+                                EnchantmentHelper.addRandomEnchantment(entity.getRNG(), drop, 30, true);
+                            }
+                            EntityItem entityitem = new EntityItem(entity.world, entity.posX, entity.posY, entity.posZ,
+                                    drop);
+                            entityitem.setDefaultPickupDelay();
+                            evt.getDrops().add(entityitem);
+                        }
                     }
                 }
             }
