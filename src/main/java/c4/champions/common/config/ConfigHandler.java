@@ -71,6 +71,43 @@ public class ConfigHandler {
     @Comment("Settings that affect the growth rate of champion mobs")
     public static Growth growth = new Growth();
 
+    @Name("Affix Settings")
+    @Comment("Settings that affect individual affixes")
+    public static Affix affix = new Affix();
+
+    public static class Affix {
+
+        @Name("Horde")
+        @Comment("Settings for the Horde affix")
+        public Horde horde = new Horde();
+
+        @Name("Lively")
+        @Comment("Settings for the Lively affix")
+        public Lively lively = new Lively();
+
+        public class Horde {
+
+            @Name("Base Additional Mobs")
+            @Comment("The base number of mobs to spawn with the champion")
+            public int hordeSize = 2;
+
+            @Name("Tier Multiplier")
+            @Comment("The number to multiply by the tier to add to the base number to spawn")
+            public int multiplier = 2;
+        }
+
+        public class Lively {
+
+            @Name("Heal Amount")
+            @Comment("The amount of health per second regeneration")
+            public double healAmount = 1.0d;
+
+            @Name("Passive Multiplier")
+            @Comment("Multiplier to health regeneration when not aggressive")
+            public double passiveMultiplier = 5.0d;
+        }
+    }
+
     public static class Growth {
 
         @Name("Health")

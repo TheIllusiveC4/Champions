@@ -37,6 +37,23 @@ champions.general.lootsource.tooltip=Set whether champion mobs drop loot from th
 champions.general.lootdrops=Loot Drops
 champions.general.lootdrops.tooltip=Sets the loot drops from champions if loot source is set to CONFIG, format is tier;modid:name;metadata;stacksize;enchant(true/false)
 
+champions.general.affix=Affix Settings
+champions.general.affix.tooltip=Settings that affect individual affixes
+
+champions.general.affix.horde=Horde
+champions.general.affix.horde.tooltip=Settings for the Horde affix
+champions.general.affix.horde.hordesize=Horde Size
+champions.general.affix.horde.hordesize.tooltip=The base number of mobs to spawn with the champion
+champions.general.affix.horde.multiplier=Tier Multiplier
+champions.general.affix.horde.multiplier.tooltip=The number to multiply by the tier to add to the base number to spawn
+
+champions.general.affix.lively=Lively
+champions.general.affix.lively.tooltip=Settings for the Lively affix
+champions.general.affix.lively.healamount=Heal Amount
+champions.general.affix.lively.healamount.tooltip=The amount of health per second regeneration
+champions.general.affix.lively.passivemultiplier=Passive Multiplier
+champions.general.affix.lively.passivemultiplier.tooltip=Multiplier to health regeneration when not aggressive
+
 champions.general.client=Client Settings
 champions.general.client.tooltip=Settings that are only client-side
 champions.general.client.colors=Rank Colors

@@ -23,6 +23,7 @@ import c4.champions.common.affix.core.AffixBase;
 import c4.champions.common.affix.core.AffixCategory;
 import c4.champions.common.capability.CapabilityChampionship;
 import c4.champions.common.capability.IChampionship;
+import c4.champions.common.config.ConfigHandler;
 import c4.champions.common.rank.RankManager;
 import c4.champions.common.util.ChampionHelper;
 import net.minecraft.entity.Entity;
@@ -44,7 +45,7 @@ public class AffixHorde extends AffixBase {
 
     @Override
     public void onInitialSpawn(EntityLiving entity, IChampionship cap) {
-        int size = 2 + cap.getRank().getTier() * 2;
+        int size = ConfigHandler.affix.horde.hordeSize + cap.getRank().getTier() * ConfigHandler.affix.horde.multiplier;
         Chunk chunk = entity.world.getChunk(entity.getPosition());
         performHordeSpawning(entity.world, entity, entity.getRNG(), chunk.x * 16 + 8, chunk.z * 16 + 8, size);
     }

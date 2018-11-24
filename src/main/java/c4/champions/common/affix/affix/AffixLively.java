@@ -22,6 +22,7 @@ package c4.champions.common.affix.affix;
 import c4.champions.common.affix.core.AffixBase;
 import c4.champions.common.affix.core.AffixCategory;
 import c4.champions.common.capability.IChampionship;
+import c4.champions.common.config.ConfigHandler;
 import net.minecraft.entity.EntityLiving;
 
 public class AffixLively extends AffixBase {
@@ -34,12 +35,12 @@ public class AffixLively extends AffixBase {
     public void onUpdate(EntityLiving entity, IChampionship cap) {
 
         if (!entity.world.isRemote && entity.ticksExisted % 20 == 0) {
-            float healAmount = 1.0f;
+            double healAmount = ConfigHandler.affix.lively.healAmount;
 
             if (entity.getAttackTarget() == null) {
-                healAmount *= 5;
+                healAmount *= ConfigHandler.affix.lively.passiveMultiplier;
             }
-            entity.heal(healAmount);
+            entity.heal((float)healAmount);
         }
     }
 }
