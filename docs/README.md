@@ -23,7 +23,9 @@ Current available affixes:
 * **Horde** - Spawns with several additional mobs of its type (these mobs are always Common)
 * **Infested** - Attacking and being attacked will spawn silverfish that will attack its target
 * **Jailer** - Small chance per attack to "jail" targets, making them unable to move positions for a few seconds
+* **Lively** - Regenerates 1 health per second. This increases to 5 health per second when not attacking or pursuing any targets.
 * **Molten** - Grants fire resistance, fiery attacks, and armor penetration
+* **Plagued** - Infects nearby creatures with Plague, which adds a Wither effect and makes the creature a new Plague host
 * **Reflecting** - A small portion of damage is reflected back at the attacker
 * **Shielding** - Periodically shields itself from all damage
 * **Vortex** - Periodically pulls targets towards itself
