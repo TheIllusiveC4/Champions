@@ -26,6 +26,7 @@ import c4.champions.common.entity.EntityJail;
 import c4.champions.common.init.ChampionsRegistry;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -47,5 +48,10 @@ public class AffixJailer extends AffixBase {
             jail.setPrisoner(target);
             entity.world.spawnEntity(jail);
         }
+    }
+
+    @Override
+    public boolean canApply(EntityLiving entity) {
+        return !(entity instanceof EntityCreeper);
     }
 }

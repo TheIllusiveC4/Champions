@@ -46,7 +46,7 @@ public class AffixVortex extends AffixBase {
             if (!entity.world.isRemote) {
 
                 if (entity.ticksExisted % 40 == 0) {
-                    float chance = vortex.mode ? 0.8f : 0.3f;
+                    float chance = vortex.mode ? 0.7f : 0.4f;
 
                     if (entity.getRNG().nextFloat() < chance) {
                         vortex.mode = !vortex.mode;
@@ -58,7 +58,7 @@ public class AffixVortex extends AffixBase {
                     double x = entity.posX;
                     double y = entity.posY;
                     double z = entity.posZ;
-                    float strength = 0.07f;
+                    float strength = 0.005f;
                     Vector3d vec = new Vector3d(x, y, z);
                     vec.sub(new Vector3d(target.posX, target.posY, target.posZ));
                     vec.normalize();
