@@ -20,8 +20,13 @@
 package c4.champions.common.potion;
 
 import c4.champions.Champions;
+import c4.champions.common.affix.Affixes;
+import c4.champions.common.capability.CapabilityChampionship;
+import c4.champions.common.capability.IChampionship;
+import c4.champions.common.util.ChampionHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.Potion;
@@ -53,11 +58,19 @@ public class PotionPlague extends Potion {
 
         if (!entityLivingBaseIn.world.isRemote) {
             List<EntityLivingBase> entities = entityLivingBaseIn.world.getEntitiesWithinAABB(EntityLivingBase.class,
-                    entityLivingBaseIn.getEntityBoundingBox().grow(4, 4, 4));
+                    entityLivingBaseIn.getEntityBoundingBox().grow(3));
 
             if (!entities.isEmpty()) {
 
                 for (EntityLivingBase ent : entities) {
+
+                    if (ChampionHelper.isValidChampion(ent)) {
+                        IChampionship chp = CapabilityChampionship.getChampionship((EntityLiving)ent);
+
+                        if (chp != null && chp.getAffixes().contains(Affixes.plagued.getIdentifier())) {
+                            continue;
+                        }
+                    }
 
                     if (!ent.isPotionActive(MobEffects.WITHER) || (ent.isPotionActive(MobEffects.WITHER) && ent
                             .getActivePotionEffect(MobEffects.WITHER).getDuration() <= 20)) {

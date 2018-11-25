@@ -58,7 +58,7 @@ public class AffixVortex extends AffixBase {
                     double x = entity.posX;
                     double y = entity.posY;
                     double z = entity.posZ;
-                    float strength = 0.005f;
+                    float strength = 0.0005f;
                     Vector3d vec = new Vector3d(x, y, z);
                     vec.sub(new Vector3d(target.posX, target.posY, target.posZ));
                     vec.normalize();
