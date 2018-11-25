@@ -53,6 +53,8 @@ champions.general.affix.lively.healamount=Heal Amount
 champions.general.affix.lively.healamount.tooltip=The amount of health per second regeneration
 champions.general.affix.lively.passivemultiplier=Passive Multiplier
 champions.general.affix.lively.passivemultiplier.tooltip=Multiplier to health regeneration when not aggressive
+champions.general.affix.lively.cooldown=Cooldown on Attacked
+champions.general.affix.lively.cooldown.tooltip=Set cooldown (in seconds) for regeneration after getting attacked
 
 champions.general.client=Client Settings
 champions.general.client.tooltip=Settings that are only client-side

@@ -105,6 +105,10 @@ public class ConfigHandler {
             @Name("Passive Multiplier")
             @Comment("Multiplier to health regeneration when not aggressive")
             public double passiveMultiplier = 5.0d;
+
+            @Name("Cooldown on Attacked")
+            @Comment("Set cooldown (in seconds) for regeneration after getting attacked")
+            public int cooldown = 3;
         }
     }
 
