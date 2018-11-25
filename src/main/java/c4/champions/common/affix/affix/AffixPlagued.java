@@ -25,11 +25,16 @@ import c4.champions.common.affix.core.AffixBase;
 import c4.champions.common.affix.core.AffixCategory;
 import c4.champions.common.capability.IChampionship;
 import c4.champions.common.init.ChampionsRegistry;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+
+import java.util.List;
 
 public class AffixPlagued extends AffixBase {
 
@@ -41,7 +46,19 @@ public class AffixPlagued extends AffixBase {
     public void onUpdate(EntityLiving entity, IChampionship cap) {
 
         if (!entity.world.isRemote) {
-            entity.addPotionEffect(new PotionEffect(ChampionsRegistry.plague, 100));
+            List<Entity> list = entity.world.getEntitiesWithinAABBExcludingEntity(entity, entity.getEntityBoundingBox
+                    ().grow(3));
+
+            for (Entity entity1 : list) {
+
+                if (entity1 instanceof EntityLivingBase) {
+                    EntityLivingBase target = (EntityLivingBase)entity1;
+
+                    if (canEntityBeInfected(entity, target)) {
+                        target.addPotionEffect(new PotionEffect(ChampionsRegistry.plague, 300));
+                    }
+                }
+            }
         }
     }
 
@@ -62,5 +79,11 @@ public class AffixPlagued extends AffixBase {
     @Override
     public boolean isCompatibleWith(IAffix affix) {
         return affix != Affixes.horde;
+    }
+
+    public static boolean canEntityBeInfected(EntityLivingBase host, EntityLivingBase target) {
+        return host.world.rayTraceBlocks(new Vec3d(host.posX, host.posY + host.height / 2.0f, host.posZ), new
+                Vec3d(target.posX, target.posY + target.height / 2.0f, target.posZ),
+                true, true, false) == null;
     }
 }

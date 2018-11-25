@@ -21,6 +21,7 @@ package c4.champions.common.potion;
 
 import c4.champions.Champions;
 import c4.champions.common.affix.Affixes;
+import c4.champions.common.affix.affix.AffixPlagued;
 import c4.champions.common.capability.CapabilityChampionship;
 import c4.champions.common.capability.IChampionship;
 import c4.champions.common.util.ChampionHelper;
@@ -64,21 +65,24 @@ public class PotionPlague extends Potion {
 
                 for (EntityLivingBase ent : entities) {
 
-                    if (ChampionHelper.isValidChampion(ent)) {
-                        IChampionship chp = CapabilityChampionship.getChampionship((EntityLiving)ent);
+                    if (AffixPlagued.canEntityBeInfected(entityLivingBaseIn, ent)) {
 
-                        if (chp != null && chp.getAffixes().contains(Affixes.plagued.getIdentifier())) {
-                            continue;
+                        if (ChampionHelper.isValidChampion(ent)) {
+                            IChampionship chp = CapabilityChampionship.getChampionship((EntityLiving) ent);
+
+                            if (chp != null && chp.getAffixes().contains(Affixes.plagued.getIdentifier())) {
+                                continue;
+                            }
                         }
-                    }
 
-                    if (!ent.isPotionActive(MobEffects.WITHER) || (ent.isPotionActive(MobEffects.WITHER) && ent
-                            .getActivePotionEffect(MobEffects.WITHER).getDuration() <= 20)) {
-                        ent.addPotionEffect(new PotionEffect(MobEffects.WITHER, 200, 0));
-                    }
+                        if (!ent.isPotionActive(MobEffects.WITHER) || (ent.isPotionActive(MobEffects.WITHER) && ent
+                                .getActivePotionEffect(MobEffects.WITHER).getDuration() <= 20)) {
+                            ent.addPotionEffect(new PotionEffect(MobEffects.WITHER, 200, 0));
+                        }
 
-                    if (!ent.isPotionActive(this) && ent != entityLivingBaseIn) {
-                        ent.addPotionEffect(new PotionEffect(this, 300));
+                        if (!ent.isPotionActive(this) && ent != entityLivingBaseIn) {
+                            ent.addPotionEffect(new PotionEffect(this, 300));
+                        }
                     }
                 }
             }
