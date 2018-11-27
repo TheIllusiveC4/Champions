@@ -82,15 +82,10 @@ public class EventHandlerCommon {
                     }
 
                     if (ConfigHandler.lootSource != ConfigHandler.LootSource.LOOT_TABLE) {
+                        ItemStack loot = ChampionHelper.getLootDrop(chp.getRank().getTier());
 
-                        for (Tuple<ItemStack, Boolean> dropEntry : ChampionHelper.getDrops(chp.getRank().getTier())) {
-                            ItemStack drop = dropEntry.getFirst().copy();
-
-                            if (dropEntry.getSecond()) {
-                                EnchantmentHelper.addRandomEnchantment(entity.getRNG(), drop, 30, true);
-                            }
-                            EntityItem entityitem = new EntityItem(entity.world, entity.posX, entity.posY, entity.posZ,
-                                    drop);
+                        if (!loot.isEmpty()) {
+                            EntityItem entityitem = new EntityItem(entity.world, entity.posX, entity.posY, entity.posZ, loot);
                             entityitem.setDefaultPickupDelay();
                             evt.getDrops().add(entityitem);
                         }

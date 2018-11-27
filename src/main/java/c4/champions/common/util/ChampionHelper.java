@@ -31,6 +31,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -56,7 +57,7 @@ public class ChampionHelper {
 
     private static Set<Integer> dimensions = Sets.newHashSet();
     private static Set<ResourceLocation> mobs = Sets.newHashSet();
-    private static Map<Integer, List<Tuple<ItemStack, Boolean>>> drops = Maps.newHashMap();
+    private static Map<Integer, List<LootData>> drops = Maps.newHashMap();
 
     public static boolean isValidChampion(final Entity entity) {
         return entity instanceof EntityLiving && entity instanceof IMob && isValidEntity(entity);
@@ -294,10 +295,11 @@ public class ChampionHelper {
 
                 if (parsed.length > 0) {
                     int tier;
-                    ItemStack stack = ItemStack.EMPTY;
+                    ItemStack stack;
                     int metadata = 0;
                     int stackSize = 1;
                     boolean enchant = false;
+                    int weight = 1;
 
                     if (parsed.length < 2) {
                         Champions.logger.log(Level.ERROR, s + " needs at least a tier and an item name");
@@ -339,17 +341,63 @@ public class ChampionHelper {
                                 if (parsed[4].equalsIgnoreCase("true")) {
                                     enchant = true;
                                 }
+
+                                if (parsed.length > 5) {
+                                    try {
+                                        weight = Integer.parseInt(parsed[5]);
+                                    } catch (NumberFormatException e) {
+                                        Champions.logger.log(Level.ERROR, parsed[5] + " is not a valid weight");
+                                    }
+                                }
                             }
                         }
                     }
                     stack = new ItemStack(item, stackSize, metadata);
-                    drops.computeIfAbsent(tier, list -> Lists.newArrayList()).add(new Tuple<>(stack, enchant));
+                    drops.computeIfAbsent(tier, list -> Lists.newArrayList()).add(new LootData(stack, enchant, weight));
                 }
             }
         }
     }
 
-    public static List<Tuple<ItemStack, Boolean>> getDrops(int tier) {
-        return drops.getOrDefault(tier, Lists.newArrayList());
+    public static ItemStack getLootDrop(int tier) {
+        double totalWeight = 0;
+        List<LootData> data = drops.getOrDefault(tier, Lists.newArrayList());
+
+        for (LootData loot : data) {
+            totalWeight += loot.weight;
+        }
+        double random = rand.nextDouble() * totalWeight;
+        double countWeight = 0;
+
+        for (LootData loot : data) {
+            countWeight += loot.weight;
+
+            if (countWeight >= random) {
+                return loot.getLootStack();
+            }
+        }
+        return ItemStack.EMPTY;
+    }
+
+    private static class LootData {
+
+        private ItemStack stack;
+        private boolean enchant;
+        private int weight;
+
+        LootData(ItemStack stack, boolean enchant, int weight) {
+            this.stack = stack;
+            this.enchant = enchant;
+            this.weight = weight;
+        }
+
+        public ItemStack getLootStack() {
+            ItemStack loot = stack.copy();
+
+            if (enchant) {
+                EnchantmentHelper.addRandomEnchantment(rand, loot, 30, true);
+            }
+            return loot;
+        }
     }
 }

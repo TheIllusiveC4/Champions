@@ -59,7 +59,7 @@ public class ConfigHandler {
 
     @Name("Loot Drops")
     @Comment("Sets the loot drops from champions if loot source is set to CONFIG, format is tier;modid:name;metadata;" +
-            "stacksize;enchant(true/false)")
+            "stacksize;enchant(true/false);weight")
     @RequiresMcRestart
     public static String[] lootDrops = new String[]{};
 

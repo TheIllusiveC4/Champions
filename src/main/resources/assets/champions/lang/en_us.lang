@@ -35,7 +35,7 @@ champions.general.moblist.tooltip=Set which mobs are blacklisted or whitelisted 
 champions.general.lootsource=Loot Source
 champions.general.lootsource.tooltip=Set whether champion mobs drop loot from the loot table, config, or both
 champions.general.lootdrops=Loot Drops
-champions.general.lootdrops.tooltip=Sets the loot drops from champions if loot source is set to CONFIG, format is tier;modid:name;metadata;stacksize;enchant(true/false)
+champions.general.lootdrops.tooltip=Sets the loot drops from champions if loot source is set to CONFIG, format is tier;modid:name;metadata;stacksize;enchant(true/false);weight
 
 champions.general.affix=Affix Settings
 champions.general.affix.tooltip=Settings that affect individual affixes
