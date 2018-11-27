@@ -7,6 +7,19 @@ This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 ## [Unreleased]
 ### Added
 - Config options for certain affix settings, currently there are settings for the Horde and Lively affixes
+- Loot weight as a parameter to the loot config option
+- Config option for target ability range
+
+### Changed
+- Desecrator and Vortex now require line of sight before activating
+- Lively regeneration will now pause for a short time when attacked, this cooldown is configurable in the configs
+- Jailer can no longer spawn on Creepers
+- Vortex will activate slightly more often, but is much weaker now
+- Plagued now checks for line of sight before infecting entities
+- Horde minions will now stay close to the champion and attack whatever the champion attacks
+
+### Fixed
+- Horde minions spawning far from the champion
 
 ## [0.3] - 2018.11.23
 ### Added
