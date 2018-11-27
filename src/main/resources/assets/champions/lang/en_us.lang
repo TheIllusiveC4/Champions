@@ -39,6 +39,8 @@ champions.general.lootdrops.tooltip=Sets the loot drops from champions if loot s
 
 champions.general.affix=Affix Settings
 champions.general.affix.tooltip=Settings that affect individual affixes
+champions.general.affix.abilityrange=Maximum Ability Range
+champions.general.affix.abilityrange.tooltip=Set the maximum distance that mobs can use their targeted abilities from, 0 to disable
 
 champions.general.affix.horde=Horde
 champions.general.affix.horde.tooltip=Settings for the Horde affix

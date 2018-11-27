@@ -38,12 +38,11 @@ public class AffixVortex extends AffixBase {
     @Override
     public void onUpdate(EntityLiving entity, IChampionship cap) {
 
-        EntityLivingBase target = entity.getAttackTarget();
+        if (!entity.world.isRemote) {
+            EntityLivingBase target = entity.getAttackTarget();
 
-        if (target != null) {
-            AffixNBT.Boolean vortex = AffixNBT.getData(cap, getIdentifier(), AffixNBT.Boolean.class);
-
-            if (!entity.world.isRemote) {
+            if (isValidAffixTarget(entity, target, true)) {
+                AffixNBT.Boolean vortex = AffixNBT.getData(cap, getIdentifier(), AffixNBT.Boolean.class);
 
                 if (entity.ticksExisted % 40 == 0) {
                     float chance = vortex.mode ? 0.7f : 0.4f;

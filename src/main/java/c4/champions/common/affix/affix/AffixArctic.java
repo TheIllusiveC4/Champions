@@ -52,7 +52,7 @@ public class AffixArctic extends AffixBase {
         @Override
         public boolean shouldExecute() {
             EntityLivingBase entitylivingbase = entity.getAttackTarget();
-            return entitylivingbase != null && entitylivingbase.isEntityAlive() && entitylivingbase.world.getDifficulty()
+            return isValidAffixTarget(entity, entitylivingbase, false) && entitylivingbase.world.getDifficulty()
                     != EnumDifficulty.PEACEFUL;
         }
 
@@ -63,7 +63,6 @@ public class AffixArctic extends AffixBase {
 
         @Override
         public void updateTask() {
-
             if (entity.world.getDifficulty() != EnumDifficulty.PEACEFUL) {
                 --this.attackTime;
                 EntityLivingBase entitylivingbase = entity.getAttackTarget();
@@ -79,7 +78,6 @@ public class AffixArctic extends AffixBase {
                                 entity.getRNG().nextFloat()) * 0.2F + 1.0F);
                     }
                 }
-                super.updateTask();
             }
         }
     }

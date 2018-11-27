@@ -22,8 +22,11 @@ package c4.champions.common.affix.core;
 import c4.champions.common.affix.AffixRegistry;
 import c4.champions.common.affix.IAffix;
 import c4.champions.common.capability.IChampionship;
+import c4.champions.common.config.ConfigHandler;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -119,5 +122,21 @@ public abstract class AffixBase implements IAffix {
     @Override
     public int getTier() {
         return tier;
+    }
+
+    public static boolean isValidAffixTarget(EntityLiving mob, EntityLivingBase target, boolean checkSight) {
+
+        if (target == null || !target.isEntityAlive()) {
+            return false;
+        }
+
+        if (checkSight && !mob.canEntityBeSeen(target)) {
+            return false;
+        }
+        IAttributeInstance iattributeinstance = mob.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE);
+        double targetRange = iattributeinstance == null ? 16.0D : iattributeinstance.getAttributeValue();
+        targetRange = ConfigHandler.affix.abilityRange == 0 ? targetRange : Math.min(targetRange, ConfigHandler.affix
+                .abilityRange);
+        return mob.getDistance(target) <= targetRange;
     }
 }

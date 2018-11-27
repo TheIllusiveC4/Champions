@@ -63,7 +63,7 @@ public class AffixDesecrator extends AffixBase {
         @Override
         public boolean shouldExecute() {
             EntityLivingBase entitylivingbase = entity.getAttackTarget();
-            return entitylivingbase != null && entitylivingbase.isEntityAlive() && entitylivingbase.world.getDifficulty()
+            return isValidAffixTarget(entity, entitylivingbase, true) && entitylivingbase.world.getDifficulty()
                     != EnumDifficulty.PEACEFUL;
         }
 

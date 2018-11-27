@@ -77,6 +77,10 @@ public class ConfigHandler {
 
     public static class Affix {
 
+        @Name("Maximum Ability Range")
+        @Comment("Set the maximum distance that mobs can use their targeted abilities from, 0 to disable")
+        public int abilityRange = 0;
+
         @Name("Horde")
         @Comment("Settings for the Horde affix")
         public Horde horde = new Horde();
