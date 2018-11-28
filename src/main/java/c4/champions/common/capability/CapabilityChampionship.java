@@ -22,6 +22,7 @@ package c4.champions.common.capability;
 import c4.champions.Champions;
 import c4.champions.common.affix.AffixRegistry;
 import c4.champions.common.affix.IAffix;
+import c4.champions.common.config.ConfigHandler;
 import c4.champions.common.rank.Rank;
 import c4.champions.common.rank.RankManager;
 import c4.champions.common.util.ChampionHelper;
@@ -39,7 +40,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -184,7 +185,7 @@ public final class CapabilityChampionship {
         }
 
         @SubscribeEvent
-        public static void entitySpawn(EntityJoinWorldEvent evt) {
+        public static void entitySpawn(LivingSpawnEvent.SpecialSpawn evt) {
             Entity entity = evt.getEntity();
 
             if (!entity.world.isRemote && ChampionHelper.isValidChampion(entity)) {
@@ -192,6 +193,11 @@ public final class CapabilityChampionship {
                 IChampionship chp = getChampionship(living);
 
                 if (chp != null) {
+
+                    if (evt.getSpawner() != null && !ConfigHandler.championSpawners) {
+                        chp.setRank(RankManager.getEmptyRank());
+                        return;
+                    }
 
                     if (chp.getRank() == null) {
 
@@ -210,17 +216,6 @@ public final class CapabilityChampionship {
                                 if (affix != null) {
                                     affix.onInitialSpawn(living, chp);
                                 }
-                            }
-                        }
-                    }
-
-                    if (chp.getRank().getTier() > 0) {
-
-                        for (String s : chp.getAffixes()) {
-                            IAffix affix = AffixRegistry.getAffix(s);
-
-                            if (affix != null) {
-                                affix.onSpawn(living, chp);
                             }
                         }
                     }

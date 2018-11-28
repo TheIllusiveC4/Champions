@@ -24,6 +24,8 @@ champions.plague=Plague
 #################
 #    Config     #
 #################
+champions.general.championspawners=Champions from Spawners
+champions.general.championspawners.tooltip=Set whether champions can spawn from mob spawners
 champions.general.dimensionpermission=Dimension Permission Mode
 champions.general.dimensionpermission.tooltip=Set whether the dimension configuration is blacklisted or whitelisted
 champions.general.dimensionlist=Dimension List

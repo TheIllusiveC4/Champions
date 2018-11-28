@@ -32,6 +32,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @Config(modid = Champions.MODID)
 public class ConfigHandler {
 
+    @Name("Champions from Spawners")
+    @Comment("Set whether champions can spawn from mob spawners")
+    public static boolean championSpawners = false;
+
     @Name("Dimension Permission Mode")
     @Comment("Set whether the dimension configuration is blacklisted or whitelisted")
     @RequiresMcRestart

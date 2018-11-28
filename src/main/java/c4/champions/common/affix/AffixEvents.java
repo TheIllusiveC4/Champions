@@ -26,10 +26,31 @@ import c4.champions.common.capability.IChampionship;
 import c4.champions.common.util.ChampionHelper;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class AffixEvents {
+
+    @SubscribeEvent
+    public void onLivingJoinWorld(EntityJoinWorldEvent evt) {
+
+        if (ChampionHelper.isValidChampion(evt.getEntity())) {
+            EntityLiving living = (EntityLiving)evt.getEntity();
+            IChampionship chp = CapabilityChampionship.getChampionship(living);
+
+            if (chp != null) {
+
+                for (String aff : chp.getAffixes()) {
+                    AffixBase affix = AffixRegistry.getAffix(aff);
+
+                    if (affix != null) {
+                        affix.onSpawn(living, chp);
+                    }
+                }
+            }
+        }
+    }
 
     @SubscribeEvent
     public void onLivingUpdate(LivingEvent.LivingUpdateEvent evt) {
