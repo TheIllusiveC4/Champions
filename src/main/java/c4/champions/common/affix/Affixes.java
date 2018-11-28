@@ -37,6 +37,7 @@ public class Affixes {
     public static AffixBase hasty;
     public static AffixBase lively;
     public static AffixBase plagued;
+    public static AffixBase adaptable;
 
     public static void registerAffixes() {
         molten = new AffixMolten();
@@ -52,5 +53,6 @@ public class Affixes {
         hasty = new AffixHasty();
         lively = new AffixLively();
         plagued = new AffixPlagued();
+        adaptable = new AffixAdaptable();
     }
 }

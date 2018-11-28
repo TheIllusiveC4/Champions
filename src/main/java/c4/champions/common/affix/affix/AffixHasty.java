@@ -25,10 +25,7 @@ import c4.champions.common.capability.IChampionship;
 import c4.champions.common.config.ConfigHandler;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
-
-import java.util.UUID;
 
 public class AffixHasty extends AffixBase {
 

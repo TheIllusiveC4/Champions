@@ -98,6 +98,23 @@ public abstract class AffixNBT {
         }
     }
 
+    public static class Text extends AffixNBT {
+
+        public String text;
+
+        @Override
+        public void readFromNBT(NBTTagCompound tag) {
+            text = tag.getString("text");
+        }
+
+        @Override
+        public NBTTagCompound writeToNBT() {
+            NBTTagCompound compound = new NBTTagCompound();
+            compound.setString("text", text);
+            return compound;
+        }
+    }
+
     public static class Integer extends AffixNBT {
 
         public int num;
