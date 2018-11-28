@@ -103,8 +103,8 @@ public class CommandSpawnChampion extends CommandBase {
             argAffix.add(args[i]);
         }
 
-        if (sender instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer)sender;
+        if (sender.getCommandSenderEntity() instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer)(sender.getCommandSenderEntity());
             BlockPos pos = player.getPosition().offset(player.getHorizontalFacing(), 2);
             living.setPosition(pos.getX(), pos.getY(), pos.getZ());
             IChampionship chp = CapabilityChampionship.getChampionship(living);
@@ -133,6 +133,7 @@ public class CommandSpawnChampion extends CommandBase {
                     }
                 }
             }
+            living.onInitialSpawn(player.world.getDifficultyForLocation(pos), null);
             player.world.spawnEntity(living);
             notifyCommandListener(sender, this, Champions.MODID + ".commands.spawnchampion.success", pos);
         }
