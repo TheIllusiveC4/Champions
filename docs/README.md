@@ -16,6 +16,7 @@ Affixes, like ranks, can also be configured through the use of the **affixes.jso
 
 Current available affixes:
 
+* **Adaptable** - Champion will take less and less damage from the same consecutive damage type
 * **Arctic** - Continuously fires homing projectiles that will slow anyone they hit
 * **Dampening** - Reduces the damage of indirect attacks
 * **Desecrator** - Periodically spawns a cloud of harming underneath its target

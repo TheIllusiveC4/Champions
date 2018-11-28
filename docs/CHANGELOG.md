@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
+## [0.5] - 2018.11.28
+### Added
+- Adaptable affix - Champion will take less and less damage from the same consecutive damage type
+- Config option to control whether champions can spawn from mob spawners
+- Config option to set movement speed bonus for Hasty affix
+
+### Changed
+- Hasty affix movement speed bonus has been lowered by half
+- Plague effect now also drains hunger/adds exhaustion
+
+### Fixed
+- /spawnchampion command not working in instances where the command sender was not a player
+
 ## [0.4] - 2018.11.26
 ### Added
 - Config options for certain affix settings, currently there are settings for the Horde and Lively affixes
