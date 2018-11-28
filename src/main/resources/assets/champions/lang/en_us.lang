@@ -44,6 +44,11 @@ champions.general.affix.tooltip=Settings that affect individual affixes
 champions.general.affix.abilityrange=Maximum Ability Range
 champions.general.affix.abilityrange.tooltip=Set the maximum distance that mobs can use their targeted abilities from, 0 to disable
 
+champions.general.affix.hasty=Hasty
+champions.general.affix.hasty.tooltip=Settings for the Hasty affix
+champions.general.affix.hasty.movementbonus=Movement Bonus
+champions.general.affix.hasty.movementbonus.tooltip=The base movement speed bonus
+
 champions.general.affix.horde=Horde
 champions.general.affix.horde.tooltip=Settings for the Horde affix
 champions.general.affix.horde.hordesize=Horde Size

@@ -85,6 +85,10 @@ public class ConfigHandler {
         @Comment("Set the maximum distance that mobs can use their targeted abilities from, 0 to disable")
         public int abilityRange = 0;
 
+        @Name("Hasty")
+        @Comment("Settings for the Hasty affix")
+        public Hasty hasty = new Hasty();
+
         @Name("Horde")
         @Comment("Settings for the Horde affix")
         public Horde horde = new Horde();
@@ -92,6 +96,13 @@ public class ConfigHandler {
         @Name("Lively")
         @Comment("Settings for the Lively affix")
         public Lively lively = new Lively();
+
+        public class Hasty {
+
+            @Name("Movement Bonus")
+            @Comment("The base movement speed bonus")
+            public double movementBonus = 0.25d;
+        }
 
         public class Horde {
 
