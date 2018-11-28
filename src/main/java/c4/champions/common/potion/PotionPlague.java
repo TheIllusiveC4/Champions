@@ -29,6 +29,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
@@ -85,6 +86,10 @@ public class PotionPlague extends Potion {
                         }
                     }
                 }
+            }
+
+            if (entityLivingBaseIn instanceof EntityPlayer) {
+                ((EntityPlayer) entityLivingBaseIn).addExhaustion(0.0025f);
             }
         }
     }
