@@ -23,6 +23,7 @@ import c4.champions.Champions;
 import c4.champions.common.capability.CapabilityChampionship;
 import c4.champions.common.capability.IChampionship;
 import c4.champions.common.config.ConfigHandler;
+import c4.champions.common.init.ChampionsRegistry;
 import c4.champions.common.util.ChampionHelper;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -35,9 +36,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.storage.loot.LootContext;
 import net.minecraft.world.storage.loot.LootTable;
-import net.minecraftforge.event.entity.living.LivingDropsEvent;
-import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.List;
@@ -123,6 +122,23 @@ public class EventHandlerCommon {
                             .getTier()));
                 }
             }
+        }
+    }
+
+    @SubscribeEvent
+    public void injuredPotionHealHandler(LivingHealEvent evt) {
+        EntityLivingBase entity = evt.getEntityLiving();
+
+        if (entity.isPotionActive(ChampionsRegistry.injured)) {
+            evt.setAmount(evt.getAmount() * 0.6f);
+        }
+    }
+
+    @SubscribeEvent
+    public void injuredPotionHurtHandler(LivingDamageEvent evt) {
+
+        if (evt.getEntityLiving().isPotionActive(ChampionsRegistry.injured)) {
+            evt.setAmount(evt.getAmount() * 1.4f);
         }
     }
 }

@@ -15,12 +15,14 @@ champions.affix.hasty=Hasty
 champions.affix.lively=Lively
 champions.affix.plagued=Plagued
 champions.affix.adaptable=Adaptable
+champions.affix.scrapper=Scrapper
 
 #################
 #    Effects    #
 #################
 champions.jailed=Jailed
 champions.plague=Plague
+champions.injured=Injured
 
 #################
 #    Config     #
