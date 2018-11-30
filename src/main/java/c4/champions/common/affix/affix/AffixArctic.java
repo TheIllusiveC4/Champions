@@ -22,6 +22,7 @@ package c4.champions.common.affix.affix;
 import c4.champions.common.affix.core.AffixBase;
 import c4.champions.common.affix.core.AffixCategory;
 import c4.champions.common.capability.IChampionship;
+import c4.champions.common.config.ConfigHandler;
 import c4.champions.common.entity.EntityArcticSpark;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -58,7 +59,7 @@ public class AffixArctic extends AffixBase {
 
         @Override
         public void startExecuting() {
-            this.attackTime = 20;
+            this.attackTime = ConfigHandler.affix.arctic.attackInterval;
         }
 
         @Override
@@ -70,7 +71,7 @@ public class AffixArctic extends AffixBase {
                 if (entitylivingbase != null) {
                     entity.getLookHelper().setLookPositionWithEntity(entitylivingbase, 180.0F, 180.0F);
                     if (this.attackTime <= 0) {
-                        this.attackTime = 20 + entity.getRNG().nextInt(5) * 10;
+                        this.attackTime = ConfigHandler.affix.arctic.attackInterval + entity.getRNG().nextInt(5) * 10;
                         EntityArcticSpark spark = new EntityArcticSpark(entity.world, entity, entitylivingbase,
                                 entity.getHorizontalFacing().getAxis());
                         entity.world.spawnEntity(spark);

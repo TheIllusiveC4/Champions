@@ -23,6 +23,7 @@ import c4.champions.common.affix.core.AffixBase;
 import c4.champions.common.affix.core.AffixCategory;
 import c4.champions.common.affix.core.AffixNBT;
 import c4.champions.common.capability.IChampionship;
+import c4.champions.common.config.ConfigHandler;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
@@ -39,14 +40,14 @@ public class AffixAdaptable extends AffixBase {
         DamageType damageType = AffixNBT.getData(cap, this.getIdentifier(), DamageType.class);
 
         if (damageType.name.equalsIgnoreCase(type)) {
-            newAmount -= amount * 0.15f * damageType.count;
+            newAmount -= amount * ConfigHandler.affix.adaptable.damageReductionIncrement * damageType.count;
             damageType.count++;
         } else {
             damageType.name = type;
             damageType.count = 0;
         }
         damageType.saveData(entity);
-        return Math.max(amount * 0.1f, newAmount);
+        return Math.max(amount * (float)(1.0f - ConfigHandler.affix.adaptable.maxDamageReduction), newAmount);
     }
 
     public static class DamageType extends AffixNBT {

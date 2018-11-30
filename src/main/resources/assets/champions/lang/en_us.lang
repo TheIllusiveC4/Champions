@@ -47,6 +47,23 @@ champions.general.affix.tooltip=Settings that affect individual affixes
 champions.general.affix.abilityrange=Maximum Ability Range
 champions.general.affix.abilityrange.tooltip=Set the maximum distance that mobs can use their targeted abilities from, 0 to disable
 
+champions.general.affix.adaptable=Adaptable
+champions.general.affix.adaptable.tooltip=Settings for the Adaptable affix
+champions.general.affix.adaptable.damagereductionincrement=Damage Reduction Increment
+champions.general.affix.adaptable.damagereductionincrement.tooltip=The increase in damage reduction for each consecutive attack of the same damage type
+champions.general.affix.adaptable.maxdamagereduction=Maximum Damage Reduction
+champions.general.affix.adaptable.maxdamagereduction.tooltip=The maximum damage reduction
+
+champions.general.affix.arctic=Arctic
+champions.general.affix.arctic.tooltip=Settings for the Arctic affix
+champions.general.affix.arctic.attackinterval=Attack Interval
+champions.general.affix.arctic.attackinterval.tooltip=How often the champion will shoot projectiles (in ticks)
+
+champions.general.affix.dampening=Dampening
+champions.general.affix.dampening.tooltip=Settings for the Dampening affix
+champions.general.affix.dampening.damagereduction=Damage Reduction
+champions.general.affix.dampening.damagereduction.tooltip=The amount of damage reduction to apply to indirect attacks
+
 champions.general.affix.hasty=Hasty
 champions.general.affix.hasty.tooltip=Settings for the Hasty affix
 champions.general.affix.hasty.movementbonus=Movement Bonus

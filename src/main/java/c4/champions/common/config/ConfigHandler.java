@@ -85,6 +85,18 @@ public class ConfigHandler {
         @Comment("Set the maximum distance that mobs can use their targeted abilities from, 0 to disable")
         public int abilityRange = 0;
 
+        @Name("Adaptable")
+        @Comment("Settings for the Adaptable affix")
+        public Adaptable adaptable = new Adaptable();
+
+        @Name("Arctic")
+        @Comment("Settings for the Arctic affix")
+        public Arctic arctic = new Arctic();
+
+        @Name("Dampening")
+        @Comment("Settings for the Dampening affix")
+        public Dampening dampening = new Dampening();
+
         @Name("Hasty")
         @Comment("Settings for the Hasty affix")
         public Hasty hasty = new Hasty();
@@ -96,6 +108,31 @@ public class ConfigHandler {
         @Name("Lively")
         @Comment("Settings for the Lively affix")
         public Lively lively = new Lively();
+
+        public class Adaptable {
+
+            @Name("Damage Reduction Increment")
+            @Comment("The increase in damage reduction for each consecutive attack of the same damage type")
+            public double damageReductionIncrement = 0.15d;
+
+            @Name("Maximum Damage Reduction")
+            @Comment("The maximum damage reduction")
+            public double maxDamageReduction = 0.9d;
+        }
+
+        public class Arctic {
+
+            @Name("Attack Interval")
+            @Comment("How often the champion will shoot projectiles (in ticks)")
+            public int attackInterval = 20;
+        }
+
+        public class Dampening {
+
+            @Name("Damage Reduction")
+            @Comment("The amount of damage reduction to apply to indirect attacks")
+            public double damageReduction = 0.8d;
+        }
 
         public class Hasty {
 
