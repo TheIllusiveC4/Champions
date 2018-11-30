@@ -28,6 +28,7 @@ Current available affixes:
 * **Molten** - Grants fire resistance, fiery attacks, and armor penetration
 * **Plagued** - Infects nearby creatures with Plague, which adds a Wither effect and makes the creature a new Plague host
 * **Reflecting** - A small portion of damage is reflected back at the attacker
+* **Scrapper** - Attacks will have a moderate chance to inflict the Injured effect, which decreases healing and increases damage taken
 * **Shielding** - Periodically shields itself from all damage
 * **Vortex** - Periodically pulls targets towards itself
 
