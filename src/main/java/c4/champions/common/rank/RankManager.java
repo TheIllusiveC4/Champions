@@ -34,7 +34,7 @@ import java.util.TreeMap;
 public class RankManager {
 
     private static final Rank[] DEFAULT_RANKS = new Rank[] {
-            new Rank(1, 1, 1, 0.2f, 0xffff00),
+            new Rank(1, 1, 1, 0.05f, 0xffff00),
             new Rank(2, 2, 4, 0.2f, 0xff9900),
             new Rank(3, 3, 9, 0.2f, 0x66ffff),
             new Rank(4, 4, 16, 0.2f, 0xcc33ff)
