@@ -31,6 +31,4 @@ public interface IProxy {
     default void init(FMLInitializationEvent evt) {}
 
     default void postInit(FMLPostInitializationEvent evt) {}
-
-    default void generateRankParticles(EntityLiving living, int color) {}
 }

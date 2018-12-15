@@ -49,14 +49,4 @@ public class ClientProxy implements IProxy {
     public void init(FMLInitializationEvent evt) {
         MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
     }
-
-    @Override
-    public void generateRankParticles(EntityLiving living, int color) {
-        Minecraft.getMinecraft().effectRenderer.addEffect(
-                new ParticleRank(living.world,
-                        living.posX + (living.getRNG().nextDouble() - 0.5D) * (double)living.width,
-                        living.posY + living.getRNG().nextDouble() * (double)living.height,
-                        living.posZ + (living.getRNG().nextDouble() - 0.5D) * (double)living.width, 0, 0, 0,
-                        color));
-    }
 }
