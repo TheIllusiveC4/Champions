@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
+## [0.7] - 2018.12.15
+### Fixed
+- Particle bugs causing crashes
+
 ## [0.6] - 2018.11.29
 ### Added
 - Scrapper affix - Champion attacks will have a moderate chance to inflict the Injured effect, which decreases healing and increases damage taken
