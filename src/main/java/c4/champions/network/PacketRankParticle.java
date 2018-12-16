@@ -19,15 +19,10 @@
 
 package c4.champions.network;
 
-import c4.champions.client.fx.ParticleRank;
-import c4.champions.common.capability.CapabilityChampionship;
-import c4.champions.common.capability.IChampionship;
-import c4.champions.common.rank.RankManager;
-import c4.champions.common.util.ChampionHelper;
+import c4.champions.Champions;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -66,12 +61,7 @@ public class PacketRankParticle implements IMessage {
 
                 if (entity instanceof EntityLivingBase) {
                     EntityLivingBase living = (EntityLivingBase)entity;
-                    Minecraft.getMinecraft().effectRenderer.addEffect(
-                            new ParticleRank(living.world,
-                                    living.posX + (living.getRNG().nextDouble() - 0.5D) * (double)living.width,
-                                    living.posY + living.getRNG().nextDouble() * (double)living.height,
-                                    living.posZ + (living.getRNG().nextDouble() - 0.5D) * (double)living.width, 0, 0, 0,
-                                    message.color));
+                    Champions.proxy.generateRankParticle(living, message.color);
                 }
             });
             return null;
