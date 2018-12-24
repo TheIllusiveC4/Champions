@@ -29,7 +29,6 @@ public class Affixes {
     public static AffixBase reflecting;
     public static AffixBase vortex;
     public static AffixBase dampening;
-    public static AffixBase horde;
     public static AffixBase infested;
     public static AffixBase jailer;
     public static AffixBase arctic;
@@ -46,7 +45,6 @@ public class Affixes {
         reflecting = new AffixReflecting();
         vortex = new AffixVortex();
         dampening = new AffixDampening();
-        horde = new AffixHorde();
         infested = new AffixInfested();
         jailer = new AffixJailer();
         arctic = new AffixArctic();

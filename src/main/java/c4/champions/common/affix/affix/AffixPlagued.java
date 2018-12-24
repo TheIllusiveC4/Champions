@@ -75,11 +75,6 @@ public class AffixPlagued extends AffixBase {
         }
     }
 
-    @Override
-    public boolean isCompatibleWith(IAffix affix) {
-        return affix != Affixes.horde;
-    }
-
     public static boolean canEntityBeInfected(EntityLivingBase host, EntityLivingBase target) {
         return host.world.rayTraceBlocks(new Vec3d(host.posX, host.posY + host.height / 2.0f, host.posZ), new
                 Vec3d(target.posX, target.posY + target.height / 2.0f, target.posZ),
