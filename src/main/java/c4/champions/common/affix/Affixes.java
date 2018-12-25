@@ -38,6 +38,7 @@ public class Affixes {
     public static AffixBase plagued;
     public static AffixBase adaptable;
     public static AffixBase scrapper;
+    public static AffixBase knockback;
 
     public static void registerAffixes() {
         molten = new AffixMolten();
@@ -54,5 +55,6 @@ public class Affixes {
         plagued = new AffixPlagued();
         adaptable = new AffixAdaptable();
         scrapper = new AffixScrapper();
+        knockback = new AffixKnockback();
     }
 }
