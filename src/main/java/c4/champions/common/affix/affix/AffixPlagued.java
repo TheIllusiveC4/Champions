@@ -24,6 +24,7 @@ import c4.champions.common.affix.IAffix;
 import c4.champions.common.affix.core.AffixBase;
 import c4.champions.common.affix.core.AffixCategory;
 import c4.champions.common.capability.IChampionship;
+import c4.champions.common.config.ConfigHandler;
 import c4.champions.common.init.ChampionsRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -54,7 +55,7 @@ public class AffixPlagued extends AffixBase {
                     EntityLivingBase target = (EntityLivingBase)entity1;
 
                     if (canEntityBeInfected(entity, target)) {
-                        target.addPotionEffect(new PotionEffect(ChampionsRegistry.plague, 300));
+                        target.addPotionEffect(new PotionEffect(ChampionsRegistry.plague, ConfigHandler.affix.plagued.duration));
                     }
                 }
             }
@@ -64,7 +65,7 @@ public class AffixPlagued extends AffixBase {
     @Override
     public void onAttack(EntityLiving entity, IChampionship cap, EntityLivingBase target, DamageSource source, float
             amount, LivingAttackEvent evt) {
-        target.addPotionEffect(new PotionEffect(ChampionsRegistry.plague, 300));
+        target.addPotionEffect(new PotionEffect(ChampionsRegistry.plague, ConfigHandler.affix.plagued.duration));
     }
 
     @Override

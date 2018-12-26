@@ -22,6 +22,7 @@ package c4.champions.common.affix.affix;
 import c4.champions.common.affix.core.AffixBase;
 import c4.champions.common.affix.core.AffixCategory;
 import c4.champions.common.capability.IChampionship;
+import c4.champions.common.config.ConfigHandler;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
@@ -43,7 +44,9 @@ public class AffixReflecting extends AffixBase {
                     .getIsThornsDamage()) {
                 return newAmount;
             }
-            entityLivingBase.attackEntityFrom(source, amount * (entity.getRNG().nextFloat() * 0.25f + 0.1f));
+            float min = (float)ConfigHandler.affix.reflecting.minimumPerc;
+            entityLivingBase.attackEntityFrom(source, amount * (entity.getRNG().nextFloat() *
+                    (float)(ConfigHandler.affix.reflecting.maximumPerc - min) + min));
         }
         return newAmount;
     }

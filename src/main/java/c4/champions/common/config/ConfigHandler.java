@@ -97,17 +97,41 @@ public class ConfigHandler {
         @Comment("Settings for the Dampening affix")
         public Dampening dampening = new Dampening();
 
+        @Name("Desecrator")
+        @Comment("Settings for the Desecrator affix")
+        public Desecrator desecrator = new Desecrator();
+
         @Name("Hasty")
         @Comment("Settings for the Hasty affix")
         public Hasty hasty = new Hasty();
 
-        @Name("Horde")
-        @Comment("Settings for the Horde affix")
-        public Horde horde = new Horde();
+        @Name("Infested")
+        @Comment("Settings for the Infested affix")
+        public Infested infested = new Infested();
+
+        @Name("Jailer")
+        @Comment("Settings for the Jailer affix")
+        public Jailer jailer = new Jailer();
+
+        @Name("Knockback")
+        @Comment("Settings for the Knockback affix")
+        public Knockback knockback = new Knockback();
 
         @Name("Lively")
         @Comment("Settings for the Lively affix")
         public Lively lively = new Lively();
+
+        @Name("Plagued")
+        @Comment("Settings for the Plagued affix")
+        public Plagued plagued = new Plagued();
+
+        @Name("Reflecting")
+        @Comment("Settings for the Reflecting affix")
+        public Reflecting reflecting = new Reflecting();
+
+        @Name("Scrapper")
+        @Comment("Settings for the Scrapper affix")
+        public Scrapper scrapper = new Scrapper();
 
         public class Adaptable {
 
@@ -134,6 +158,13 @@ public class ConfigHandler {
             public double damageReduction = 0.8d;
         }
 
+        public class Desecrator {
+
+            @Name("Attack Interval")
+            @Comment("How often the champion will create harming clouds (in ticks)")
+            public int attackInterval = 60;
+        }
+
         public class Hasty {
 
             @Name("Movement Bonus")
@@ -141,15 +172,29 @@ public class ConfigHandler {
             public double movementBonus = 0.25d;
         }
 
-        public class Horde {
+        public class Infested {
 
-            @Name("Base Additional Mobs")
-            @Comment("The base number of mobs to spawn with the champion")
-            public int hordeSize = 2;
+            @Name("Silverfish per Attack")
+            @Comment("Number of silverfish to spawn per attack")
+            public int silverfishPerAttack = 1;
 
-            @Name("Tier Multiplier")
-            @Comment("The number to multiply by the tier to add to the base number to spawn")
-            public int multiplier = 2;
+            @Name("Silverfish on Death per Tier")
+            @Comment("Average number of silverfish to spawn on death per tier")
+            public int silverfishOnDeath = 4;
+        }
+
+        public class Jailer {
+
+            @Name("Chance per Attack")
+            @Comment("The percent chance that an attack will jail targets")
+            public double chance = 0.2d;
+        }
+
+        public class Knockback {
+
+            @Name("Knockback Multiplier")
+            @Comment("The multiplier to apply to the knockback strength")
+            public double multiplier = 5.0d;
         }
 
         public class Lively {
@@ -165,6 +210,31 @@ public class ConfigHandler {
             @Name("Cooldown on Attacked")
             @Comment("Set cooldown (in seconds) for regeneration after getting attacked")
             public int cooldown = 3;
+        }
+
+        public class Plagued {
+
+            @Name("Plague Duration")
+            @Comment("The duration (in ticks) of the plague effect")
+            public int duration = 300;
+        }
+
+        public class Reflecting {
+
+            @Name("Minimum Percent of Damage")
+            @Comment("The minimum percent of damage to reflect back")
+            public double minimumPerc = 0.1d;
+
+            @Name("Maximum Percent of Damage")
+            @Comment("The maximum percent of damage to reflect back")
+            public double maximumPerc = 0.35d;
+        }
+
+        public class Scrapper {
+
+            @Name("Chance per Attack")
+            @Comment("The percent chance that an attack will injure targets")
+            public double chance = 0.4d;
         }
     }
 

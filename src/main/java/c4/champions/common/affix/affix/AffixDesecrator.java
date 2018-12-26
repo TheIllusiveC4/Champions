@@ -22,6 +22,7 @@ package c4.champions.common.affix.affix;
 import c4.champions.common.affix.core.AffixBase;
 import c4.champions.common.affix.core.AffixCategory;
 import c4.champions.common.capability.IChampionship;
+import c4.champions.common.config.ConfigHandler;
 import net.minecraft.entity.EntityAreaEffectCloud;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -69,7 +70,7 @@ public class AffixDesecrator extends AffixBase {
 
         @Override
         public void startExecuting() {
-            this.attackTime = 20;
+            this.attackTime = ConfigHandler.affix.desecrator.attackInterval;
         }
 
         @Override
@@ -82,7 +83,7 @@ public class AffixDesecrator extends AffixBase {
                 if (entitylivingbase != null) {
                     entity.getLookHelper().setLookPositionWithEntity(entitylivingbase, 180.0F, 180.0F);
                     if (this.attackTime <= 0) {
-                        this.attackTime = 70 + entity.getRNG().nextInt(5) * 10;
+                        this.attackTime = ConfigHandler.affix.desecrator.attackInterval + entity.getRNG().nextInt(5) * 10;
                         EntityAreaEffectCloud cloud = new EntityAreaEffectCloud(entitylivingbase.world,
                                 entitylivingbase.posX, entitylivingbase.posY, entitylivingbase.posZ);
                         cloud.setOwner(this.entity);

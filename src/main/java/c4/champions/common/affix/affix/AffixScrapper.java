@@ -22,6 +22,7 @@ package c4.champions.common.affix.affix;
 import c4.champions.common.affix.core.AffixBase;
 import c4.champions.common.affix.core.AffixCategory;
 import c4.champions.common.capability.IChampionship;
+import c4.champions.common.config.ConfigHandler;
 import c4.champions.common.init.ChampionsRegistry;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -40,7 +41,7 @@ public class AffixScrapper extends AffixBase {
     public void onAttack(EntityLiving entity, IChampionship cap, EntityLivingBase target, DamageSource source, float
             amount, LivingAttackEvent evt) {
 
-        if (!entity.world.isRemote && entity.getRNG().nextFloat() < 0.4f) {
+        if (!entity.world.isRemote && entity.getRNG().nextFloat() < ConfigHandler.affix.scrapper.chance) {
             target.addPotionEffect(new PotionEffect(ChampionsRegistry.injured, 200, 0));
         }
     }

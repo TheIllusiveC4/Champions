@@ -23,7 +23,9 @@ import c4.champions.common.affix.core.AffixBase;
 import c4.champions.common.affix.core.AffixCategory;
 import c4.champions.common.capability.CapabilityChampionship;
 import c4.champions.common.capability.IChampionship;
+import c4.champions.common.config.ConfigHandler;
 import c4.champions.common.rank.RankManager;
+import com.google.common.collect.Lists;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntitySilverfish;
@@ -32,6 +34,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+
+import java.util.List;
 
 public class AffixInfested extends AffixBase {
 
@@ -44,8 +48,12 @@ public class AffixInfested extends AffixBase {
             amount, LivingAttackEvent evt) {
 
         if (!entity.world.isRemote) {
-            EntitySilverfish silverfish = spawnSilverfish(entity.world, entity.getPosition());
-            silverfish.setAttackTarget(target);
+            List<EntitySilverfish> silverfish = spawnSilverfish(entity.world, entity.getPosition(),
+                    ConfigHandler.affix.infested.silverfishPerAttack);
+
+            for (EntitySilverfish en : silverfish) {
+                en.setAttackTarget(target);
+            }
         }
     }
 
@@ -53,10 +61,14 @@ public class AffixInfested extends AffixBase {
     public float onDamaged(EntityLiving entity, IChampionship cap, DamageSource source, float amount, float newAmount) {
 
         if (!entity.world.isRemote) {
-            EntitySilverfish silverfish = spawnSilverfish(entity.world, entity.getPosition());
+            List<EntitySilverfish> silverfish = spawnSilverfish(entity.world, entity.getPosition(),
+                    ConfigHandler.affix.infested.silverfishPerAttack);
 
             if (source.getTrueSource() instanceof EntityLivingBase) {
-                silverfish.setRevengeTarget((EntityLivingBase) source.getTrueSource());
+
+                for (EntitySilverfish en : silverfish) {
+                    en.setRevengeTarget((EntityLivingBase) source.getTrueSource());
+                }
             }
         }
         return newAmount;
@@ -66,32 +78,36 @@ public class AffixInfested extends AffixBase {
     public void onDeath(EntityLiving entity, IChampionship cap, DamageSource source, LivingDeathEvent evt) {
 
         if (!entity.world.isRemote) {
-            int num = entity.getRNG().nextInt(cap.getRank().getTier() * 2) + 1;
+            int num = entity.getRNG().nextInt(cap.getRank().getTier() * ConfigHandler.affix.infested.silverfishOnDeath) + 1;
             EntityLivingBase target = null;
+
             if (source.getTrueSource() instanceof EntityLivingBase) {
                 target = (EntityLivingBase) source.getTrueSource();
             }
-            for (int i = 0; i < num; i++) {
-                EntitySilverfish silverfish = spawnSilverfish(entity.world, entity.getPosition());
+            List<EntitySilverfish> silverfish = spawnSilverfish(entity.world, entity.getPosition(), num);
 
-                if (target != null) {
-                    silverfish.setRevengeTarget(target);
-                }
+            for (EntitySilverfish en : silverfish) {
+                en.setRevengeTarget(target);
             }
         }
     }
 
-    private EntitySilverfish spawnSilverfish(World world, BlockPos pos) {
-        EntitySilverfish entitysilverfish = new EntitySilverfish(world);
-        entitysilverfish.setLocationAndAngles((double)pos.getX() + 0.5D, (double)pos.getY(), (double)pos.getZ() + 0.5D, 0.0F, 0.0F);
-        IChampionship chp = CapabilityChampionship.getChampionship(entitysilverfish);
+    private List<EntitySilverfish> spawnSilverfish(World world, BlockPos pos, int amount) {
+        List<EntitySilverfish> silverfishList = Lists.newArrayList();
 
-        if (chp != null) {
-            chp.setRank(RankManager.getEmptyRank());
+        for (int i = 0; i < amount; i++) {
+            EntitySilverfish entitysilverfish = new EntitySilverfish(world);
+            entitysilverfish.setLocationAndAngles((double)pos.getX() + 0.5D, (double)pos.getY(), (double)pos.getZ() + 0.5D, 0.0F, 0.0F);
+            IChampionship chp = CapabilityChampionship.getChampionship(entitysilverfish);
+
+            if (chp != null) {
+                chp.setRank(RankManager.getEmptyRank());
+            }
+            world.spawnEntity(entitysilverfish);
+            entitysilverfish.spawnExplosionParticle();
+            silverfishList.add(entitysilverfish);
         }
-        world.spawnEntity(entitysilverfish);
-        entitysilverfish.spawnExplosionParticle();
-        return entitysilverfish;
+        return silverfishList;
     }
 
     @Override
