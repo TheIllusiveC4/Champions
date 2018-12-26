@@ -26,6 +26,12 @@ champions.plague=Plague
 champions.injured=Injured
 
 #################
+#     Items     #
+#################
+item.champions.champion_egg.name=Spawn Champion
+champions.champion_egg.tooltip.tier=Tier %d
+
+#################
 #    Config     #
 #################
 champions.general.championspawners=Champions from Spawners
@@ -167,3 +173,6 @@ champions.commands.spawnchampion.entityError=%s is not a valid entity
 champions.commands.spawnchampion.tierError=%s is not a valid tier
 champions.commands.spawnchampion.affixError=%s is not a valid affix identifier
 champions.commands.spawnchampion.success=Spawned champion mob at %s
+
+champions.commands.championegg.usage=/championegg <entity> <tier> [affixes]...
+champions.commands.championegg.success=Given Champion Egg to %s

@@ -22,9 +22,11 @@ package c4.champions.common.init;
 import c4.champions.Champions;
 import c4.champions.common.entity.EntityArcticSpark;
 import c4.champions.common.entity.EntityJail;
+import c4.champions.common.item.ItemChampionPlacer;
 import c4.champions.common.potion.PotionInjured;
 import c4.champions.common.potion.PotionJailed;
 import c4.champions.common.potion.PotionPlague;
+import net.minecraft.item.Item;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
@@ -46,6 +48,14 @@ public class ChampionsRegistry {
 
     @GameRegistry.ObjectHolder("injured")
     public static final Potion injured = null;
+
+    @GameRegistry.ObjectHolder("champion_egg")
+    public static final Item championEgg = null;
+
+    @SubscribeEvent
+    public static void registerItem(RegistryEvent.Register<Item> evt) {
+        evt.getRegistry().register(new ItemChampionPlacer());
+    }
 
     @SubscribeEvent
     public static void registerPotion(RegistryEvent.Register<Potion> evt) {

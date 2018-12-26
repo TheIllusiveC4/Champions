@@ -19,17 +19,29 @@
 
 package c4.champions;
 
+import c4.champions.command.CommandChampionEgg;
 import c4.champions.command.CommandSpawnChampion;
 import c4.champions.common.EventHandlerCommon;
 import c4.champions.common.affix.AffixEvents;
 import c4.champions.common.affix.Affixes;
 import c4.champions.common.affix.filter.AffixFilterManager;
 import c4.champions.common.capability.CapabilityChampionship;
+import c4.champions.common.init.ChampionsRegistry;
+import c4.champions.common.item.ItemChampionPlacer;
 import c4.champions.common.loot.EntityIsChampion;
 import c4.champions.common.rank.RankManager;
 import c4.champions.common.util.ChampionHelper;
 import c4.champions.network.NetworkHandler;
 import c4.champions.proxy.IProxy;
+import net.minecraft.block.BlockDispenser;
+import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
+import net.minecraft.dispenser.IBlockSource;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemMonsterPlacer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraft.world.storage.loot.properties.EntityPropertyManager;
@@ -41,6 +53,8 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.*;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nonnull;
 
 @Mod(   modid = Champions.MODID,
         name = Champions.NAME,
@@ -83,6 +97,29 @@ public class Champions
         RankManager.readRanksFromJson();
         AffixFilterManager.readAffixFiltersFromJson();
         ChampionHelper.parseConfigs();
+        BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(ChampionsRegistry.championEgg, new BehaviorDefaultDispenseItem() {
+
+            @Nonnull
+            public ItemStack dispenseStack(IBlockSource source, ItemStack stack) {
+                EnumFacing enumfacing = source.getBlockState().getValue(BlockDispenser.FACING);
+                double d0 = source.getX() + (double)enumfacing.getXOffset();
+                double d1 = (double)((float)(source.getBlockPos().getY() + enumfacing.getYOffset()) + 0.2F);
+                double d2 = source.getZ() + (double)enumfacing.getZOffset();
+                Entity entity = ItemChampionPlacer.createChampion(source.getWorld(), ItemMonsterPlacer.getNamedIdFrom(stack), d0, d1, d2);
+
+                if (entity instanceof EntityLivingBase && stack.hasDisplayName()) {
+                    entity.setCustomNameTag(stack.getDisplayName());
+                }
+
+                ItemMonsterPlacer.applyItemEntityDataToEntity(source.getWorld(), null, stack, entity);
+
+                if (ChampionHelper.isValidChampion(entity)) {
+                    ItemChampionPlacer.applyItemChampionDataToEntity(source.getWorld(), null, stack, (EntityLiving)entity);
+                }
+                stack.shrink(1);
+                return stack;
+            }
+        });
         proxy.postInit(evt);
     }
 
@@ -94,5 +131,6 @@ public class Champions
     @EventHandler
     public void serverLoad(FMLServerStartingEvent evt) {
         evt.registerServerCommand(new CommandSpawnChampion());
+        evt.registerServerCommand(new CommandChampionEgg());
     }
 }

@@ -24,13 +24,23 @@ import c4.champions.client.EventHandlerClient;
 import c4.champions.client.fx.ParticleRank;
 import c4.champions.client.renderer.RenderArcticSpark;
 import c4.champions.common.entity.EntityArcticSpark;
+import c4.champions.common.init.ChampionsRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.client.renderer.color.ItemColors;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemMonsterPlacer;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.Random;
@@ -46,6 +56,15 @@ public class ClientProxy implements IProxy {
     @Override
     public void init(FMLInitializationEvent evt) {
         MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
+        Minecraft.getMinecraft().getItemColors().registerItemColorHandler((stack, tintIndex) -> {
+            EntityList.EntityEggInfo entitylist$entityegginfo = EntityList.ENTITY_EGGS.get(ItemMonsterPlacer.getNamedIdFrom(stack));
+
+            if (entitylist$entityegginfo == null) {
+                return -1;
+            } else {
+                return tintIndex == 0 ? entitylist$entityegginfo.primaryColor : entitylist$entityegginfo.secondaryColor;
+            }
+        }, ChampionsRegistry.championEgg);
     }
 
     @Override
@@ -56,5 +75,11 @@ public class ClientProxy implements IProxy {
                         living.posY + living.getRNG().nextDouble() * (double)living.height,
                         living.posZ + (living.getRNG().nextDouble() - 0.5D) * (double)living.width, 0, 0, 0,
                         color));
+    }
+
+    @SubscribeEvent
+    public static void registerModels(ModelRegistryEvent evt) {
+        ModelLoader.setCustomModelResourceLocation(ChampionsRegistry.championEgg, 0,
+                new ModelResourceLocation(ChampionsRegistry.championEgg.getRegistryName(), "inventory"));
     }
 }
