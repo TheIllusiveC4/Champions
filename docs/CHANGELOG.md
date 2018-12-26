@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
+## [0.9] - 2018.12.26
+### Added
+- Knockback affix - Increases knockback from attacks, which will also slow targets for a short amount of time
+- Affix configs for Desecrator, Infested, Jailer, Knockback, Plagued, Reflecting, Scrapper
+- /championegg command that creates an egg of a specific type of champion [#4](https://github.com/TheIllusiveC4/Champions/issues/4)
+
+### Removed
+- Horde affix
+
 ## [0.8] - 2018.12.15
 ### Fixed
 - Dedicated server crash
@@ -20,7 +29,7 @@ This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 ## [0.5] - 2018.11.28
 ### Added
 - Adaptable affix - Champion will take less and less damage from the same consecutive damage type
-- Config option to control whether champions can spawn from mob spawners
+- Config option to control whether champions can spawn from mob spawners [#3](https://github.com/TheIllusiveC4/Champions/issues/3)
 - Config option to set movement speed bonus for Hasty affix
 
 ### Changed
