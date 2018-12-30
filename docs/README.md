@@ -21,9 +21,9 @@ Current available affixes:
 * **Dampening** - Reduces the damage of indirect attacks
 * **Desecrator** - Periodically spawns a cloud of harming underneath its target
 * **Hasty** - Drastically increases movement speed
-* **Horde** - Spawns with several additional mobs of its type (these mobs are always Common)
 * **Infested** - Attacking and being attacked will spawn silverfish that will attack its target
 * **Jailer** - Small chance per attack to "jail" targets, making them unable to move positions for a few seconds
+* **Knockback** - Increased knockback from attacks, which will also slow targets for a small period of time
 * **Lively** - Regenerates 1 health per second. This increases to 5 health per second when not attacking or pursuing any targets.
 * **Molten** - Grants fire resistance, fiery attacks, and armor penetration
 * **Plagued** - Infects nearby creatures with Plague, which adds a Wither effect and makes the creature a new Plague host
