@@ -26,6 +26,7 @@ import c4.champions.common.config.ConfigHandler;
 import c4.champions.common.rank.Rank;
 import c4.champions.common.rank.RankManager;
 import c4.champions.common.util.ChampionHelper;
+import c4.champions.integrations.gamestages.ChampionStages;
 import c4.champions.network.NetworkHandler;
 import c4.champions.network.PacketSyncAffix;
 import com.google.common.collect.Maps;
@@ -42,6 +43,7 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -195,6 +197,11 @@ public final class CapabilityChampionship {
                 if (chp != null) {
 
                     if (evt.getSpawner() != null && !ConfigHandler.championSpawners) {
+                        chp.setRank(RankManager.getEmptyRank());
+                        return;
+                    }
+
+                    if (Champions.isGameStagesLoaded && !ChampionStages.canSpawn(living)) {
                         chp.setRank(RankManager.getEmptyRank());
                         return;
                     }

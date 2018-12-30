@@ -47,6 +47,7 @@ import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraft.world.storage.loot.properties.EntityPropertyManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLLog;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -66,6 +67,8 @@ public class Champions
 {
     public static final String MODID = "champions";
     public static final String NAME = "Champions";
+
+    public static boolean isGameStagesLoaded = false;
 
     private static final boolean DEBUG = false;
 
@@ -94,6 +97,10 @@ public class Champions
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent evt) {
+
+        if (Loader.isModLoaded("gamestages")) {
+            isGameStagesLoaded = true;
+        }
         RankManager.readRanksFromJson();
         AffixFilterManager.readAffixFiltersFromJson();
         ChampionHelper.parseConfigs();

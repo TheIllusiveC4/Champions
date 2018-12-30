@@ -35,6 +35,24 @@ sourceSets {
     }
 }
 
+repositories {
+
+    maven {
+        url 'https://maven.blamejared.com/'
+    }
+
+    maven {
+        url 'https://maven.mcmoddev.com/'
+    }
+}
+
+dependencies {
+
+    deobfProvided "net.darkhax.bookshelf:Bookshelf-1.12.2:${version_bookshelf}"
+    deobfProvided "net.darkhax.gamestages:GameStages-1.12.2:${version_gamestages}"
+    deobfProvided "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-${version_crafttweaker}"
+}
+
 processResources {
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
