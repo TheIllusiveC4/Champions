@@ -67,6 +67,14 @@ public class ConfigHandler {
     @RequiresMcRestart
     public static String[] lootDrops = new String[]{};
 
+    @Name("Additional Champion Names")
+    @Comment("Additional names that will be added to the pool of names given to champions")
+    public static String[] championNames = new String[]{};
+
+    @Name("Additional Champion Name Suffixes")
+    @Comment("Additional name suffixes that will be added to the pool of names given to champions")
+    public static String[] championNameSuffixes = new String[]{};
+
     @Name("Client Settings")
     @Comment("Settings that are only client-side")
     public static Client client = new Client();

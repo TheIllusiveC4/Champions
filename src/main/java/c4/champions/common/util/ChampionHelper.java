@@ -81,11 +81,25 @@ public class ChampionHelper {
     }
 
     public static String generateRandomName() {
-        int randomPrefix = rand.nextInt(24);
-        int randomSuffix = rand.nextInt(24);
+        int langSize = 24;
+        int randomPrefix = rand.nextInt(langSize + ConfigHandler.championNames.length);
+        int randomSuffix = rand.nextInt(langSize + ConfigHandler.championNameSuffixes.length);
+        String prefix;
+        String suffix;
         String header = Champions.MODID + ".%s.%d";
-        String prefix = new TextComponentTranslation(String.format(header, "prefix", randomPrefix)).getFormattedText();
-        String suffix = new TextComponentTranslation(String.format(header, "suffix", randomSuffix)).getFormattedText();
+
+        if (randomPrefix < langSize) {
+            prefix = new TextComponentTranslation(String.format(header, "prefix", randomPrefix)).getFormattedText();
+        } else {
+            prefix = ConfigHandler.championNames[randomPrefix - langSize];
+        }
+
+        if (randomSuffix < langSize) {
+            suffix = new TextComponentTranslation(String.format(header, "suffix", randomSuffix)).getFormattedText();
+        } else {
+            String configSuffix = ConfigHandler.championNameSuffixes[randomSuffix - langSize];
+            suffix = configSuffix.charAt(0) == ',' ? configSuffix : " " + configSuffix;
+        }
         return prefix + suffix;
     }
 
