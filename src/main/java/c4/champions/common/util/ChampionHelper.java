@@ -66,15 +66,12 @@ public class ChampionHelper {
         ImmutableMap<Integer, Rank> ranks = RankManager.getRanks();
         int finalTier = 0;
 
-        if (!nearActiveBeacon(entityLivingIn)) {
+        for (Integer tier : ranks.keySet()) {
 
-            for (Integer tier : ranks.keySet()) {
-
-                if (rand.nextFloat() < ranks.get(tier).getChance()) {
-                    finalTier = tier;
-                } else {
-                    break;
-                }
+            if (rand.nextFloat() < ranks.get(tier).getChance()) {
+                finalTier = tier;
+            } else {
+                break;
             }
         }
         return finalTier == 0 ? RankManager.getEmptyRank() : ranks.get(finalTier);
@@ -210,43 +207,6 @@ public class ChampionHelper {
 
     public static boolean isElite(Rank rank) {
         return rank != null && rank.getTier() > 0;
-    }
-
-    private static final Field IS_COMPLETE = ReflectionHelper.findField(TileEntityBeacon.class,
-            "isComplete", "field_146015_k");
-
-    private static boolean nearActiveBeacon(final EntityLiving entityLivingIn) {
-        BlockPos pos = entityLivingIn.getPosition();
-        int xPos = pos.getX();
-        int yPos = pos.getY();
-        int zPos = pos.getZ();
-
-        for (int x = -24; x <= 24; x++) {
-
-            for (int z = -24; z <= 24; z++) {
-
-                for (int y = -24; y <= 24; y++) {
-                    BlockPos blockpos = new BlockPos(xPos + x, yPos + y, zPos + z);
-
-                    if (entityLivingIn.world.isBlockLoaded(blockpos)) {
-                        TileEntity te = entityLivingIn.world.getTileEntity(blockpos);
-
-                        if (te instanceof TileEntityBeacon) {
-                            TileEntityBeacon beacon = (TileEntityBeacon) te;
-                            boolean flag = false;
-
-                            try {
-                                flag = IS_COMPLETE.getBoolean(beacon);
-                            } catch (IllegalAccessException e) {
-                                Champions.logger.log(Level.ERROR, "Error reading isComplete from beacon!");
-                            }
-                            return flag;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
     }
 
     public static boolean isValidEntity(Entity entity) {
