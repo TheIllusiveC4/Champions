@@ -19,8 +19,6 @@
 
 package c4.champions.common.affix.affix;
 
-import c4.champions.common.affix.Affixes;
-import c4.champions.common.affix.IAffix;
 import c4.champions.common.affix.core.AffixBase;
 import c4.champions.common.affix.core.AffixCategory;
 import c4.champions.common.capability.IChampionship;

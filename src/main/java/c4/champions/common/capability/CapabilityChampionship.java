@@ -43,7 +43,6 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -240,7 +239,7 @@ public final class CapabilityChampionship {
                 if (ChampionHelper.isValidChampion(entity)) {
                     IChampionship chp = getChampionship((EntityLiving) entity);
 
-                    if (chp != null && chp.getRank() != null && chp.getRank().getTier() > 0) {
+                    if (chp != null && ChampionHelper.isElite(chp.getRank())) {
                         NetworkHandler.INSTANCE.sendTo(new PacketSyncAffix(entity.getEntityId(),
                                 chp.getRank().getTier(), chp.getAffixData(), chp.getName()), playerMP);
                     }
