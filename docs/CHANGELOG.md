@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
+## [0.11] - 2018.12.30
+### Added
+- GameStages integration, documentation coming soon to GitHub
+- Config option to add more possible names/name suffixes for champions
+
 ## [0.10] - 2018.12.26
 ### Fixed
 - Dedicated server crash [#5](https://github.com/TheIllusiveC4/Champions/issues/5)
