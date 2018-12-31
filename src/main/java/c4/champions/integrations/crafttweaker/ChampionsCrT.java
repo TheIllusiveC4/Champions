@@ -37,4 +37,14 @@ public class ChampionsCrT {
     public static void addStage(String stage, String entity, int dimension) {
         CraftTweakerAPI.apply(new ActionAddChampionStage(stage, entity, dimension));
     }
+
+    @ZenMethod
+    public static void addTierStage(String stage, int tier) {
+        CraftTweakerAPI.apply(new ActionAddTierStage(stage, tier));
+    }
+
+    @ZenMethod
+    public static void addTierStage(String stage, int tier, int dimension) {
+        CraftTweakerAPI.apply(new ActionAddTierStage(stage, tier, dimension));
+    }
 }

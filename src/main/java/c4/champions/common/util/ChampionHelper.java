@@ -27,6 +27,7 @@ import c4.champions.common.affix.filter.AffixFilterManager;
 import c4.champions.common.config.ConfigHandler;
 import c4.champions.common.rank.Rank;
 import c4.champions.common.rank.RankManager;
+import c4.champions.integrations.gamestages.ChampionStages;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -64,6 +65,10 @@ public class ChampionHelper {
         for (Integer tier : ranks.keySet()) {
 
             if (rand.nextFloat() < ranks.get(tier).getChance()) {
+
+                if (Champions.isGameStagesLoaded && !ChampionStages.isValidTier(tier, entityLivingIn)) {
+                    break;
+                }
                 finalTier = tier;
             } else {
                 break;

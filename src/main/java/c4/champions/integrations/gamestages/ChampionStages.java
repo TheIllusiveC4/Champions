@@ -34,26 +34,44 @@ import java.util.Set;
 
 public class ChampionStages {
 
-    private static final Map<String, Info> STAGE_INFO = Maps.newHashMap();
+    private static final Map<String, Info> ENTITY_STAGE_INFO = Maps.newHashMap();
+    private static final Map<Integer, Info> TIER_STAGE_INFO = Maps.newHashMap();
 
     public static void addStage(String entity, String stage) {
-        STAGE_INFO.merge(entity, new Info(stage), (k, v) -> {
+        ENTITY_STAGE_INFO.merge(entity, new Info(stage), (k, v) -> {
             v.addStage(stage);
             return v;
         });
     }
 
     public static void addStage(String entity, String stage, int dimension) {
-        STAGE_INFO.merge(entity, new Info(stage, dimension), (k, v) -> {
+        ENTITY_STAGE_INFO.merge(entity, new Info(stage, dimension), (k, v) -> {
             v.addStage(stage, dimension);
+            return v;
+        });
+    }
+
+    public static void addTierStage(int tier, String stage) {
+        TIER_STAGE_INFO.merge(tier, new Info(stage), (k, v) -> {
+            v.addStage(stage);
+            return v;
+        });
+    }
+
+    public static void addTierStage(int tier, String stage, int dimension) {
+        TIER_STAGE_INFO.merge(tier, new Info(stage, dimension), (k, v) -> {
+            v.addStage(stage);
             return v;
         });
     }
 
     @Nullable
     private static Info getStageInfo(String entity) {
-        return STAGE_INFO.get(entity);
+        return ENTITY_STAGE_INFO.get(entity);
     }
+
+    @Nullable
+    private static Info getStageInfo(int tier) { return TIER_STAGE_INFO.get(tier); }
 
     public static boolean canSpawn(EntityLiving living) {
         final ResourceLocation rl = EntityList.getKey(living);
@@ -65,6 +83,15 @@ public class ChampionStages {
             if (stageInfo != null) {
                 return hasRequiredStages(stageInfo, living);
             }
+        }
+        return true;
+    }
+
+    public static boolean isValidTier(int tier, EntityLiving living) {
+        final Info stageInfo = getStageInfo(tier);
+
+        if (stageInfo != null) {
+            return hasRequiredStages(stageInfo, living);
         }
         return true;
     }
