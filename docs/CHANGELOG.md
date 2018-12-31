@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
+## [1.0] - 2018.12.30
+### Added
+- GameStages integration for tiered stages
+
+### Changed
+- GameStages integration now checks players within 256 blocks instead of 128 blocks
+
+### Removed
+- Champions not spawning when within 24 blocks of an active beacon
+
 ## [0.11] - 2018.12.30
 ### Added
 - GameStages integration, documentation coming soon to GitHub
