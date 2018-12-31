@@ -8,11 +8,15 @@ Champion mobs are defined by their ranks. Every time a valid mob is spawned into
 
 Ranks are extremely configurable through the use of the **ranks.json** file generated in the **config/champions** folder. Players can edit rank attributes such as default color, number of affixes, growth factor, and chance to spawn. New ranks can even be added, infinitely.
 
+More in-depth information about the **ranks.json** file is located at the [GitHub Wiki](https://github.com/TheIllusiveC4/Champions/wiki/Ranks-JSON).
+
 ## Affixes
 
 Affixes are unique abilities or attributes that spawn with champion mobs. Players can see which affixes are attached to any champion by looking underneath the champion's health bar on the screen. These can be identified from a fair distance away, allowing players to sufficiently analyze each champion's threat level and available abilities.
 
 Affixes, like ranks, can also be configured through the use of the **affixes.json** file generated in the **config/champions** folder. Here, players can disable certain affixes, require certain ranks, blacklist entities, and make specific entities always spawn with certain affixes if possible. Unlike ranks, new affixes cannot be added in any way.
+
+More in-depth information about the **affixes.json** file is located at the [GitHub Wiki](https://github.com/TheIllusiveC4/Champions/wiki/Affixes-JSON).
 
 Current available affixes:
 
