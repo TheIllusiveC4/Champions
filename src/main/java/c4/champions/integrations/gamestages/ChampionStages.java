@@ -112,7 +112,7 @@ public class ChampionStages {
 
             for (final EntityPlayer player : living.world.playerEntities) {
 
-                if (GameStageHelper.hasAllOf(player, stages) && player.getDistance(living) <= 128) {
+                if (GameStageHelper.hasAllOf(player, stages) && player.getDistance(living) <= 256) {
                     return true;
                 }
             }

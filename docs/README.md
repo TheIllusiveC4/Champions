@@ -40,4 +40,7 @@ Current available affixes:
 
 In addition to the json files mentioned above, Champions has a general configuration file. Here, players can specify things like dimensional blacklists/whitelists for champion mobs, client color overrides for ranks, and values to use for stat growth for champions.
 
+## Game Stages
+
+Champions has support for Game Stages for staged champion mobs and staged rank tiers. More information about this can be found on the [GitHub Wiki](https://github.com/TheIllusiveC4/Champions/wiki/Game-Stages-Integration).
 
