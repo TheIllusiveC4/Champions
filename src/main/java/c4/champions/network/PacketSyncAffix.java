@@ -85,15 +85,12 @@ public class PacketSyncAffix implements IMessage {
         public IMessage onMessage(PacketSyncAffix message, MessageContext ctx) {
             Minecraft.getMinecraft().addScheduledTask(() -> {
                 Entity entity = Minecraft.getMinecraft().world.getEntityByID(message.entityId);
+                IChampionship chp = CapabilityChampionship.getChampionship((EntityLiving)entity);
 
-                if (ChampionHelper.isValidChampion(entity)) {
-                    IChampionship chp = CapabilityChampionship.getChampionship((EntityLiving)entity);
-
-                    if (chp != null) {
-                        chp.setRank(RankManager.getRankForTier(message.tier));
-                        chp.setAffixData(message.affixData);
-                        chp.setName(message.name);
-                    }
+                if (chp != null) {
+                    chp.setRank(RankManager.getRankForTier(message.tier));
+                    chp.setAffixData(message.affixData);
+                    chp.setName(message.name);
                 }
             });
             return null;
