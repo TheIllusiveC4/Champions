@@ -25,6 +25,8 @@ champions.jailed=Jailed
 champions.plague=Plague
 champions.injured=Injured
 
+death.attack.reflecting=%1$s got a taste of their own medicine
+
 #################
 #     Items     #
 #################
