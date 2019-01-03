@@ -26,6 +26,7 @@ import c4.champions.common.config.ConfigHandler;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
 
 public class AffixReflecting extends AffixBase {
@@ -45,6 +46,11 @@ public class AffixReflecting extends AffixBase {
                 return newAmount;
             }
             float min = (float)ConfigHandler.affix.reflecting.minimumPerc;
+            source.damageType = "reflecting";
+
+            if (source instanceof EntityDamageSource) {
+                ((EntityDamageSource) source).setIsThornsDamage();
+            }
             entityLivingBase.attackEntityFrom(source, amount * (entity.getRNG().nextFloat() *
                     (float)(ConfigHandler.affix.reflecting.maximumPerc - min) + min));
         }
