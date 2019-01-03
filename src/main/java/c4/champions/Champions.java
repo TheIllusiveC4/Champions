@@ -70,8 +70,6 @@ public class Champions
 
     public static boolean isGameStagesLoaded = false;
 
-    private static final boolean DEBUG = false;
-
     public static Logger logger;
 
     @SidedProxy(clientSide = "c4.champions.proxy.ClientProxy", serverSide = "c4.champions.proxy.ServerProxy")
