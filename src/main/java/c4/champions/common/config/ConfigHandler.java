@@ -75,6 +75,10 @@ public class ConfigHandler {
     @Comment("Additional name suffixes that will be added to the pool of names given to champions")
     public static String[] championNameSuffixes = new String[]{};
 
+    @Name("Beacon Blacklist Range")
+    @Comment("The range an active beacon will prevent champion spawns, 0 to disable")
+    public static int beaconRange = 64;
+
     @Name("Client Settings")
     @Comment("Settings that are only client-side")
     public static Client client = new Client();

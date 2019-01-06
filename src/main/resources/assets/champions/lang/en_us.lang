@@ -54,6 +54,8 @@ champions.general.championnames=Additional Champion Names
 champions.general.championnames.tooltip=Additional names that will be added to the pool of names given to champions
 champions.general.championnamesuffixes=Additional Champion Name Suffixes
 champions.general.championnamesuffixes.tooltip=Additional name suffixes that will be added to the pool of names given to champions
+champions.general.beaconrange=Beacon Blacklist Range
+champions.general.beaconrange.tooltip=The range an active beacon will prevent champion spawns, 0 to disable
 
 champions.general.affix=Affix Settings
 champions.general.affix.tooltip=Settings that affect individual affixes
