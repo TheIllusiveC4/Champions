@@ -24,6 +24,7 @@ import c4.champions.common.affix.core.AffixCategory;
 import c4.champions.common.capability.IChampionship;
 import c4.champions.common.config.ConfigHandler;
 import c4.champions.common.init.ChampionsRegistry;
+import c4.champions.common.potion.PotionPlague;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -45,7 +46,7 @@ public class AffixPlagued extends AffixBase {
 
         if (!entity.world.isRemote) {
             List<Entity> list = entity.world.getEntitiesWithinAABBExcludingEntity(entity, entity.getEntityBoundingBox
-                    ().grow(3));
+                    ().grow(ConfigHandler.affix.plagued.infectRange));
 
             for (Entity entity1 : list) {
 
@@ -57,6 +58,10 @@ public class AffixPlagued extends AffixBase {
                     }
                 }
             }
+
+            if (entity.isPotionActive(PotionPlague.getInfectionPotion())) {
+                entity.removePotionEffect(PotionPlague.getInfectionPotion());
+            }
         }
     }
 
@@ -66,17 +71,9 @@ public class AffixPlagued extends AffixBase {
         target.addPotionEffect(new PotionEffect(ChampionsRegistry.plague, ConfigHandler.affix.plagued.duration));
     }
 
-    @Override
-    public void onAttacked(EntityLiving entity, IChampionship cap, DamageSource source, float amount, LivingAttackEvent evt) {
-
-        if (source == DamageSource.WITHER) {
-            evt.setCanceled(true);
-        }
-    }
-
     public static boolean canEntityBeInfected(EntityLivingBase host, EntityLivingBase target) {
-        return host.world.rayTraceBlocks(new Vec3d(host.posX, host.posY + host.height / 2.0f, host.posZ), new
-                Vec3d(target.posX, target.posY + target.height / 2.0f, target.posZ),
-                true, true, false) == null;
+        return host.world.rayTraceBlocks(new Vec3d(host.posX, host.posY + host.height / 2.0f, host.posZ),
+                new Vec3d(target.posX, target.posY + target.height / 2.0f, target.posZ), true,
+                true, false) == null;
     }
 }

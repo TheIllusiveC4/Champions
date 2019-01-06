@@ -229,6 +229,23 @@ public class ConfigHandler {
             @Name("Plague Duration")
             @Comment("The duration (in ticks) of the plague effect")
             public int duration = 300;
+
+            @Name("Infection Potion")
+            @Comment("The potion that will be spread through the plague effect")
+            @RequiresMcRestart
+            public String infectPotion = "minecraft:wither";
+
+            @Name("Infection Potion Duration")
+            @Comment("The duration (in ticks) of the infection potion")
+            public int infectDuration = 200;
+
+            @Name("Infection Potion Power")
+            @Comment("The power of the infection potion (base: 1)")
+            public int infectPower = 1;
+
+            @Name("Infection Range")
+            @Comment("The range that the infection will spread from hosts")
+            public int infectRange = 3;
         }
 
         public class Reflecting {

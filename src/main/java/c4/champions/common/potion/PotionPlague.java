@@ -24,6 +24,8 @@ import c4.champions.common.affix.Affixes;
 import c4.champions.common.affix.affix.AffixPlagued;
 import c4.champions.common.capability.CapabilityChampionship;
 import c4.champions.common.capability.IChampionship;
+import c4.champions.common.config.ConfigHandler;
+import c4.champions.common.init.ChampionsRegistry;
 import c4.champions.common.util.ChampionHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -38,16 +40,27 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class PotionPlague extends Potion {
 
     private static final ResourceLocation ICON = new ResourceLocation(Champions.MODID, "textures/gui/plague.png");
 
+    private static Potion INFECTION = MobEffects.WITHER;
+
     public PotionPlague() {
         super(true, 2046740);
         this.setPotionName(Champions.MODID + ".plague");
         this.setRegistryName(Champions.MODID, "plague");
+    }
+
+    public static void setInfectionPotion(Potion potion) {
+        INFECTION = potion;
+    }
+
+    public static Potion getInfectionPotion() {
+        return INFECTION;
     }
 
     @Override
@@ -60,7 +73,7 @@ public class PotionPlague extends Potion {
 
         if (!entityLivingBaseIn.world.isRemote) {
             List<EntityLivingBase> entities = entityLivingBaseIn.world.getEntitiesWithinAABB(EntityLivingBase.class,
-                    entityLivingBaseIn.getEntityBoundingBox().grow(3));
+                    entityLivingBaseIn.getEntityBoundingBox().grow(ConfigHandler.affix.plagued.infectRange));
 
             if (!entities.isEmpty()) {
 
@@ -76,13 +89,13 @@ public class PotionPlague extends Potion {
                             }
                         }
 
-                        if (!ent.isPotionActive(MobEffects.WITHER) || (ent.isPotionActive(MobEffects.WITHER) && ent
-                                .getActivePotionEffect(MobEffects.WITHER).getDuration() <= 20)) {
-                            ent.addPotionEffect(new PotionEffect(MobEffects.WITHER, 200, 0));
+                        if (!ent.isPotionActive(INFECTION)) {
+                            ent.addPotionEffect(new PotionEffect(INFECTION, ConfigHandler.affix.plagued.infectDuration,
+                                    ConfigHandler.affix.plagued.infectPower - 1));
                         }
 
                         if (!ent.isPotionActive(this) && ent != entityLivingBaseIn) {
-                            ent.addPotionEffect(new PotionEffect(this, 300));
+                            ent.addPotionEffect(new PotionEffect(this, ConfigHandler.affix.plagued.duration));
                         }
                     }
                 }

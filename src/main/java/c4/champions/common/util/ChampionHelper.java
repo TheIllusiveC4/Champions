@@ -25,6 +25,7 @@ import c4.champions.common.affix.core.AffixBase;
 import c4.champions.common.affix.core.AffixCategory;
 import c4.champions.common.affix.filter.AffixFilterManager;
 import c4.champions.common.config.ConfigHandler;
+import c4.champions.common.potion.PotionPlague;
 import c4.champions.common.rank.Rank;
 import c4.champions.common.rank.RankManager;
 import c4.champions.integrations.gamestages.ChampionStages;
@@ -39,6 +40,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Potion;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityBeacon;
 import net.minecraft.util.ResourceLocation;
@@ -282,6 +284,12 @@ public class ChampionHelper {
     }
 
     public static void parseConfigs() {
+
+        Potion potion = Potion.getPotionFromResourceLocation(ConfigHandler.affix.plagued.infectPotion);
+
+        if (potion != null) {
+            PotionPlague.setInfectionPotion(potion);
+        }
 
         if (ConfigHandler.dimensionList.length > 0) {
 

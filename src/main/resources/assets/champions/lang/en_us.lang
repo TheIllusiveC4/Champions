@@ -24,6 +24,7 @@ champions.affix.knockback=Knockback
 champions.jailed=Jailed
 champions.plague=Plague
 champions.injured=Injured
+champions.immune=Immune
 
 death.attack.reflecting=%1$s got a taste of their own medicine
 
@@ -119,6 +120,14 @@ champions.general.affix.plagued=Plagued
 champions.general.affix.plagued.tooltip=Settings for the Plagued affix
 champions.general.affix.plagued.duration=Plague Duration
 champions.general.affix.plagued.duration.tooltip=The duration (in ticks) of the plague effect
+champions.general.affix.plagued.infectpotion=Infection Potion
+champions.general.affix.plagued.infectpotion.tooltip=The potion that will be spread through the plague effect
+champions.general.affix.plagued.infectduration=Infection Duration
+champions.general.affix.plagued.infectduration.tooltip=The duration (in ticks) of the infection potion
+champions.general.affix.plagued.infectpower=Infection Power
+champions.general.affix.plagued.infectpower.tooltip=The power of the infection potion (base: 1)
+champions.general.affix.plagued.infectrange=Infection Range
+champions.general.affix.plagued.infectrange.tooltip=The range that the infection will spread from hosts
 
 champions.general.affix.reflecting=Reflecting
 champions.general.affix.reflecting.tooltip=Settings for the Lively affix
