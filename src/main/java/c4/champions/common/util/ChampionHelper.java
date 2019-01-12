@@ -60,6 +60,7 @@ public class ChampionHelper {
     private static Set<Integer> dimensions = Sets.newHashSet();
     private static Set<ResourceLocation> mobs = Sets.newHashSet();
     private static Map<Integer, List<LootData>> drops = Maps.newHashMap();
+    private static Set<ResourceLocation> champions = Sets.newHashSet();
 
     public static boolean isValidChampion(final Entity entity) {
         return entity instanceof EntityLiving && entity instanceof IMob && isValidEntity(entity);
@@ -70,7 +71,7 @@ public class ChampionHelper {
         int finalTier = 0;
         int firstTier = ranks.firstKey();
 
-        if (rand.nextFloat() < ranks.get(firstTier).getChance()) {
+        if (rand.nextFloat() < ranks.get(firstTier).getChance() || champions.contains(EntityList.getKey(entityLivingIn))) {
 
             if ((Champions.isGameStagesLoaded && !ChampionStages.isValidTier(ranks.firstKey(), entityLivingIn)) ||
                     nearActiveBeacon(entityLivingIn)) {
@@ -314,6 +315,19 @@ public class ChampionHelper {
                     mobs.add(rl);
                 } else {
                     Champions.logger.log(Level.ERROR, "Invalid entity found in mob config! " + s);
+                }
+            }
+        }
+
+        if (ConfigHandler.championsList.length > 0) {
+
+            for (String s : ConfigHandler.championsList) {
+                ResourceLocation rl = new ResourceLocation(s);
+
+                if (EntityList.getEntityNameList().contains(rl)) {
+                    champions.add(rl);
+                } else {
+                    Champions.logger.log(Level.ERROR, "Invalid entity found in champions list config! " + s);
                 }
             }
         }

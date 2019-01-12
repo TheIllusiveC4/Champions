@@ -57,6 +57,11 @@ public class ConfigHandler {
     @RequiresMcRestart
     public static String[] mobList = new String[]{};
 
+    @Name("Champion Mobs List")
+    @Comment("List of mobs that will always spawn as champions")
+    @RequiresMcRestart
+    public static String[] championsList = new String[]{};
+
     @Name("Loot Source")
     @Comment("Set whether champion mobs drop loot from the loot table, config, or both")
     public static LootSource lootSource = LootSource.LOOT_TABLE;
