@@ -78,7 +78,7 @@ public class AffixInfested extends AffixBase {
     public void onDeath(EntityLiving entity, IChampionship cap, DamageSource source, LivingDeathEvent evt) {
 
         if (!entity.world.isRemote) {
-            int num = entity.getRNG().nextInt(cap.getRank().getTier() * ConfigHandler.affix.infested.silverfishOnDeath) + 1;
+            int num = entity.getRNG().nextInt(Math.max(1, cap.getRank().getTier() * ConfigHandler.affix.infested.silverfishOnDeath)) + 1;
             EntityLivingBase target = null;
 
             if (source.getTrueSource() instanceof EntityLivingBase) {
