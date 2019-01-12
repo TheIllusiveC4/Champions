@@ -25,7 +25,6 @@ import c4.champions.common.affix.affix.AffixPlagued;
 import c4.champions.common.capability.CapabilityChampionship;
 import c4.champions.common.capability.IChampionship;
 import c4.champions.common.config.ConfigHandler;
-import c4.champions.common.init.ChampionsRegistry;
 import c4.champions.common.util.ChampionHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -40,7 +39,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class PotionPlague extends Potion {

@@ -21,7 +21,7 @@ package c4.champions.common.rank;
 
 import c4.champions.Champions;
 import c4.champions.common.util.JsonUtil;
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSortedMap;
 import com.google.common.collect.Maps;
 import com.google.gson.reflect.TypeToken;
 import net.minecraftforge.fml.common.Loader;
@@ -43,8 +43,8 @@ public class RankManager {
 
     private static final TreeMap<Integer, Rank> RANKS = Maps.newTreeMap();
 
-    public static ImmutableMap<Integer, Rank> getRanks() {
-        return ImmutableMap.copyOf(RANKS);
+    public static ImmutableSortedMap<Integer, Rank> getRanks() {
+        return ImmutableSortedMap.copyOf(RANKS);
     }
 
     @Nonnull

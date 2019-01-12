@@ -29,7 +29,7 @@ import c4.champions.common.potion.PotionPlague;
 import c4.champions.common.rank.Rank;
 import c4.champions.common.rank.RankManager;
 import c4.champions.integrations.gamestages.ChampionStages;
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSortedMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -66,12 +66,22 @@ public class ChampionHelper {
     }
 
     public static Rank generateRank(final EntityLiving entityLivingIn) {
-        ImmutableMap<Integer, Rank> ranks = RankManager.getRanks();
+        ImmutableSortedMap<Integer, Rank> ranks = RankManager.getRanks();
         int finalTier = 0;
+        int firstTier = ranks.firstKey();
 
-        if (!nearActiveBeacon(entityLivingIn)) {
+        if (rand.nextFloat() < ranks.get(firstTier).getChance()) {
 
-            for (Integer tier : ranks.keySet()) {
+            if ((Champions.isGameStagesLoaded && !ChampionStages.isValidTier(ranks.firstKey(), entityLivingIn)) ||
+                    nearActiveBeacon(entityLivingIn)) {
+                return RankManager.getEmptyRank();
+            }
+            finalTier = firstTier;
+        }
+
+        if (finalTier > 0) {
+
+            for (Integer tier : ranks.keySet().tailSet(firstTier, false)) {
 
                 if (rand.nextFloat() < ranks.get(tier).getChance()) {
 
@@ -223,35 +233,27 @@ public class ChampionHelper {
             "isComplete", "field_146015_k");
 
     private static boolean nearActiveBeacon(final EntityLiving entityLivingIn) {
-        BlockPos pos = entityLivingIn.getPosition();
-        int xPos = pos.getX();
-        int yPos = pos.getY();
-        int zPos = pos.getZ();
         int range = ConfigHandler.beaconRange;
 
         if (range <= 0) {
             return false;
         }
-        Iterable<BlockPos> iter = BlockPos.getAllInBox(xPos - range, yPos - range, zPos - range, xPos + range, yPos + range, zPos + range);
 
-        for (BlockPos blockpos : iter) {
+        for (TileEntity te : entityLivingIn.world.tickableTileEntities) {
+            BlockPos pos = te.getPos();
 
-            if (entityLivingIn.world.isBlockLoaded(blockpos)) {
-                TileEntity te = entityLivingIn.world.getTileEntity(blockpos);
+            if (Math.sqrt(entityLivingIn.getDistanceSq(pos)) <= range && te instanceof TileEntityBeacon) {
+                TileEntityBeacon beacon = (TileEntityBeacon)te;
+                boolean flag = false;
 
-                if (te instanceof TileEntityBeacon) {
-                    TileEntityBeacon beacon = (TileEntityBeacon) te;
-                    boolean flag = false;
+                try {
+                    flag = IS_COMPLETE.getBoolean(beacon);
+                } catch (IllegalAccessException e) {
+                    Champions.logger.log(Level.ERROR, "Error reading isComplete from beacon!");
+                }
 
-                    try {
-                        flag = IS_COMPLETE.getBoolean(beacon);
-                    } catch (IllegalAccessException e) {
-                        Champions.logger.log(Level.ERROR, "Error reading isComplete from beacon!");
-                    }
-
-                    if (flag) {
-                        return true;
-                    }
+                if (flag) {
+                    return true;
                 }
             }
         }
