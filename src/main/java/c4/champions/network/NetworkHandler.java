@@ -31,7 +31,5 @@ public class NetworkHandler {
 
     public static void register() {
         INSTANCE.registerMessage(PacketSyncAffix.PacketSyncHandler.class, PacketSyncAffix.class, 0, Side.CLIENT);
-        INSTANCE.registerMessage(PacketRankParticle.PacketParticleHandler.class, PacketRankParticle.class, 1, Side.CLIENT);
     }
-
 }

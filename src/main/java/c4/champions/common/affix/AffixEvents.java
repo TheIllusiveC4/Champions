@@ -19,12 +19,11 @@
 
 package c4.champions.common.affix;
 
+import c4.champions.Champions;
 import c4.champions.common.affix.core.AffixBase;
 import c4.champions.common.capability.CapabilityChampionship;
 import c4.champions.common.capability.IChampionship;
 import c4.champions.common.util.ChampionHelper;
-import c4.champions.network.NetworkHandler;
-import c4.champions.network.PacketRankParticle;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -70,9 +69,8 @@ public class AffixEvents {
                     }
                 }
 
-                if (ChampionHelper.isElite(chp.getRank())) {
-                    NetworkHandler.INSTANCE.sendToAllTracking(new PacketRankParticle(living.getEntityId(), chp.getRank().getColor()),
-                            living);
+                if (living.world.isRemote && ChampionHelper.isElite(chp.getRank())) {
+                    Champions.proxy.generateRankParticle(living, chp.getRank().getColor());
                 }
             }
         }
