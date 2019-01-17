@@ -28,6 +28,10 @@ import c4.champions.common.rank.RankManager;
 import com.google.common.collect.Lists;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.boss.EntityDragon;
+import net.minecraft.entity.monster.EntityEnderman;
+import net.minecraft.entity.monster.EntityEndermite;
+import net.minecraft.entity.monster.EntityShulker;
 import net.minecraft.entity.monster.EntitySilverfish;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
@@ -48,10 +52,15 @@ public class AffixInfested extends AffixBase {
             amount, LivingAttackEvent evt) {
 
         if (!entity.world.isRemote) {
-            List<EntitySilverfish> silverfish = spawnSilverfish(entity.world, entity.getPosition(),
-                    ConfigHandler.affix.infested.silverfishPerAttack);
+            boolean isEnder = false;
 
-            for (EntitySilverfish en : silverfish) {
+            if (entity instanceof EntityEnderman || entity instanceof EntityShulker || entity instanceof EntityEndermite || entity instanceof EntityDragon) {
+                isEnder = true;
+            }
+            List<EntityLiving> parasites = spawnParasites(entity.world, entity.getPosition(),
+                    ConfigHandler.affix.infested.silverfishPerAttack, isEnder);
+
+            for (EntityLiving en : parasites) {
                 en.setAttackTarget(target);
             }
         }
@@ -61,12 +70,17 @@ public class AffixInfested extends AffixBase {
     public float onDamaged(EntityLiving entity, IChampionship cap, DamageSource source, float amount, float newAmount) {
 
         if (!entity.world.isRemote) {
-            List<EntitySilverfish> silverfish = spawnSilverfish(entity.world, entity.getPosition(),
-                    ConfigHandler.affix.infested.silverfishPerAttack);
+            boolean isEnder = false;
+
+            if (entity instanceof EntityEnderman || entity instanceof EntityShulker || entity instanceof EntityEndermite || entity instanceof EntityDragon) {
+                isEnder = true;
+            }
+            List<EntityLiving> parasites = spawnParasites(entity.world, entity.getPosition(),
+                    ConfigHandler.affix.infested.silverfishPerAttack, isEnder);
 
             if (source.getTrueSource() instanceof EntityLivingBase) {
 
-                for (EntitySilverfish en : silverfish) {
+                for (EntityLiving en : parasites) {
                     en.setRevengeTarget((EntityLivingBase) source.getTrueSource());
                 }
             }
@@ -84,30 +98,35 @@ public class AffixInfested extends AffixBase {
             if (source.getTrueSource() instanceof EntityLivingBase) {
                 target = (EntityLivingBase) source.getTrueSource();
             }
-            List<EntitySilverfish> silverfish = spawnSilverfish(entity.world, entity.getPosition(), num);
+            boolean isEnder = false;
 
-            for (EntitySilverfish en : silverfish) {
+            if (entity instanceof EntityEnderman || entity instanceof EntityShulker || entity instanceof EntityEndermite || entity instanceof EntityDragon) {
+                isEnder = true;
+            }
+            List<EntityLiving> parasites = spawnParasites(entity.world, entity.getPosition(), num, isEnder);
+
+            for (EntityLiving en : parasites) {
                 en.setRevengeTarget(target);
             }
         }
     }
 
-    private List<EntitySilverfish> spawnSilverfish(World world, BlockPos pos, int amount) {
-        List<EntitySilverfish> silverfishList = Lists.newArrayList();
+    private List<EntityLiving> spawnParasites(World world, BlockPos pos, int amount, boolean isEnder) {
+        List<EntityLiving> parasites = Lists.newArrayList();
 
         for (int i = 0; i < amount; i++) {
-            EntitySilverfish entitysilverfish = new EntitySilverfish(world);
-            entitysilverfish.setLocationAndAngles((double)pos.getX() + 0.5D, (double)pos.getY(), (double)pos.getZ() + 0.5D, 0.0F, 0.0F);
-            IChampionship chp = CapabilityChampionship.getChampionship(entitysilverfish);
+            EntityLiving para = isEnder ? new EntityEndermite(world) : new EntitySilverfish(world);
+            para.setLocationAndAngles((double)pos.getX() + 0.5D, (double)pos.getY(), (double)pos.getZ() + 0.5D, 0.0F, 0.0F);
+            IChampionship chp = CapabilityChampionship.getChampionship(para);
 
             if (chp != null) {
                 chp.setRank(RankManager.getEmptyRank());
             }
-            world.spawnEntity(entitysilverfish);
-            entitysilverfish.spawnExplosionParticle();
-            silverfishList.add(entitysilverfish);
+            world.spawnEntity(para);
+            para.spawnExplosionParticle();
+            parasites.add(para);
         }
-        return silverfishList;
+        return parasites;
     }
 
     @Override
