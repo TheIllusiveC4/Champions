@@ -41,6 +41,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -186,6 +187,36 @@ public final class CapabilityChampionship {
         }
 
         @SubscribeEvent
+        public static void entityJoin(EntityJoinWorldEvent evt) {
+            Entity entity = evt.getEntity();
+
+            if (!entity.world.isRemote && ChampionHelper.isValidChampion(entity)) {
+                EntityLiving living = (EntityLiving)entity;
+                IChampionship chp = getChampionship(living);
+
+                if (chp != null && chp.getRank() == null) {
+                    Rank rank = ChampionHelper.generateRank(living);
+                    chp.setRank(rank);
+
+                    if (rank.getTier() > 0) {
+                        Set<String> affixes = ChampionHelper.generateAffixes(rank, living);
+                        chp.setAffixes(affixes);
+                        chp.setName(ChampionHelper.generateRandomName());
+                        chp.getRank().applyGrowth(living);
+
+                        for (String s : chp.getAffixes()) {
+                            IAffix affix = AffixRegistry.getAffix(s);
+
+                            if (affix != null) {
+                                affix.onInitialSpawn(living, chp);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        @SubscribeEvent
         public static void entitySpawn(LivingSpawnEvent.SpecialSpawn evt) {
             Entity entity = evt.getEntity();
 
@@ -206,7 +237,6 @@ public final class CapabilityChampionship {
                     }
 
                     if (chp.getRank() == null) {
-
                         Rank rank = ChampionHelper.generateRank(living);
                         chp.setRank(rank);
 
