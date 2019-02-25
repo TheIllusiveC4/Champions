@@ -162,6 +162,8 @@ champions.general.growth.knockbackresist=Knockback Resistance
 champions.general.growth.knockbackresist.tooltip=The increase in knockback resistance multiplied by the growth factor
 champions.general.growth.exp=Experience
 champions.general.growth.exp.tooltip=The increase in experience multiplied by the growth factor
+champions.general.growth.creeperstrength=Creeper Explosion Strength
+champions.general.growth.creeperstrength.tooltip=The increase in creeper explosion strength multiplied by tier, NOT by growth factor
 
 #################
 #     Names     #

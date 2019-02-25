@@ -29,14 +29,17 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.storage.loot.LootContext;
 import net.minecraft.world.storage.loot.LootTable;
 import net.minecraftforge.event.entity.living.*;
+import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.List;
@@ -121,6 +124,20 @@ public class EventHandlerCommon {
                     evt.setAmount(evt.getAmount() * (float)(1 + ConfigHandler.growth.attackDamage * chp.getRank()
                             .getTier()));
                 }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onExplosion(ExplosionEvent.Start evt) {
+        Explosion explosion = evt.getExplosion();
+        EntityLivingBase entityLivingBase = explosion.getExplosivePlacedBy();
+
+        if (entityLivingBase instanceof EntityCreeper && !entityLivingBase.world.isRemote) {
+            IChampionship chp = CapabilityChampionship.getChampionship((EntityCreeper)entityLivingBase);
+
+            if (chp != null && ChampionHelper.isElite(chp.getRank())) {
+                explosion.size += ConfigHandler.growth.creeperStrength * chp.getRank().getTier();
             }
         }
     }

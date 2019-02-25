@@ -377,7 +377,7 @@ public class ChampionHelper {
                             try {
                                 stackSize = Integer.parseInt(parsed[3]);
                             } catch (NumberFormatException e) {
-                                Champions.logger.log(Level.ERROR, parsed[3] + " is not a valid stack size");
+                                Champions.logger.log(Level.ERROR, parsed[3] + " is not a valid stack creeperStrength");
                             }
 
                             if (parsed.length > 4) {

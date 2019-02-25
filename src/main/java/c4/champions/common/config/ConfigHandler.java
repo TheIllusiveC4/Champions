@@ -297,6 +297,10 @@ public class ConfigHandler {
         @Name("Experience")
         @Comment("The increase in experience multiplied by the growth factor")
         public double exp = 1;
+
+        @Name("Creeper Explosion Strength")
+        @Comment("The increase in creeper explosion strength multiplied by tier, NOT by growth factor")
+        public int creeperStrength = 2;
     }
 
     public static class Client {
