@@ -175,6 +175,11 @@ champions.general.growth.exp.tooltip=The increase in experience multiplied by th
 champions.general.growth.creeperstrength=Creeper Explosion Strength
 champions.general.growth.creeperstrength.tooltip=The increase in creeper explosion strength multiplied by tier, NOT by growth factor
 
+champions.general.scalinghealth=Scaling Health Integration
+champions.general.scalinghealth.tooltip=Settings for integration with the Scaling Health mod
+champions.general.scalinghealth.spawnmodifiers=Tier Spawn Modifiers
+champions.general.scalinghealth.spawnmodifiers.tooltip=List of tiers with numbers to multiply spawn rates by difficulty (i.e. '1;0.02' to increase tier 1 spawns by 2 percent per difficulty). Note that tier spawn chances are cumulative, so increasing lower tier spawns will naturally increase higher tier spawns.
+
 #################
 #     Names     #
 #################

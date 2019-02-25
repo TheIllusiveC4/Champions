@@ -100,6 +100,10 @@ public class ConfigHandler {
     @Comment("Settings that affect individual affixes")
     public static Affix affix = new Affix();
 
+    @Name("Scaling Health Integration")
+    @Comment("Settings for integration with the Scaling Health mod")
+    public static ScalingHealth scalingHealth = new ScalingHealth();
+
     public static class Affix {
 
         @Name("Maximum Ability Range")
@@ -324,6 +328,15 @@ public class ConfigHandler {
         @Name("Rank Colors")
         @Comment("A list of colors, as numbers, for each rank")
         public String[] colors = new String[]{};
+    }
+
+    public static class ScalingHealth {
+
+        @Name("Tier Spawn Modifiers")
+        @Comment("List of tiers with numbers to multiply spawn rates by difficulty (i.e. '1;0.02' to increase tier 1 spawns by 2 percent per difficulty)." +
+                " Note that tier spawn chances are cumulative, so increasing lower tier spawns will naturally increase higher tier spawns.")
+        @RequiresMcRestart
+        public String[] spawnModifiers = new String[]{};
     }
 
     public enum PermissionMode {

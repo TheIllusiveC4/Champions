@@ -31,6 +31,7 @@ import c4.champions.common.item.ItemChampionPlacer;
 import c4.champions.common.loot.EntityIsChampion;
 import c4.champions.common.rank.RankManager;
 import c4.champions.common.util.ChampionHelper;
+import c4.champions.integrations.scalinghealth.ChampionDifficulty;
 import c4.champions.network.NetworkHandler;
 import c4.champions.proxy.IProxy;
 import net.minecraft.block.BlockDispenser;
@@ -68,7 +69,9 @@ public class Champions
     public static final String MODID = "champions";
     public static final String NAME = "Champions";
 
+    //Integrations
     public static boolean isGameStagesLoaded = false;
+    public static boolean isScalingHealthLoaded = false;
 
     public static Logger logger;
 
@@ -98,6 +101,11 @@ public class Champions
 
         if (Loader.isModLoaded("gamestages")) {
             isGameStagesLoaded = true;
+        }
+
+        if (Loader.isModLoaded("scalinghealth")) {
+            isScalingHealthLoaded = true;
+            ChampionDifficulty.loadConfigs();
         }
         RankManager.readRanksFromJson();
         AffixFilterManager.readAffixFiltersFromJson();

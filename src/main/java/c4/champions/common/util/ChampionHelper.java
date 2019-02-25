@@ -29,6 +29,7 @@ import c4.champions.common.potion.PotionPlague;
 import c4.champions.common.rank.Rank;
 import c4.champions.common.rank.RankManager;
 import c4.champions.integrations.gamestages.ChampionStages;
+import c4.champions.integrations.scalinghealth.ChampionDifficulty;
 import com.google.common.collect.ImmutableSortedMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -47,6 +48,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.silentchaos512.scalinghealth.api.ScalingHealthAPI;
 import org.apache.logging.log4j.Level;
 
 import java.lang.reflect.Field;
@@ -83,8 +85,13 @@ public class ChampionHelper {
         if (finalTier > 0) {
 
             for (Integer tier : ranks.keySet().tailSet(firstTier, false)) {
+                float chance = ranks.get(tier).getChance();
 
-                if (rand.nextFloat() < ranks.get(tier).getChance()) {
+                if (Champions.isScalingHealthLoaded) {
+                    chance += ChampionDifficulty.getSpawnModifier(tier) * ScalingHealthAPI.getAreaDifficulty(entityLivingIn.world, entityLivingIn.getPosition());
+                }
+
+                if (rand.nextFloat() < chance) {
 
                     if (Champions.isGameStagesLoaded && !ChampionStages.isValidTier(tier, entityLivingIn)) {
                         break;
