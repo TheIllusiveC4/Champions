@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
+## [1.0.5] - 2019.02.25
+### Added
+- Config options for Desecrator affix to control cloud wait time, radius, and duration [#14](https://github.com/TheIllusiveC4/Champions/issues/14)
+- Creeper explosions increase in size by champion tier, configurable
+- Config option to enable death messages for champion slaying [#15](https://github.com/TheIllusiveC4/Champions/issues/15)
+- Configurable Scaling Health integration for increasing champion spawns by difficulty rating [#13](https://github.com/TheIllusiveC4/Champions/issues/13)
+
 ## [1.0.4.1] - 2019.01.19
 ### Changed
 - Champion candidate selection will now catch more mobs (i.e. spawn eggs, Wither, Ender Dragon, unnatural spawns, etc.)
