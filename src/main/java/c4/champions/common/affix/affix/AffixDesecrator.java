@@ -87,10 +87,10 @@ public class AffixDesecrator extends AffixBase {
                         EntityAreaEffectCloud cloud = new EntityAreaEffectCloud(entitylivingbase.world,
                                 entitylivingbase.posX, entitylivingbase.posY, entitylivingbase.posZ);
                         cloud.setOwner(this.entity);
-                        cloud.setRadius(4.0F);
-                        cloud.setDuration(200);
+                        cloud.setRadius((float)ConfigHandler.affix.desecrator.cloudRadius);
+                        cloud.setDuration(ConfigHandler.affix.desecrator.cloudDuration);
                         cloud.setRadiusOnUse(-0.5F);
-                        cloud.setWaitTime(10);
+                        cloud.setWaitTime(ConfigHandler.affix.desecrator.activationTicks);
                         cloud.setRadiusPerTick(-cloud.getRadius() / (float)cloud.getDuration());
                         cloud.addEffect(new PotionEffect(MobEffects.INSTANT_DAMAGE, 1, 1));
                         entity.world.spawnEntity(cloud);

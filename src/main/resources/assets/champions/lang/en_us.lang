@@ -90,6 +90,12 @@ champions.general.affix.desecrator=Desecrator
 champions.general.affix.desecrator.tooltip=Settings for the Desecrator affix
 champions.general.affix.desecrator.attackinterval=Attack Interval
 champions.general.affix.desecrator.attackinterval.tooltip=How often the champion will create harming clouds (in ticks)
+champions.general.affix.desecrator.activationticks=Cloud Activation Time
+champions.general.affix.desecrator.activationticks.tooltip=How long, in ticks, it takes for the effect cloud to activate after being placed
+champions.general.affix.desecrator.cloudradius=Cloud Radius
+champions.general.affix.desecrator.cloudradius.tooltip=The radius of the cloud effect
+champions.general.affix.desecrator.cloudduration=Cloud Duration
+champions.general.affix.desecrator.cloudduration.tooltip=The duration, in ticks, of the cloud effect
 
 champions.general.affix.hasty=Hasty
 champions.general.affix.hasty.tooltip=Settings for the Hasty affix

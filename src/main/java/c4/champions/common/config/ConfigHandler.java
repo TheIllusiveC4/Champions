@@ -184,6 +184,18 @@ public class ConfigHandler {
             @Name("Attack Interval")
             @Comment("How often the champion will create harming clouds (in ticks)")
             public int attackInterval = 60;
+
+            @Name("Cloud Activation Time")
+            @Comment("How long, in ticks, it takes for the effect cloud to activate after being placed")
+            public int activationTicks = 20;
+
+            @Name("Cloud Radius")
+            @Comment("The radius of the cloud effect")
+            public double cloudRadius = 4.0f;
+
+            @Name("Cloud Duration")
+            @Comment("The duration, in ticks, of the cloud effect")
+            public int cloudDuration = 200;
         }
 
         public class Hasty {
