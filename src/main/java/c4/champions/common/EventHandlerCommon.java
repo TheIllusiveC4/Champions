@@ -34,6 +34,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.storage.loot.LootContext;
@@ -47,6 +49,21 @@ import java.util.List;
 public class EventHandlerCommon {
 
     private static final ResourceLocation CHAMPION_LOOT = new ResourceLocation(Champions.MODID, "champion_loot");
+
+    @SubscribeEvent
+    public void livingDeath(LivingDeathEvent evt) {
+        EntityLivingBase entityLivingBase = evt.getEntityLiving();
+        boolean flag = entityLivingBase.world.getGameRules().getBoolean("showDeathMessages");
+        if (flag && !entityLivingBase.world.isRemote && ChampionHelper.isValidChampion(entityLivingBase)) {
+            IChampionship chp = CapabilityChampionship.getChampionship((EntityLiving)entityLivingBase);
+
+            if (chp != null && ChampionHelper.isElite(chp.getRank()) && chp.getRank().getTier() >= ConfigHandler.deathMessageTier) {
+                entityLivingBase.getServer().getPlayerList().sendMessage(new TextComponentTranslation("champions.identifier")
+                        .appendSibling(new TextComponentString(" "))
+                        .appendSibling(entityLivingBase.getCombatTracker().getDeathMessage()));
+            }
+        }
+    }
 
     @SubscribeEvent
     public void livingDrops(LivingDropsEvent evt) {

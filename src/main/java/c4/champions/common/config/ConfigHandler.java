@@ -84,6 +84,10 @@ public class ConfigHandler {
     @Comment("The range an active beacon will prevent champion spawns, 0 to disable")
     public static int beaconRange = 64;
 
+    @Name("Death Message Tier")
+    @Comment("The tier (and above) of champions that will have death messages sent out upon defeat, 0 to disable")
+    public static int deathMessageTier = 0;
+
     @Name("Client Settings")
     @Comment("Settings that are only client-side")
     public static Client client = new Client();
