@@ -72,8 +72,15 @@ public class ChampionHelper {
         ImmutableSortedMap<Integer, Rank> ranks = RankManager.getRanks();
         int finalTier = 0;
         int firstTier = ranks.firstKey();
+        float chance = ranks.get(firstTier).getChance();
 
-        if (rand.nextFloat() < ranks.get(firstTier).getChance() || champions.contains(EntityList.getKey(entityLivingIn))) {
+        if (Champions.isScalingHealthLoaded) {
+            double modifier = ChampionDifficulty.getSpawnModifier(firstTier);
+            double difficulty = ScalingHealthAPI.getAreaDifficulty(entityLivingIn.world, entityLivingIn.getPosition());
+            chance += modifier * difficulty;
+        }
+
+        if (rand.nextFloat() < chance || champions.contains(EntityList.getKey(entityLivingIn))) {
 
             if ((Champions.isGameStagesLoaded && !ChampionStages.isValidTier(ranks.firstKey(), entityLivingIn)) ||
                     nearActiveBeacon(entityLivingIn)) {
@@ -85,10 +92,12 @@ public class ChampionHelper {
         if (finalTier > 0) {
 
             for (Integer tier : ranks.keySet().tailSet(firstTier, false)) {
-                float chance = ranks.get(tier).getChance();
+                chance = ranks.get(tier).getChance();
 
                 if (Champions.isScalingHealthLoaded) {
-                    chance += ChampionDifficulty.getSpawnModifier(tier) * ScalingHealthAPI.getAreaDifficulty(entityLivingIn.world, entityLivingIn.getPosition());
+                    double modifier = ChampionDifficulty.getSpawnModifier(tier);
+                    double difficulty = ScalingHealthAPI.getAreaDifficulty(entityLivingIn.world, entityLivingIn.getPosition());
+                    chance += modifier * difficulty;
                 }
 
                 if (rand.nextFloat() < chance) {
