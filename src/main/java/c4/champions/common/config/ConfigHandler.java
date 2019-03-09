@@ -55,7 +55,7 @@ public class ConfigHandler {
     @Name("Mob List")
     @Comment("Set which mobs are blacklisted or whitelisted for champion mobs, leave blank to disable this option")
     @RequiresMcRestart
-    public static String[] mobList = new String[]{};
+    public static String[] mobList = new String[]{"aether_legacy:sun_spirit"};
 
     @Name("Champion Mobs List")
     @Comment("List of mobs that will always spawn as champions")

@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
 ## [1.0.5.1] - 2019.03.08
+### Changed
+- Aether Legacy's Sun Spirit is blacklisted by default due to erratic behavior from the AI when combined wth Champion traits [#16](https://github.com/TheIllusiveC4/Champions/issues/16)
+
 ### Fixed
 - Fixed Scaling Health integration not applying difficulty modifiers to the first tier
 
