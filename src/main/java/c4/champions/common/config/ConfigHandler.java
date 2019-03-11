@@ -215,6 +215,10 @@ public class ConfigHandler {
             @Comment("Number of silverfish to spawn per attack")
             public int silverfishPerAttack = 1;
 
+            @Name("Silverfish on Damage Taken")
+            @Comment("Number of silverfish to spawn when damage is taken")
+            public int silverfishOnDamage = 1;
+
             @Name("Silverfish on Death per Tier")
             @Comment("Average number of silverfish to spawn on death per tier")
             public int silverfishOnDeath = 4;

@@ -69,20 +69,17 @@ public class AffixInfested extends AffixBase {
     @Override
     public float onDamaged(EntityLiving entity, IChampionship cap, DamageSource source, float amount, float newAmount) {
 
-        if (!entity.world.isRemote) {
+        if (!entity.world.isRemote && source.getTrueSource() instanceof EntityLivingBase) {
             boolean isEnder = false;
 
             if (entity instanceof EntityEnderman || entity instanceof EntityShulker || entity instanceof EntityEndermite || entity instanceof EntityDragon) {
                 isEnder = true;
             }
             List<EntityLiving> parasites = spawnParasites(entity.world, entity.getPosition(),
-                    ConfigHandler.affix.infested.silverfishPerAttack, isEnder);
+                    ConfigHandler.affix.infested.silverfishOnDamage, isEnder);
 
-            if (source.getTrueSource() instanceof EntityLivingBase) {
-
-                for (EntityLiving en : parasites) {
-                    en.setRevengeTarget((EntityLivingBase) source.getTrueSource());
-                }
+            for (EntityLiving en : parasites) {
+                en.setRevengeTarget((EntityLivingBase) source.getTrueSource());
             }
         }
         return newAmount;
@@ -131,6 +128,6 @@ public class AffixInfested extends AffixBase {
 
     @Override
     public boolean canApply(EntityLiving entity) {
-        return !(entity instanceof EntitySilverfish);
+        return !(entity instanceof EntitySilverfish) && !(entity instanceof EntityEndermite);
     }
 }
