@@ -23,12 +23,19 @@ import c4.champions.Champions;
 import c4.champions.common.affix.core.AffixBase;
 import c4.champions.common.capability.CapabilityChampionship;
 import c4.champions.common.capability.IChampionship;
+import c4.champions.common.rank.Rank;
+import c4.champions.common.rank.RankManager;
 import c4.champions.common.util.ChampionHelper;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.Tuple;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.List;
 
 public class AffixEvents {
 
@@ -46,6 +53,18 @@ public class AffixEvents {
 
                     if (affix != null) {
                         affix.onSpawn(living, chp);
+                    }
+                }
+                Rank rank = chp.getRank();
+
+                if (!living.world.isRemote && ChampionHelper.isElite(rank)) {
+                    List<Tuple<Potion, Integer>> potions = RankManager.getPotionsForTier(rank.getTier());
+
+                    if (potions != null) {
+
+                        for (Tuple<Potion, Integer> potion : potions) {
+                            living.addPotionEffect(new PotionEffect(potion.getFirst(), 200, potion.getSecond()));
+                        }
                     }
                 }
             }
@@ -68,9 +87,22 @@ public class AffixEvents {
                         affix.onUpdate(living, chp);
                     }
                 }
+                Rank rank = chp.getRank();
 
-                if (living.world.isRemote && ChampionHelper.isElite(chp.getRank())) {
-                    Champions.proxy.generateRankParticle(living, chp.getRank().getColor());
+                if (ChampionHelper.isElite(rank)) {
+
+                    if (living.world.isRemote) {
+                        Champions.proxy.generateRankParticle(living, rank.getColor());
+                    } else if (living.ticksExisted % 100 == 0) {
+                        List<Tuple<Potion, Integer>> potions = RankManager.getPotionsForTier(rank.getTier());
+
+                        if (potions != null) {
+
+                            for (Tuple<Potion, Integer> potion : potions) {
+                                living.addPotionEffect(new PotionEffect(potion.getFirst(), 200, potion.getSecond()));
+                            }
+                        }
+                    }
                 }
             }
         }

@@ -22,7 +22,6 @@ package c4.champions.network;
 import c4.champions.common.capability.CapabilityChampionship;
 import c4.champions.common.capability.IChampionship;
 import c4.champions.common.rank.RankManager;
-import c4.champions.common.util.ChampionHelper;
 import com.google.common.collect.Maps;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;

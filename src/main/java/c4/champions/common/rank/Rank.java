@@ -27,29 +27,26 @@ import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import org.apache.logging.log4j.Level;
 
-import java.util.UUID;
-
 public class Rank {
-
-    private static final UUID GROWTH = UUID.fromString("e8471143-fb3f-4ec0-b26f-b83794d08f61");
-    private static final String GROWTH_NAME = "Growth modifier";
 
     private final int tier;
     private final int color;
     private final int affixes;
     private final int growthFactor;
     private final float chance;
+    private final String[] potions;
 
     public Rank() {
-        this(0, 0, 0, 0, 0);
+        this(0, 0, 0, 0, 0, new String[]{});
     }
 
-    public Rank(int tier, int affixes, int growthFactor, float chance, int color) {
+    public Rank(int tier, int affixes, int growthFactor, float chance, int color, String[] potions) {
         this.tier = tier;
         this.affixes = affixes;
         this.growthFactor = growthFactor;
         this.chance = chance;
         this.color = color;
+        this.potions = potions;
     }
 
     public int getTier() {
@@ -81,6 +78,10 @@ public class Rank {
 
     public float getChance() {
         return chance;
+    }
+
+    public String[] getPotions() {
+        return potions;
     }
 
     public void applyGrowth(EntityLivingBase entityLivingBase) {
