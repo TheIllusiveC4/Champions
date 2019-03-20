@@ -159,6 +159,10 @@ champions.general.client=Client Settings
 champions.general.client.tooltip=Settings that are only client-side
 champions.general.client.colors=Rank Colors
 champions.general.client.colors.tooltip=A list of colors, as numbers, for each rank
+champions.general.client.xoffset=Health Bar X-Offset
+champions.general.client.xoffset.tooltip=The x-offset for the champion health bars
+champions.general.client.yoffset=Health Bar Y-Offset
+champions.general.client.yoffset.tooltip=The y-offset for the champion health bars
 
 champions.general.growth=Growth Settings
 champions.general.growth.tooltip=Settings that affect the growth rate of champion mobs

@@ -21,6 +21,7 @@ package c4.champions.client;
 
 import c4.champions.Champions;
 import c4.champions.common.capability.IChampionship;
+import c4.champions.common.config.ConfigHandler;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import net.minecraft.client.Minecraft;
@@ -146,6 +147,8 @@ public class ClientUtil {
         int i = scaledresolution.getScaledWidth();
         int k = i / 2 - 91;
         int j = 21;
+        int xOffset = ConfigHandler.client.xOffset;
+        int yOffset = ConfigHandler.client.yOffset;
         int color = chp.getRank().getColor();
         float r = (float)((color>>16)&0xFF)/255f;
         float g = (float)((color>>8)&0xFF)/255f;
@@ -154,28 +157,29 @@ public class ClientUtil {
         GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         GlStateManager.enableBlend();
         client.getTextureManager().bindTexture(GUI_BARS_TEXTURES);
-        render(k, j, living.getHealth() / living.getMaxHealth());
+        render(xOffset + k, yOffset + j, living.getHealth() / living.getMaxHealth());
         client.getTextureManager().bindTexture(GUI_STAR);
         int num = chp.getRank().getTier();
 
         if (num <= 18) {
-            int startX = i / 2 - 5 - 5 * (num - 1);
+            int startX = xOffset + i / 2 - 5 - 5 * (num - 1);
+
             for (int tier = 0; tier < num; tier++) {
-                Gui.drawModalRectWithCustomSizedTexture(startX, 1, 0, 0, 9, 9, 9, 9);
+                Gui.drawModalRectWithCustomSizedTexture(startX, yOffset + 1, 0, 0, 9, 9, 9, 9);
                 startX += 10;
             }
         } else {
-            int startX = i / 2 - 5;
+            int startX = xOffset + i / 2 - 5;
             String count = "x" + num;
-            Gui.drawModalRectWithCustomSizedTexture(startX - client.fontRenderer.getStringWidth(count) / 2, 1, 0, 0,
+            Gui.drawModalRectWithCustomSizedTexture(startX - client.fontRenderer.getStringWidth(count) / 2, yOffset + 1, 0, 0,
                     9, 9, 9, 9);
-            client.fontRenderer.drawStringWithShadow(count, startX + 10 - client.fontRenderer.getStringWidth(count) /
-                    2, 2, 16777215);
+            client.fontRenderer.drawStringWithShadow(count, startX + 10 - client.fontRenderer.getStringWidth(count) / 2.0f,
+                    2, 16777215);
 
         }
         String s = living.hasCustomName() ? living.getDisplayName().getFormattedText() : chp.getName();
-        client.fontRenderer.drawStringWithShadow(s, (float)(i / 2 - client.fontRenderer.getStringWidth(s) / 2),
-                (float)(j - 9), color);
+        client.fontRenderer.drawStringWithShadow(s, xOffset + (float)(i / 2 - client.fontRenderer.getStringWidth(s) / 2),
+                yOffset + (float)(j - 9), color);
         GlStateManager.color(1, 1, 1, 1);
         StringBuilder builder = new StringBuilder();
 
@@ -184,8 +188,8 @@ public class ClientUtil {
             builder.append(" ");
         }
         String affixes = builder.toString().trim();
-        client.fontRenderer.drawStringWithShadow(affixes, (float)(i / 2 - client.fontRenderer.getStringWidth(affixes) / 2),
-                (float)(j + 6), 16777215);
+        client.fontRenderer.drawStringWithShadow(affixes, xOffset + (float)(i / 2 - client.fontRenderer.getStringWidth(affixes) / 2),
+                yOffset + (float)(j + 6), 16777215);
         GlStateManager.disableBlend();
     }
 

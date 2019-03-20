@@ -332,6 +332,14 @@ public class ConfigHandler {
         @Name("Rank Colors")
         @Comment("A list of colors, as numbers, for each rank")
         public String[] colors = new String[]{};
+
+        @Name("Health Bar X-Offset")
+        @Comment("The x-offset for the champion health bars")
+        public int xOffset = 0;
+
+        @Name("Health Bar Y-Offset")
+        @Comment("The y-offset for the champion health bars")
+        public int yOffset = 0;
     }
 
     public static class ScalingHealth {
