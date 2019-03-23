@@ -40,6 +40,7 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.storage.loot.LootContext;
 import net.minecraft.world.storage.loot.LootTable;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -69,6 +70,10 @@ public class EventHandlerCommon {
     public void livingDrops(LivingDropsEvent evt) {
         EntityLivingBase entity = evt.getEntityLiving();
 
+        if (!entity.world.getGameRules().getBoolean("doMobLoot") || (!ConfigHandler.lootFake && evt.getSource().getTrueSource() instanceof FakePlayer)) {
+            return;
+        }
+
         if (ChampionHelper.isValidChampion(entity)) {
             IChampionship chp = CapabilityChampionship.getChampionship((EntityLiving)entity);
 
@@ -81,7 +86,6 @@ public class EventHandlerCommon {
                         LootTable table = world.getLootTableManager().getLootTableFromLocation(CHAMPION_LOOT);
                         DamageSource source = evt.getSource();
                         LootContext.Builder builder = new LootContext.Builder(world).withDamageSource(evt.getSource()).withLootedEntity(entity);
-
 
                         if (source.getTrueSource() instanceof EntityPlayer) {
                             EntityPlayer player = (EntityPlayer) source.getTrueSource();
