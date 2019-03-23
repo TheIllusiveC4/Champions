@@ -266,7 +266,7 @@ public class ConfigHandler {
             @Name("Infection Potion")
             @Comment("The potion that will be spread through the plague effect")
             @RequiresMcRestart
-            public String infectPotion = "minecraft:wither";
+            public String infectPotion = "minecraft:poison";
 
             @Name("Infection Potion Duration")
             @Comment("The duration (in ticks) of the infection potion")
