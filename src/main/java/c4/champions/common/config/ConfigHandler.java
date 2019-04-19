@@ -344,6 +344,10 @@ public class ConfigHandler {
         @Name("Health Bar Y-Offset")
         @Comment("The y-offset for the champion health bars")
         public int yOffset = 0;
+
+        @Name("Health Bar Visibility Range")
+        @Comment("The distance, in blocks, from which the health bar can be seen")
+        public int healthVisibility = 50;
     }
 
     public static class ScalingHealth {

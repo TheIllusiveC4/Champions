@@ -165,6 +165,8 @@ champions.general.client.xoffset=Health Bar X-Offset
 champions.general.client.xoffset.tooltip=The x-offset for the champion health bars
 champions.general.client.yoffset=Health Bar Y-Offset
 champions.general.client.yoffset.tooltip=The y-offset for the champion health bars
+champions.general.client.healthvisibility=Health Bar Visibility Range
+champions.general.client.healthvisibility.tooltip=The distance, in blocks, from which the health bar can be seen
 
 champions.general.growth=Growth Settings
 champions.general.growth.tooltip=Settings that affect the growth rate of champion mobs
