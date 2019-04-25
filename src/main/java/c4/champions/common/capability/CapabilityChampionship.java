@@ -165,12 +165,15 @@ public final class CapabilityChampionship {
 
         @Override
         public NBTBase serializeNBT() {
-            return getCapability().writeNBT(getInstance(), getFacing());
+            return getCapability() != null ? getCapability().writeNBT(getInstance(), getFacing()) : new NBTTagCompound();
         }
 
         @Override
         public void deserializeNBT(NBTBase nbt) {
-            getCapability().readNBT(getInstance(), getFacing(), nbt);
+
+            if (getCapability() != null) {
+                getCapability().readNBT(getInstance(), getFacing(), nbt);
+            }
         }
     }
 
