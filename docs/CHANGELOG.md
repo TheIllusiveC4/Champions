@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
+## [1.0.9] - 2019.04.24
+### Added
+- Config option for health bar visibility range [#21](https://github.com/TheIllusiveC4/Champions/issues/21)
+
+### Changed
+- Champion health bars can now be seen through transparent/partially transparent blocks such as glass [#21](https://github.com/TheIllusiveC4/Champions/issues/21)
+
+### Fixed
+- Fixed possible NPE [#24](https://github.com/TheIllusiveC4/Champions/issues/24)
+
 ## [1.0.8] - 2019.03.22
 ### Added
 - Config option to stop loot drops when killed by fake players [#19](https://github.com/TheIllusiveC4/Champions/issues/19)
