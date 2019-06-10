@@ -100,6 +100,11 @@ public abstract class AffixBase implements IAffix {
     }
 
     @Override
+    public float onHealed(EntityLiving entity, IChampionship cap, float amount, float newAmount) {
+        return newAmount;
+    }
+
+    @Override
     public void onKnockback(EntityLiving entity, IChampionship cap, LivingKnockBackEvent evt) {
 
     }

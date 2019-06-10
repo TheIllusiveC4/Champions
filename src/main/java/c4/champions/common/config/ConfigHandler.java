@@ -215,17 +215,21 @@ public class ConfigHandler {
 
         public class Infested {
 
-            @Name("Silverfish per Attack")
-            @Comment("Number of silverfish to spawn per attack")
-            public int silverfishPerAttack = 1;
+            @Name("Silverfish Spawn Amount")
+            @Comment("How many silverfish to spawn per interval")
+            public int silverfishAmount = 2;
 
-            @Name("Silverfish on Damage Taken")
-            @Comment("Number of silverfish to spawn when damage is taken")
-            public int silverfishOnDamage = 1;
+            @Name("Silverfish Spawn Interval")
+            @Comment("How long, in ticks, between silverfish spawns")
+            public int silverfishInterval = 60;
 
-            @Name("Silverfish on Death per Tier")
-            @Comment("Average number of silverfish to spawn on death per tier")
-            public int silverfishOnDeath = 4;
+            @Name("Silverfish Per Health")
+            @Comment("The amount of silverfish to infest per health point of the champion")
+            public double silverfishPerHealth = 0.5d;
+
+            @Name("Silverfish Total Amount")
+            @Comment("The total amount of silverfish a champion can house at once")
+            public int silverfishTotal = 20;
         }
 
         public class Jailer {
