@@ -47,6 +47,8 @@ public interface IAffix {
 
     float onHurt(EntityLiving entity, IChampionship cap, DamageSource source, float amount, float newAmount);
 
+    float onHealed(EntityLiving entity, IChampionship cap, float amount, float newAmount);
+
     float onDamaged(EntityLiving entity, IChampionship cap, DamageSource source, float amount, float newAmount);
 
     void onDeath(EntityLiving entity, IChampionship cap, DamageSource source, LivingDeathEvent evt);

@@ -238,4 +238,28 @@ public class AffixEvents {
             }
         }
     }
+
+    @SubscribeEvent
+    public void onLivingHeal(LivingHealEvent evt) {
+
+        if (ChampionHelper.isValidChampion(evt.getEntityLiving())) {
+            float amount = evt.getAmount();
+            float newAmount = amount;
+
+            EntityLiving living = (EntityLiving)evt.getEntityLiving();
+            IChampionship chp = CapabilityChampionship.getChampionship(living);
+
+            if (chp != null) {
+
+                for (String aff : chp.getAffixes()) {
+                    AffixBase affix = AffixRegistry.getAffix(aff);
+
+                    if (affix != null) {
+                        newAmount = affix.onHealed(living, chp,  amount, newAmount);
+                    }
+                }
+                evt.setAmount(newAmount);
+            }
+        }
+    }
 }
