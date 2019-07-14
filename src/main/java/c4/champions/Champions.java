@@ -21,6 +21,7 @@ package c4.champions;
 
 import c4.champions.command.CommandChampionEgg;
 import c4.champions.command.CommandSpawnChampion;
+import c4.champions.command.CommandSpawnChampionAt;
 import c4.champions.common.EventHandlerCommon;
 import c4.champions.common.affix.AffixEvents;
 import c4.champions.common.affix.Affixes;
@@ -145,5 +146,6 @@ public class Champions
     public void serverLoad(FMLServerStartingEvent evt) {
         evt.registerServerCommand(new CommandSpawnChampion());
         evt.registerServerCommand(new CommandChampionEgg());
+        evt.registerServerCommand(new CommandSpawnChampionAt());
     }
 }

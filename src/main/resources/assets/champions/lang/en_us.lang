@@ -252,5 +252,7 @@ champions.commands.spawnchampion.tierError=%s is not a valid tier
 champions.commands.spawnchampion.affixError=%s is not a valid affix identifier
 champions.commands.spawnchampion.success=Spawned champion mob at %s
 
+champions.commands.spawnchampionat.usage=/spawnchampionat <x> <y> <z> <entity> <tier> [affixes]...
+
 champions.commands.championegg.usage=/championegg <entity> <tier> [affixes]...
 champions.commands.championegg.success=Given Champion Egg to %s

@@ -78,7 +78,7 @@ public class CommandSpawnChampion extends CommandBase {
         }
         Entity entity = EntityList.createEntityByIDFromName(new ResourceLocation(args[0]), sender.getEntityWorld());
 
-        if (entity == null || !(entity instanceof EntityLiving)) {
+        if (!(entity instanceof EntityLiving)) {
             throw new CommandException(Champions.MODID + ".commands.spawnchampion.entityError", args[0]);
         }
 
