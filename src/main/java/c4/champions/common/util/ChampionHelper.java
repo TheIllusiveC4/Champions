@@ -164,7 +164,7 @@ public class ChampionHelper {
                     AffixCategory cat = aff.getCategory();
                     Set<String> availableAffixes = categoryMap.get(cat);
 
-                    if (availableAffixes.contains(s)) {
+                    if (availableAffixes != null && availableAffixes.contains(s)) {
                         availableAffixes.remove(s);
                         boolean added = false;
                         AffixBase affix = AffixRegistry.getAffix(s);
