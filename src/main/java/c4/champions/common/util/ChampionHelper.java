@@ -62,7 +62,7 @@ public class ChampionHelper {
     private static Set<Integer> dimensions = Sets.newHashSet();
     private static Set<ResourceLocation> mobs = Sets.newHashSet();
     private static Map<Integer, List<LootData>> drops = Maps.newHashMap();
-    private static Set<ResourceLocation> champions = Sets.newHashSet();
+    private static Map<ResourceLocation, Integer> champions = Maps.newHashMap();
 
     public static boolean isValidChampion(final Entity entity) {
         return entity instanceof EntityLiving && entity instanceof IMob && isValidEntity(entity);
@@ -80,7 +80,14 @@ public class ChampionHelper {
             chance += modifier * difficulty;
         }
 
-        if (rand.nextFloat() < chance || champions.contains(EntityList.getKey(entityLivingIn))) {
+        ResourceLocation entityKey = EntityList.getKey(entityLivingIn);
+
+        if (rand.nextFloat() < chance || champions.containsKey(entityKey)) {
+            int curatedTier = champions.getOrDefault(entityKey, 0);
+
+            if (curatedTier > 0) {
+                return ranks.get(curatedTier);
+            }
 
             if ((Champions.isGameStagesLoaded && !ChampionStages.isValidTier(ranks.firstKey(), entityLivingIn)) ||
                     nearActiveBeacon(entityLivingIn)) {
@@ -337,10 +344,12 @@ public class ChampionHelper {
         if (ConfigHandler.championsList.length > 0) {
 
             for (String s : ConfigHandler.championsList) {
-                ResourceLocation rl = new ResourceLocation(s);
+                String[] args = s.split(";");
+                ResourceLocation rl = new ResourceLocation(args[0]);
+                int tier = args.length > 1 ? Integer.parseInt(args[1]) : 0;
 
                 if (EntityList.getEntityNameList().contains(rl)) {
-                    champions.add(rl);
+                    champions.put(rl, tier);
                 } else {
                     Champions.logger.log(Level.ERROR, "Invalid entity found in champions list config! " + s);
                 }

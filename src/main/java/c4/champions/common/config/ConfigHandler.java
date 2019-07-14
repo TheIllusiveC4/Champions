@@ -58,7 +58,8 @@ public class ConfigHandler {
     public static String[] mobList = new String[]{"aether_legacy:sun_spirit"};
 
     @Name("Champion Mobs List")
-    @Comment("List of mobs that will always spawn as champions")
+    @Comment("List of mobs that will always spawn as champions, can " +
+             "optionally include specific tier (i.e. 'minecraft:spider;2')")
     @RequiresMcRestart
     public static String[] championsList = new String[]{};
 
