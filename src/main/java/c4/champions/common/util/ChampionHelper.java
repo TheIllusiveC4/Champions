@@ -161,8 +161,7 @@ public class ChampionHelper {
                         availableAffixes.remove(s);
                         boolean added = false;
                         AffixBase affix = AffixRegistry.getAffix(s);
-                        if (affix != null && affix.canApply(entityLivingIn) && AffixFilterManager.isValidAffix(affix,
-                                entityLivingIn, tier)) {
+                        if (affix != null) {
                             boolean flag = true;
                             //Check for incompatible affixes
                             for (String s1 : affixList) {
