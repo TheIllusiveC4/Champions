@@ -36,10 +36,10 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -116,43 +116,41 @@ public class CommandSpawnChampionAt extends CommandBase {
       argAffix.add(args[i]);
     }
 
-    if (sender.getCommandSenderEntity() instanceof EntityPlayer) {
-      EntityPlayer player = (EntityPlayer) (sender.getCommandSenderEntity());
-      living.setPosition(blockPos.getX(), blockPos.getY(), blockPos.getZ());
-      IChampionship chp = CapabilityChampionship.getChampionship(living);
+    World world = sender.getEntityWorld();
+    living.setPosition(blockPos.getX(), blockPos.getY(), blockPos.getZ());
+    IChampionship chp = CapabilityChampionship.getChampionship(living);
 
-      if (chp != null) {
-        Rank rank = RankManager.getRankForTier(tier);
-        chp.setRank(rank);
+    if (chp != null) {
+      Rank rank = RankManager.getRankForTier(tier);
+      chp.setRank(rank);
 
-        if (rank.getTier() > 0) {
+      if (rank.getTier() > 0) {
 
-          if (argAffix.isEmpty()) {
-            Set<String> affixes = ChampionHelper.generateAffixes(rank, living);
-            chp.setAffixes(affixes);
-          } else {
-            chp.setAffixes(argAffix);
-          }
+        if (argAffix.isEmpty()) {
+          Set<String> affixes = ChampionHelper.generateAffixes(rank, living);
+          chp.setAffixes(affixes);
+        } else {
+          chp.setAffixes(argAffix);
+        }
 
-          chp.setName(ChampionHelper.generateRandomName());
-          chp.getRank().applyGrowth(living);
+        chp.setName(ChampionHelper.generateRandomName());
+        chp.getRank().applyGrowth(living);
 
-          for (String s : chp.getAffixes()) {
-            IAffix affix = AffixRegistry.getAffix(s);
+        for (String s : chp.getAffixes()) {
+          IAffix affix = AffixRegistry.getAffix(s);
 
-            if (affix != null) {
-              affix.onInitialSpawn(living, chp);
-            }
+          if (affix != null) {
+            affix.onInitialSpawn(living, chp);
           }
         }
       }
-
-      living.onInitialSpawn(player.world.getDifficultyForLocation(blockPos), null);
-      player.world.spawnEntity(living);
-      notifyCommandListener(sender, this,
-                            Champions.MODID + ".commands.spawnchampion.success",
-                            blockPos);
     }
+
+    living.onInitialSpawn(world.getDifficultyForLocation(blockPos), null);
+    world.spawnEntity(living);
+    notifyCommandListener(sender, this,
+                          Champions.MODID + ".commands.spawnchampion.success",
+                          blockPos);
   }
 
   @Override
