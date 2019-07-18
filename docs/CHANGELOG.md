@@ -4,10 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
+## [1.0.10.1] - 2019.07.18
+### Changed
+- Lifted restriction on /spawnchampion and /spawnchampion commands so that 
+non-player entities can use them
+
 ## [1.0.10] - 2019.07.14
 ### Added
 - [API] Added onHealed affix event
-- Added /summonchampionat command for summoning champions to specific coordinates
+- Added /spawnchampionat command for summoning champions to specific coordinates
 - Added specific tier functionality for champions mob list config option [#23](https://github.com/TheIllusiveC4/Champions/issues/23)
 
 ### Changed
