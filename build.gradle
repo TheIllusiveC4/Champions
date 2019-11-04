@@ -66,7 +66,7 @@ dependencies {
     deobfProvided "net.darkhax.gamestages:GameStages-1.12.2:${version_gamestages}"
     deobfProvided "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-${version_crafttweaker}"
     deobfProvided "curse.maven:silent-lib:2675924"
-    deobfProvided "curse.maven:scaling-health:2816920"
+    deobfProvided "curse.maven:scaling-health:2657459"
     deobfProvided "mezz.jei:jei_1.12.2:4.13.1.225:api"
     runtime "mezz.jei:jei_1.12.2:4.13.1.225"
 }
