@@ -139,7 +139,11 @@ public class ChampionHelper {
             suffix = new TextComponentTranslation(String.format(header, "suffix", randomSuffix)).getFormattedText();
         } else {
             String configSuffix = ConfigHandler.championNameSuffixes[randomSuffix - langSize];
-            suffix = configSuffix.charAt(0) == ',' ? configSuffix : " " + configSuffix;
+            if (!configSuffix.isEmpty()) {
+                suffix = configSuffix.charAt(0) == ',' ? configSuffix : " " + configSuffix;
+            } else {
+                suffix = "";
+            }
         }
         return prefix + suffix;
     }
