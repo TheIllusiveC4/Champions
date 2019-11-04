@@ -2,12 +2,15 @@ buildscript {
     repositories {
         jcenter()
         maven { url = "http://files.minecraftforge.net/maven" }
+        maven { url = "https://plugins.gradle.org/m2/" }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath 'com.wynprice.cursemaven:CurseMaven:2.1.1'
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'com.wynprice.cursemaven'
 
 version = "${version_minecraft}-${version_mod}"
 group = "${mod_group}.${mod_id}"
@@ -55,10 +58,6 @@ repositories {
         name = "ModMaven"
         url = "modmaven.k-4u.nl"
     }
-    maven {
-        name = "CurseForge"
-        url = "https://minecraft.curseforge.com/api/maven/"
-    }
 }
 
 dependencies {
@@ -66,8 +65,8 @@ dependencies {
     deobfProvided "net.darkhax.bookshelf:Bookshelf-1.12.2:${version_bookshelf}"
     deobfProvided "net.darkhax.gamestages:GameStages-1.12.2:${version_gamestages}"
     deobfProvided "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-${version_crafttweaker}"
-    deobfProvided "scaling-health:ScalingHealth-1.12.2:1.3.32:134"
-    deobfProvided "silent-lib:SilentLib:1.12.2:3.0.13+167"
+    deobfProvided "curse.maven:silent-lib:2675924"
+    deobfProvided "curse.maven:scaling-health:2816920"
     deobfProvided "mezz.jei:jei_1.12.2:4.13.1.225:api"
     runtime "mezz.jei:jei_1.12.2:4.13.1.225"
 }
