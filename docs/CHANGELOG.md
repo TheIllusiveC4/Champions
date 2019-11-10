@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
+## [1.0.11] - 2019.11.09
+### Added
+- Added Cinder affix, champions will shoot flaming homing projectiles that do damage and set targets on fire [#28](https://github.com/TheIllusiveC4/Champions/issues/28)
+- Added additional config options for Reflecting affix [#30](https://github.com/TheIllusiveC4/Champions/issues/30)
+### Fixed
+- Fixed crashes with name configs [#33](https://github.com/TheIllusiveC4/Champions/issues/33)
+
 ## [1.0.10.1] - 2019.07.18
 ### Changed
 - Lifted restriction on /spawnchampion and /spawnchampion commands so that 
