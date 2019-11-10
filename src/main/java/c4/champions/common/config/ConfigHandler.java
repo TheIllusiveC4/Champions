@@ -295,6 +295,14 @@ public class ConfigHandler {
             @Name("Maximum Percent of Damage")
             @Comment("The maximum percent of damage to reflect back")
             public double maximumPerc = 0.35d;
+
+            @Name("Maximum Damage")
+            @Comment("The maximum amount of damage to reflect back")
+            public double maxDamage = 100.0d;
+
+            @Name("Enable Killing Blow")
+            @Comment("Set whether or not reflected damage can be deadly")
+            public boolean killingBlow = true;
         }
 
         public class Scrapper {

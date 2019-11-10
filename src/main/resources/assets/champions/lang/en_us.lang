@@ -151,6 +151,10 @@ champions.general.affix.reflecting.minimumperc=Minimum Percent of Damage
 champions.general.affix.reflecting.minimumperc.tooltip=The minimum percent of damage to reflect back
 champions.general.affix.reflecting.maximumperc=Maximum Percent of Damage
 champions.general.affix.reflecting.maximumperc.tooltip=The maximum percent of damage to reflect back
+champions.general.affix.reflecting.maxdamage=Maximum Damage
+champions.general.affix.reflecting.maxdamage.tooltip=The maximum amount of damage to reflect back
+champions.general.affix.reflecting.killingblow=Enable Killing Blow
+champions.general.affix.reflecting.killingblow.tooltip=Set whether or not reflected damage can be deadly
 
 champions.general.affix.scrapper=Scrapper
 champions.general.affix.scrapper.tooltip=Settings for the Scrapper affix
