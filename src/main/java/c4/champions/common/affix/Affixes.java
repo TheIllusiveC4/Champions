@@ -19,7 +19,22 @@
 
 package c4.champions.common.affix;
 
-import c4.champions.common.affix.affix.*;
+import c4.champions.common.affix.affix.AffixAdaptable;
+import c4.champions.common.affix.affix.AffixArctic;
+import c4.champions.common.affix.affix.AffixCinder;
+import c4.champions.common.affix.affix.AffixDampening;
+import c4.champions.common.affix.affix.AffixDesecrator;
+import c4.champions.common.affix.affix.AffixHasty;
+import c4.champions.common.affix.affix.AffixInfested;
+import c4.champions.common.affix.affix.AffixJailer;
+import c4.champions.common.affix.affix.AffixKnockback;
+import c4.champions.common.affix.affix.AffixLively;
+import c4.champions.common.affix.affix.AffixMolten;
+import c4.champions.common.affix.affix.AffixPlagued;
+import c4.champions.common.affix.affix.AffixReflecting;
+import c4.champions.common.affix.affix.AffixScrapper;
+import c4.champions.common.affix.affix.AffixShielding;
+import c4.champions.common.affix.affix.AffixVortex;
 import c4.champions.common.affix.core.AffixBase;
 
 public class Affixes {
@@ -39,6 +54,7 @@ public class Affixes {
     public static AffixBase adaptable;
     public static AffixBase scrapper;
     public static AffixBase knockback;
+    public static AffixBase cinder;
 
     public static void registerAffixes() {
         molten = new AffixMolten();
@@ -56,5 +72,6 @@ public class Affixes {
         adaptable = new AffixAdaptable();
         scrapper = new AffixScrapper();
         knockback = new AffixKnockback();
+        cinder = new AffixCinder();
     }
 }

@@ -26,8 +26,8 @@ import c4.champions.common.capability.CapabilityChampionship;
 import c4.champions.common.capability.IChampionship;
 import c4.champions.common.config.ConfigHandler;
 import c4.champions.common.rank.RankManager;
-import c4.champions.common.util.ChampionHelper;
 import com.google.common.collect.Lists;
+import java.util.List;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -40,10 +40,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
-
-import java.util.List;
 
 public class AffixInfested extends AffixBase {
 

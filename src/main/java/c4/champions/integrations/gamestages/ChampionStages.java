@@ -21,16 +21,15 @@ package c4.champions.integrations.gamestages;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import java.util.Map;
+import java.util.Set;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import net.darkhax.gamestages.GameStageHelper;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Map;
-import java.util.Set;
 
 public class ChampionStages {
 

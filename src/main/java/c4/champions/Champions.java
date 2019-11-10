@@ -35,6 +35,7 @@ import c4.champions.common.util.ChampionHelper;
 import c4.champions.integrations.scalinghealth.ChampionDifficulty;
 import c4.champions.network.NetworkHandler;
 import c4.champions.proxy.IProxy;
+import javax.annotation.Nonnull;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
 import net.minecraft.dispenser.IBlockSource;
@@ -53,11 +54,13 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.*;
+import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
-
-import javax.annotation.Nonnull;
 
 @Mod(   modid = Champions.MODID,
         name = Champions.NAME,

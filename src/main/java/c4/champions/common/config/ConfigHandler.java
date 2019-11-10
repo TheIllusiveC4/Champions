@@ -123,6 +123,10 @@ public class ConfigHandler {
         @Comment("Settings for the Arctic affix")
         public Arctic arctic = new Arctic();
 
+        @Name("Cinder")
+        @Comment("Settings for the Cinder affix")
+        public Cinder cinder = new Cinder();
+
         @Name("Dampening")
         @Comment("Settings for the Dampening affix")
         public Dampening dampening = new Dampening();
@@ -175,6 +179,13 @@ public class ConfigHandler {
         }
 
         public class Arctic {
+
+            @Name("Attack Interval")
+            @Comment("How often the champion will shoot projectiles (in ticks)")
+            public int attackInterval = 20;
+        }
+
+        public class Cinder {
 
             @Name("Attack Interval")
             @Comment("How often the champion will shoot projectiles (in ticks)")

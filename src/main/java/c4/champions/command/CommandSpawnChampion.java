@@ -29,6 +29,11 @@ import c4.champions.common.rank.Rank;
 import c4.champions.common.rank.RankManager;
 import c4.champions.common.util.ChampionHelper;
 import com.google.common.collect.Sets;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -40,12 +45,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
 
 public class CommandSpawnChampion extends CommandBase {
 

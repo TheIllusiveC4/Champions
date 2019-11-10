@@ -23,14 +23,13 @@ import c4.champions.Champions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.Level;
-
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import javax.annotation.Nonnull;
+import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.Level;
 
 /*
 * Derivative of info.tehnut.soulshardrespawn.core.util.JsonUtil from Soul Shards Respawn by TehNut

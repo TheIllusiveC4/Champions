@@ -24,18 +24,17 @@ import c4.champions.common.util.JsonUtil;
 import com.google.common.collect.ImmutableSortedMap;
 import com.google.common.collect.Maps;
 import com.google.gson.reflect.TypeToken;
-import net.minecraft.potion.Potion;
-import net.minecraft.util.Tuple;
-import net.minecraftforge.fml.common.Loader;
-import org.apache.logging.log4j.Level;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.TreeMap;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import net.minecraft.potion.Potion;
+import net.minecraft.util.Tuple;
+import net.minecraftforge.fml.common.Loader;
+import org.apache.logging.log4j.Level;
 
 public class RankManager {
 

@@ -12,6 +12,7 @@ champions.affix.horde=Horde
 champions.affix.infested=Infested
 champions.affix.jailer=Jailer
 champions.affix.arctic=Arctic
+champions.affix.cinder=Cinder
 champions.affix.desecrator=Desecrator
 champions.affix.hasty=Hasty
 champions.affix.lively=Lively
@@ -82,6 +83,11 @@ champions.general.affix.arctic=Arctic
 champions.general.affix.arctic.tooltip=Settings for the Arctic affix
 champions.general.affix.arctic.attackinterval=Attack Interval
 champions.general.affix.arctic.attackinterval.tooltip=How often the champion will shoot projectiles (in ticks)
+
+champions.general.affix.cinder=Cinder
+champions.general.affix.cinder.tooltip=Settings for the Cinder affix
+champions.general.affix.cinder.attackinterval=Attack Interval
+champions.general.affix.cinder.attackinterval.tooltip=How often the champion will shoot projectiles (in ticks)
 
 champions.general.affix.dampening=Dampening
 champions.general.affix.dampening.tooltip=Settings for the Dampening affix

@@ -26,11 +26,10 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import org.apache.logging.log4j.Level;
-
-import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.Nullable;
+import org.apache.logging.log4j.Level;
 
 public class AffixRegistry {
 

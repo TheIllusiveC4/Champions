@@ -23,14 +23,13 @@ import c4.champions.Champions;
 import c4.champions.common.capability.IChampionship;
 import c4.champions.network.NetworkHandler;
 import c4.champions.network.PacketSyncAffix;
+import javax.annotation.Nonnull;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.WorldServer;
 import org.apache.logging.log4j.Level;
-
-import javax.annotation.Nonnull;
 
 public abstract class AffixNBT {
 

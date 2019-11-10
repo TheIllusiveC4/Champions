@@ -25,6 +25,11 @@ import c4.champions.common.affix.core.AffixBase;
 import c4.champions.common.init.ChampionsRegistry;
 import c4.champions.common.item.ItemChampionPlacer;
 import com.google.common.collect.Sets;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -38,12 +43,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.ItemHandlerHelper;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
 
 public class CommandChampionEgg extends CommandBase {
 

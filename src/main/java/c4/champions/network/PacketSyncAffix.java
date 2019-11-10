@@ -24,6 +24,7 @@ import c4.champions.common.capability.IChampionship;
 import c4.champions.common.rank.RankManager;
 import com.google.common.collect.Maps;
 import io.netty.buffer.ByteBuf;
+import java.util.Map;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -32,8 +33,6 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-
-import java.util.Map;
 
 public class PacketSyncAffix implements IMessage {
 

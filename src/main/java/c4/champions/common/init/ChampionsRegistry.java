@@ -21,6 +21,7 @@ package c4.champions.common.init;
 
 import c4.champions.Champions;
 import c4.champions.common.entity.EntityArcticSpark;
+import c4.champions.common.entity.EntityCinderSpark;
 import c4.champions.common.entity.EntityJail;
 import c4.champions.common.item.ItemChampionPlacer;
 import c4.champions.common.potion.PotionInjured;
@@ -77,6 +78,12 @@ public class ChampionsRegistry {
                 .name(Champions.MODID + ".arctic_spark")
                 .tracker(80, 3, true)
                 .build();
-        evt.getRegistry().registerAll(entry, entry1);
+        EntityEntry entry2 = EntityEntryBuilder.create()
+                .entity(EntityCinderSpark.class)
+                .id(new ResourceLocation(Champions.MODID, "cinder_spark"), id++)
+                .name(Champions.MODID + ".cinder_spark")
+                .tracker(80, 3, true)
+                .build();
+        evt.getRegistry().registerAll(entry, entry1, entry2);
     }
 }
