@@ -155,6 +155,10 @@ public class ConfigHandler {
         @Comment("Settings for the Lively affix")
         public Lively lively = new Lively();
 
+        @Name("Molten")
+        @Comment("Settings for the Molten affix")
+        public Molten molten = new Molten();
+
         @Name("Plagued")
         @Comment("Settings for the Plagued affix")
         public Plagued plagued = new Plagued();
@@ -271,6 +275,13 @@ public class ConfigHandler {
             @Name("Cooldown on Attacked")
             @Comment("Set cooldown (in seconds) for regeneration after getting attacked")
             public int cooldown = 3;
+        }
+
+        public class Molten {
+
+            @Name("Water-Resistant")
+            @Comment("Whether or not champions are damaged by water")
+            public boolean waterResistant = false;
         }
 
         public class Plagued {

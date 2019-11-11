@@ -23,6 +23,7 @@ import c4.champions.Champions;
 import c4.champions.common.affix.core.AffixBase;
 import c4.champions.common.affix.core.AffixCategory;
 import c4.champions.common.capability.IChampionship;
+import c4.champions.common.config.ConfigHandler;
 import java.lang.reflect.Field;
 import java.util.Iterator;
 import net.minecraft.entity.Entity;
@@ -83,7 +84,7 @@ public class AffixMolten extends AffixBase {
                 entity.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 40, 0, true, false));
             }
 
-            if (entity.isWet()) {
+            if (!ConfigHandler.affix.molten.waterResistant && entity.isWet()) {
                 entity.attackEntityFrom(DamageSource.DROWN, 1.0F);
             }
         }

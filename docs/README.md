@@ -22,6 +22,7 @@ Current available affixes:
 
 * **Adaptable** - Champion will take less and less damage from the same consecutive damage type
 * **Arctic** - Continuously fires homing projectiles that will slow anyone they hit
+* **Cinder** - Continuously fires homing projectiles that will damage and burn anyone they hit.
 * **Dampening** - Reduces the damage of indirect attacks
 * **Desecrator** - Periodically spawns a cloud of harming underneath its target
 * **Hasty** - Drastically increases movement speed

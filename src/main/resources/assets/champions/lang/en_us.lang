@@ -139,6 +139,11 @@ champions.general.affix.lively.passivemultiplier.tooltip=Multiplier to health re
 champions.general.affix.lively.cooldown=Cooldown on Attacked
 champions.general.affix.lively.cooldown.tooltip=Set cooldown (in seconds) for regeneration after getting attacked
 
+champions.general.affix.molten=Molten
+champions.general.affix.molten.tooltip=Settings for the Molten affix
+champions.general.affix.molten.waterresistant=Water-Resistant
+champions.general.affix.molten.waterresistant=Whether or not champions are damaged by water
+
 champions.general.affix.plagued=Plagued
 champions.general.affix.plagued.tooltip=Settings for the Plagued affix
 champions.general.affix.plagued.duration=Plague Duration
