@@ -35,6 +35,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -434,24 +435,37 @@ public class ChampionHelper {
         }
     }
 
-    public static ItemStack getLootDrop(int tier) {
+    public static List<ItemStack> getLootDrops(int tier) {
         double totalWeight = 0;
-        List<LootData> data = drops.getOrDefault(tier, Lists.newArrayList());
+        List<LootData> data = Lists.newArrayList(drops.getOrDefault(tier, Lists.newArrayList()));
+        List<ItemStack> drops = new ArrayList<>();
 
-        for (LootData loot : data) {
-            totalWeight += loot.weight;
+        if (data.isEmpty()) {
+            return drops;
         }
-        double random = rand.nextDouble() * totalWeight;
-        double countWeight = 0;
 
-        for (LootData loot : data) {
-            countWeight += loot.weight;
+        int amount = ConfigHandler.lootScaling ? tier : 1;
 
-            if (countWeight >= random) {
-                return loot.getLootStack();
+        for (int i = 0; i < amount; i++) {
+            totalWeight = 0;
+
+            for (LootData loot : data) {
+                totalWeight += loot.weight;
+            }
+            double random = rand.nextDouble() * totalWeight;
+            double countWeight = 0;
+
+            for (LootData loot : data) {
+                countWeight += loot.weight;
+
+                if (countWeight >= random) {
+                    drops.add(loot.getLootStack());
+                    break;
+                }
             }
         }
-        return ItemStack.EMPTY;
+
+        return drops;
     }
 
     private static class LootData {

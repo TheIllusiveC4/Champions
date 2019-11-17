@@ -73,6 +73,10 @@ public class ConfigHandler {
     @RequiresMcRestart
     public static String[] lootDrops = new String[]{};
 
+    @Name("Loot Drop Scales to Tier")
+    @Comment("Sets whether to scale loot drop amount to tier number if LootSource.CONFIG is active")
+    public static boolean lootScaling = false;
+
     @Name("Loot Drops From Fake Players")
     @Comment("True if fake players can cause champion loot drops, otherwise false")
     public static boolean lootFake = true;
