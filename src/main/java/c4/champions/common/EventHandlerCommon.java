@@ -61,8 +61,9 @@ public class EventHandlerCommon {
         boolean flag = entityLivingBase.world.getGameRules().getBoolean("showDeathMessages");
         if (flag && !entityLivingBase.world.isRemote && ChampionHelper.isValidChampion(entityLivingBase)) {
             IChampionship chp = CapabilityChampionship.getChampionship((EntityLiving)entityLivingBase);
+            int messageTier = ConfigHandler.deathMessageTier;
 
-            if (chp != null && ChampionHelper.isElite(chp.getRank()) && chp.getRank().getTier() <= ConfigHandler.deathMessageTier) {
+            if (messageTier > 0 && chp != null && ChampionHelper.isElite(chp.getRank()) && chp.getRank().getTier() >= messageTier) {
                 entityLivingBase.getServer().getPlayerList().sendMessage(new TextComponentTranslation("champions.identifier")
                         .appendSibling(new TextComponentString(" "))
                         .appendSibling(entityLivingBase.getCombatTracker().getDeathMessage()));
