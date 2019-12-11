@@ -23,6 +23,7 @@ import c4.champions.common.affix.core.AffixBase;
 import c4.champions.common.affix.core.AffixCategory;
 import c4.champions.common.affix.core.AffixNBT;
 import c4.champions.common.capability.IChampionship;
+import c4.champions.common.config.ConfigHandler;
 import javax.vecmath.Vector3d;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -56,7 +57,7 @@ public class AffixVortex extends AffixBase {
                     double x = entity.posX;
                     double y = entity.posY;
                     double z = entity.posZ;
-                    float strength = 0.0005f;
+                    double strength = ConfigHandler.affix.vortex.strength;
                     Vector3d vec = new Vector3d(x, y, z);
                     vec.sub(new Vector3d(target.posX, target.posY, target.posZ));
                     vec.normalize();

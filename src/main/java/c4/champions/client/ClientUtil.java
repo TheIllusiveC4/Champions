@@ -81,13 +81,7 @@ public class ClientUtil {
                 float f = 1.0F;
                 List<Entity> list = client.world.getEntitiesInAABBexcluding(entity, entity.getEntityBoundingBox().expand
                         (vec3d1.x * distance, vec3d1.y * distance, vec3d1.z * distance).grow(1.0D, 1.0D, 1.0D), Predicates.and
-                        (EntitySelectors.NOT_SPECTATING, new Predicate<Entity>()
-                {
-                    public boolean apply(@Nullable Entity p_apply_1_)
-                    {
-                        return p_apply_1_ != null && p_apply_1_.canBeCollidedWith();
-                    }
-                }));
+                        (EntitySelectors.NOT_SPECTATING, (entity1) -> entity1 != null && entity1.canBeCollidedWith()));
                 double d2 = d1;
 
                 for (int j = 0; j < list.size(); ++j)

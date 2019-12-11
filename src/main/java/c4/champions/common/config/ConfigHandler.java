@@ -175,6 +175,10 @@ public class ConfigHandler {
         @Comment("Settings for the Scrapper affix")
         public Scrapper scrapper = new Scrapper();
 
+        @Name("Vortex")
+        @Comment("Settings for the Vortex affix")
+        public Vortex vortex = new Vortex();
+
         public class Adaptable {
 
             @Name("Damage Reduction Increment")
@@ -336,6 +340,13 @@ public class ConfigHandler {
             @Name("Chance per Attack")
             @Comment("The percent chance that an attack will injure targets")
             public double chance = 0.4d;
+        }
+
+        public class Vortex {
+
+            @Name("Vortex Strength")
+            @Comment("The strength of the vortex pulling effect")
+            public double strength = 0.05d;
         }
     }
 

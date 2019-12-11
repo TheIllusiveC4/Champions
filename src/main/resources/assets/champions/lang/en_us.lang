@@ -175,6 +175,11 @@ champions.general.affix.scrapper.tooltip=Settings for the Scrapper affix
 champions.general.affix.scrapper.chance=Chance per Attack
 champions.general.affix.scrapper.chance.tooltip=The percent chance that an attack will injure targets
 
+champions.general.affix.vortex=Vortex
+champions.general.affix.vortex.tooltip=Settings for the Vortex affix
+champions.general.affix.vortex.strength=Vortex Strength
+champions.general.affix.vortex.strength.tooltip=The strength of the vortex pulling effect
+
 champions.general.client=Client Settings
 champions.general.client.tooltip=Settings that are only client-side
 champions.general.client.colors=Rank Colors
