@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
+## [1.0.11.2] - 2019.12.10
+### Added
+- Added config option to hide champion effects [#36](https://github.com/TheIllusiveC4/Champions/issues/36)
+- Added config option for Vortex affix strength
+### Changed
+- Increased strength of Vortex affix effect
+
 ## [1.0.11.1] - 2019.11.17
 ### Added
 - Added config option to scale loot drop amount to Champion tier for Config Loot
