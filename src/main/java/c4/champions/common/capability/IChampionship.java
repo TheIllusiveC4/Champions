@@ -47,4 +47,8 @@ public interface IChampionship {
     void setName(String name);
 
     String getName();
+
+    void setHideEffects(boolean hideEffects);
+
+    boolean hideEffects();
 }

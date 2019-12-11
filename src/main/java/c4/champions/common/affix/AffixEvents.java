@@ -96,7 +96,7 @@ public class AffixEvents {
 
                 if (ChampionHelper.isElite(rank)) {
 
-                    if (living.world.isRemote) {
+                    if (living.world.isRemote && !chp.hideEffects()) {
                         Champions.proxy.generateRankParticle(living, rank.getColor());
                     } else if (living.ticksExisted % 100 == 0) {
                         List<Tuple<Potion, Integer>> potions = RankManager.getPotionsForTier(rank.getTier());

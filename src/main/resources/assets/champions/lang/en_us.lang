@@ -39,6 +39,8 @@ champions.champion_egg.tooltip.tier=Tier %d
 #################
 #    Config     #
 #################
+champions.general.hideeffects=Hide Champion Effects
+champions.general.hideeffects.tooltip=Set whether to hide champion particles and HUD effects
 champions.general.championspawners=Champions from Spawners
 champions.general.championspawners.tooltip=Set whether champions can spawn from mob spawners
 champions.general.dimensionpermission=Dimension Permission Mode

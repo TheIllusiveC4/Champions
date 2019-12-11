@@ -32,6 +32,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @Config(modid = Champions.MODID)
 public class ConfigHandler {
 
+    @Name("Hide Champion Effects")
+    @Comment("Set whether to hide champion particles and HUD effects")
+    public static boolean hideEffects = false;
+
     @Name("Champions from Spawners")
     @Comment("Set whether champions can spawn from mob spawners")
     public static boolean championSpawners = false;

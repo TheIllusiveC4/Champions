@@ -59,7 +59,7 @@ public class EventHandlerClient {
                     EntityLiving living = (EntityLiving)entity;
                     IChampionship chp = CapabilityChampionship.getChampionship(living);
 
-                    if (chp != null && ChampionHelper.isElite(chp.getRank())) {
+                    if (chp != null && ChampionHelper.isElite(chp.getRank()) && !chp.hideEffects()) {
                         ClientUtil.renderChampionHealth(living, chp);
                         evt.setCanceled(true);
                     }
