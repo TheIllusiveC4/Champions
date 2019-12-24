@@ -23,6 +23,7 @@ import c4.champions.Champions;
 import c4.champions.common.affix.core.AffixBase;
 import c4.champions.common.capability.CapabilityChampionship;
 import c4.champions.common.capability.IChampionship;
+import c4.champions.common.config.ConfigHandler;
 import c4.champions.common.rank.Rank;
 import c4.champions.common.rank.RankManager;
 import c4.champions.common.util.ChampionHelper;
@@ -96,7 +97,7 @@ public class AffixEvents {
 
                 if (ChampionHelper.isElite(rank)) {
 
-                    if (living.world.isRemote && !chp.hideEffects()) {
+                    if (living.world.isRemote && !ConfigHandler.hideEffects) {
                         Champions.proxy.generateRankParticle(living, rank.getColor());
                     } else if (living.ticksExisted % 100 == 0) {
                         List<Tuple<Potion, Integer>> potions = RankManager.getPotionsForTier(rank.getTier());

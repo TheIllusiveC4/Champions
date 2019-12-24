@@ -33,7 +33,6 @@ public class Championship implements IChampionship {
     private Map<String, NBTTagCompound> affixData = Maps.newHashMap();
     private Rank rank = null;
     private String name;
-    private boolean hideEffects;
 
     public Championship() {}
 
@@ -91,15 +90,5 @@ public class Championship implements IChampionship {
     @Override
     public String getName() {
         return name;
-    }
-
-    @Override
-    public void setHideEffects(boolean hideEffects) {
-        this.hideEffects = hideEffects;
-    }
-
-    @Override
-    public boolean hideEffects() {
-        return hideEffects;
     }
 }
