@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
+## [1.0.11.3] - 2019.12.24
+### Changed
+- Re-implemented Hide Effects config option to be client-sided
+
 ## [1.0.11.2] - 2019.12.10
 ### Added
 - Added config option to hide champion effects [#36](https://github.com/TheIllusiveC4/Champions/issues/36)
