@@ -60,8 +60,8 @@ public class AffixReflecting extends AffixBase {
     if (source.getTrueSource() instanceof EntityLivingBase) {
       EntityLivingBase entityLivingBase = (EntityLivingBase) source.getTrueSource();
 
-      if (source instanceof EntityDamageSourceIndirect && ((EntityDamageSourceIndirect) source)
-          .getIsThornsDamage()) {
+      if (source.damageType.equals("reflecting") || (source instanceof EntityDamageSourceIndirect
+          && ((EntityDamageSourceIndirect) source).getIsThornsDamage())) {
         return newAmount;
       }
       float min = (float) ConfigHandler.affix.reflecting.minimumPerc;
