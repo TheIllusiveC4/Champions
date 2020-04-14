@@ -53,11 +53,13 @@ import net.minecraft.potion.Potion;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityBeacon;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Tuple;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.silentchaos512.scalinghealth.api.ScalingHealthAPI;
 import org.apache.logging.log4j.Level;
+import scala.Int;
 
 public class ChampionHelper {
 
@@ -66,7 +68,7 @@ public class ChampionHelper {
     private static Set<Integer> dimensions = Sets.newHashSet();
     private static Set<ResourceLocation> mobs = Sets.newHashSet();
     private static Map<Integer, List<LootData>> drops = Maps.newHashMap();
-    private static Map<ResourceLocation, Integer> champions = Maps.newHashMap();
+    private static Map<ResourceLocation, Tuple<Integer, Integer>> champions = Maps.newHashMap();
 
     public static boolean isValidChampion(final Entity entity) {
         return entity instanceof EntityLiving && entity instanceof IMob && isValidEntity(entity);
@@ -85,13 +87,15 @@ public class ChampionHelper {
         }
 
         ResourceLocation entityKey = EntityList.getKey(entityLivingIn);
+        Tuple<Integer, Integer> curated = champions.getOrDefault(entityKey, new Tuple<>(0, 0));
 
-        if (rand.nextFloat() < chance || champions.containsKey(entityKey)) {
-            int curatedTier = champions.getOrDefault(entityKey, 0);
+        if (curated.getFirst() > 0) {
+            finalTier = curated.getFirst();
 
-            if (curatedTier > 0) {
-                return ranks.get(curatedTier);
+            if (curated.getSecond() == 0) {
+                return ranks.get(finalTier);
             }
+        } else if (rand.nextFloat() < chance) {
 
             if ((Champions.isGameStagesLoaded && !ChampionStages.isValidTier(ranks.firstKey(), entityLivingIn)) ||
                     nearActiveBeacon(entityLivingIn)) {
@@ -122,7 +126,15 @@ public class ChampionHelper {
                 }
             }
         }
-        return finalTier == 0 ? RankManager.getEmptyRank() : ranks.get(finalTier);
+
+        if (finalTier == 0) {
+            return RankManager.getEmptyRank();
+        } else {
+            if (curated.getSecond() > 0) {
+                finalTier = Math.min(finalTier, curated.getSecond());
+            }
+            return ranks.get(finalTier);
+        }
     }
 
     public static String generateRandomName() {
@@ -354,10 +366,11 @@ public class ChampionHelper {
             for (String s : ConfigHandler.championsList) {
                 String[] args = s.split(";");
                 ResourceLocation rl = new ResourceLocation(args[0]);
-                int tier = args.length > 1 ? Integer.parseInt(args[1]) : 0;
+                int minTier = args.length > 1 ? Integer.parseInt(args[1]) : 0;
+                int maxTier = args.length > 2 ? Integer.parseInt(args[2]) : 0;
 
                 if (EntityList.getEntityNameList().contains(rl)) {
-                    champions.put(rl, tier);
+                    champions.put(rl, new Tuple<>(minTier, maxTier));
                 } else {
                     Champions.logger.log(Level.ERROR, "Invalid entity found in champions list config! " + s);
                 }
@@ -436,7 +449,7 @@ public class ChampionHelper {
     }
 
     public static List<ItemStack> getLootDrops(int tier) {
-        double totalWeight = 0;
+        double totalWeight;
         List<LootData> data = Lists.newArrayList(drops.getOrDefault(tier, Lists.newArrayList()));
         List<ItemStack> drops = new ArrayList<>();
 

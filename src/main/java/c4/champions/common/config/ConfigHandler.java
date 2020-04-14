@@ -63,7 +63,7 @@ public class ConfigHandler {
 
     @Name("Champion Mobs List")
     @Comment("List of mobs that will always spawn as champions, can " +
-             "optionally include specific tier (i.e. 'minecraft:spider;2')")
+             "optionally include specific tier (i.e. 'minecraft:spider;2') or tier range (i.e. 'minecraft:spider;1;3")
     @RequiresMcRestart
     public static String[] championsList = new String[]{};
 
@@ -415,7 +415,7 @@ public class ConfigHandler {
 
     public enum PermissionMode {
         BLACKLIST,
-        WHITELIST;
+        WHITELIST
     }
 
     public enum LootSource {
