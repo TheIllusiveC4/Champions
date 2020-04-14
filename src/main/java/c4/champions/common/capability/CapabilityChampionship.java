@@ -22,6 +22,8 @@ package c4.champions.common.capability;
 import c4.champions.Champions;
 import c4.champions.common.affix.AffixRegistry;
 import c4.champions.common.affix.IAffix;
+import c4.champions.common.affix.filter.AffixFilter;
+import c4.champions.common.affix.filter.AffixFilterManager;
 import c4.champions.common.config.ConfigHandler;
 import c4.champions.common.rank.Rank;
 import c4.champions.common.rank.RankManager;
@@ -117,7 +119,12 @@ public final class CapabilityChampionship {
 
                         for (int i = 0; i < list.tagCount(); i++) {
                             NBTTagCompound tag = list.getCompoundTagAt(i);
-                            affixes.put(tag.getString("identifier"), tag.getCompoundTag(DATA_TAG));
+                            String id = tag.getString("identifier");
+                            AffixFilter filter = AffixFilterManager.getAffixFilter(id);
+
+                            if (filter != null && filter.isEnabled()) {
+                                affixes.put(tag.getString("identifier"), tag.getCompoundTag(DATA_TAG));
+                            }
                         }
                         instance.setAffixData(affixes);
                         instance.setName(compound.getString(NAME_TAG));
