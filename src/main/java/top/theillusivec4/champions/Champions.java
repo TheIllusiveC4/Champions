@@ -17,10 +17,19 @@
  * License along with Champions.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package c4.champions.common.affix.core;
+package top.theillusivec4.champions;
 
-public enum  AffixCategory {
-    CC,
-    OFFENSE,
-    DEFENSE
+import net.minecraftforge.fml.common.Mod;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+@Mod(Champions.MODID)
+public class Champions {
+
+    public static final String MODID = "champions";
+    public static final Logger LOGGER = LogManager.getLogger();
+
+    public Champions() {
+
+    }
 }

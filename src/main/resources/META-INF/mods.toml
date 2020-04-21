@@ -1,0 +1,25 @@
+modLoader="javafml"
+loaderVersion="[28,)"
+issueTrackerURL="https://github.com/TheIllusiveC4/Champions/issues"
+logoFile="${mod_icon}"
+[[mods]]
+modId="${mod_id}"
+version="${version}"
+displayName="${mod_name}"
+displayURL="${mod_url}"
+authors="${mod_author}"
+description='''
+${mod_description}
+'''
+[[dependencies.champions]]
+    modId="forge"
+    mandatory=true
+    versionRange="[28,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.champions]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.14.4,1.15)"
+    ordering="NONE"
+    side="BOTH"
