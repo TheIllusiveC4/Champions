@@ -1,33 +1,56 @@
 buildscript {
     repositories {
+        maven { url = 'https://files.minecraftforge.net/maven' }
+        maven { url 'https://plugins.gradle.org/m2/' }
         jcenter()
-        maven { url = "http://files.minecraftforge.net/maven" }
-        maven { url = "https://plugins.gradle.org/m2/" }
+        mavenCentral()
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
-        classpath 'com.wynprice.cursemaven:CurseMaven:2.1.1'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
     }
 }
-apply plugin: 'net.minecraftforge.gradle.forge'
-apply plugin: 'com.wynprice.cursemaven'
+apply plugin: 'net.minecraftforge.gradle'
 
-version = "${version_minecraft}-${version_mod}"
-group = "${mod_group}.${mod_id}"
+version = "${version_minecraft}-${mod_version}"
+group = "${mod_group}"
 archivesBaseName = "${mod_id}"
 
-sourceCompatibility = targetCompatibility = '1.8'
-compileJava {
-    sourceCompatibility = targetCompatibility = '1.8'
-}
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 minecraft {
-    version = "${version_minecraft}-${version_forge}"
-    runDir = "run"
-    mappings = "${version_mcp}"
-    replace '@VERSION@', project.version
-    replace '@FINGERPRINT@', project.findProperty('signSHA1')
-    replaceIn("${mod_class}.java")
+    mappings channel: 'stable', version: "${version_mcp}".toString()
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                champions {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                champions {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${version_forge}"
 }
 
 sourceSets {
@@ -38,77 +61,46 @@ sourceSets {
     }
 }
 
-repositories {
-
-    maven {
-        url 'https://maven.blamejared.com/'
-    }
-
-    maven {
-        url 'https://maven.mcmoddev.com/'
-    }
-
-    maven {
-        // location of the maven that hosts JEI files
-        name = "Progwml6 maven"
-        url = "http://dvs1.progwml6.com/files/maven"
-    }
-    maven {
-        // location of a maven mirror for JEI files, as a fallback
-        name = "ModMaven"
-        url = "modmaven.k-4u.nl"
+jar {
+    manifest {
+        attributes(["Specification-Title": "${mod_name}",
+                    "Specification-Vendor": "${mod_author}",
+                    "Specification-Version": "${version}",
+                    "Implementation-Title": "${mod_name}",
+                    "Implementation-Version": "${version}",
+                    "Implementation-Vendor" :"${mod_author}",
+                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")],)
     }
 }
 
-dependencies {
-
-    deobfProvided "net.darkhax.bookshelf:Bookshelf-1.12.2:${version_bookshelf}"
-    deobfProvided "net.darkhax.gamestages:GameStages-1.12.2:${version_gamestages}"
-    deobfProvided "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-${version_crafttweaker}"
-    deobfProvided "curse.maven:silent-lib:2675924"
-    deobfProvided "curse.maven:scaling-health:2657459"
-    deobfProvided "mezz.jei:jei_1.12.2:4.13.1.225:api"
-    runtime "mezz.jei:jei_1.12.2:4.13.1.225"
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allJava
 }
+
+tasks.build.dependsOn sourcesJar
 
 processResources {
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
 
     from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-                
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+        include 'META-INF/mods.toml'
+        expand 'version': project.version, 'mod_id' : mod_id, 'mod_name': mod_name, 'mod_url': mod_url, 'mod_author': mod_author, 'mod_description': mod_description, 'mod_icon': mod_icon
     }
-        
+
     from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
-    rename '(.+_at.cfg)', 'META-INF/$1'
-}
-
-jar {
-
-    manifest {
-
-        attributes 'FMLAT': 'champions_at.cfg'
+        exclude 'META-INF/mods.toml'
     }
 }
 
-task signJar(type: SignJar, dependsOn: reobfJar) {
 
-    onlyIf {
-        project.hasProperty('keyStore')
+curseforge {
+
+    project {
+        apiKey = findProperty('curseKey') ?: 0
+        id = "${curse_id}"
+        releaseType = "${curse_release}"
+        changelogType = 'markdown'
+        changelog = file('docs/CHANGELOG.md')
+        addArtifact(sourcesJar)
     }
-
-    keyStore = project.findProperty('keyStore')
-    alias = project.findProperty('keyStoreAlias')
-    storePass = project.findProperty('keyStorePass')
-    keyPass = project.findProperty('keyStoreKeyPass')
-    inputFile = jar.archivePath
-    outputFile = jar.archivePath
 }
-
-build.dependsOn signJar
-
-
