@@ -1,0 +1,28 @@
+[[ranks]]
+  tier = 1
+  numAffixes = 1
+  defaultColor = 0xffff00
+  chance = 0.05
+  growthFactor = 1
+  effects = []
+[[ranks]]
+  tier = 2
+  numAffixes = 2
+  defaultColor = 0xff9900
+  chance = 0.02
+  growthFactor = 4
+  effects = []
+[[ranks]]
+  tier = 3
+  numAffixes = 3
+  defaultColor = 0x66ffff
+  chance = 0.02
+  growthFactor = 9
+  effects = []
+[[ranks]]
+  tier = 4
+  numAffixes = 4
+  defaultColor = 0xcc33ff
+  chance = 0.02
+  growthFactor = 16
+  effects = []
