@@ -1,4 +1,11 @@
 [[ranks]]
+  tier = 0
+  numAffixes = 0
+  defaultColor = 0
+  chance = 1.0
+  growthFactor = 0
+  effects = []
+[[ranks]]
   tier = 1
   numAffixes = 1
   defaultColor = 0xffff00

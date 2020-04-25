@@ -2,9 +2,12 @@ package top.theillusivec4.champions.common.rank;
 
 import com.google.common.collect.ImmutableSortedMap;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 import java.util.TreeMap;
 import javax.annotation.Nonnull;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.potion.Effect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
@@ -15,12 +18,10 @@ import top.theillusivec4.champions.common.config.RanksConfig.RankConfig;
 
 public class RankManager {
 
-  private static final Rank COMMON = new Rank();
   private static final TreeMap<Integer, Rank> RANKS = new TreeMap<>();
+  private static final Random RAND = new Random();
 
-  static {
-    RANKS.put(0, COMMON);
-  }
+  private static Rank emptyRank = new Rank();
 
   public static ImmutableSortedMap<Integer, Rank> getRanks() {
     return ImmutableSortedMap.copyOf(RANKS);
@@ -28,11 +29,11 @@ public class RankManager {
 
   @Nonnull
   public static Rank getRank(int tier) {
-    return RANKS.getOrDefault(tier, getCommonRank());
+    return RANKS.getOrDefault(tier, getEmptyRank());
   }
 
-  public static Rank getCommonRank() {
-    return COMMON;
+  public static Rank getEmptyRank() {
+    return emptyRank;
   }
 
   public static void buildRanks() {
@@ -45,6 +46,21 @@ public class RankManager {
       Rank newRank = getRankFromConfig(rank);
       RANKS.put(newRank.getTier(), newRank);
     });
+  }
+
+  public static Rank createRank(final LivingEntity livingEntity) {
+    Iterator<Integer> iter = RANKS.navigableKeySet().tailSet(emptyRank.getTier(), false)
+        .iterator();
+    Rank result = RANKS.firstEntry().getValue();
+
+    while (iter.hasNext()) {
+      Rank rank = RANKS.get(iter.next());
+
+      if (RAND.nextFloat() < rank.getChance()) {
+        result = rank;
+      }
+    }
+    return result;
   }
 
   private static Rank getRankFromConfig(RankConfig rank) throws IllegalArgumentException {
