@@ -19,7 +19,6 @@ import top.theillusivec4.champions.common.config.RanksConfig.RankConfig;
 public class RankManager {
 
   private static final TreeMap<Integer, Rank> RANKS = new TreeMap<>();
-  private static final Random RAND = new Random();
 
   private static Rank emptyRank = new Rank();
 
@@ -50,23 +49,6 @@ public class RankManager {
         Champions.LOGGER.error("Invalid attribute found while building rank, skipping...");
       }
     });
-  }
-
-  public static Rank createRank(final LivingEntity livingEntity) {
-    Iterator<Integer> iter = RANKS.navigableKeySet().tailSet(emptyRank.getTier(), false)
-        .iterator();
-    Rank result = RANKS.firstEntry().getValue();
-
-    while (iter.hasNext()) {
-      Rank rank = RANKS.get(iter.next());
-
-      if (RAND.nextFloat() < rank.getChance()) {
-        result = rank;
-      } else {
-        return result;
-      }
-    }
-    return result;
   }
 
   private static Rank getRankFromConfig(RankConfig rank) throws IllegalArgumentException {

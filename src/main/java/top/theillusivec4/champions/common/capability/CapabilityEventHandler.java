@@ -12,8 +12,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
 import top.theillusivec4.champions.common.network.NetworkHandler;
 import top.theillusivec4.champions.common.network.SPacketSyncChampion;
+import top.theillusivec4.champions.common.rank.Rank;
 import top.theillusivec4.champions.common.rank.RankManager;
 import top.theillusivec4.champions.common.registry.ChampionsRegistry;
+import top.theillusivec4.champions.common.util.ChampionBuilder;
 import top.theillusivec4.champions.common.util.ChampionHelper;
 
 public class CapabilityEventHandler {
@@ -57,7 +59,9 @@ public class CapabilityEventHandler {
       ChampionCapability.getCapability(entity).ifPresent(champion -> {
 
         if (champion.getRank() == null) {
-          champion.setRank(RankManager.createRank(entity));
+          Rank newRank = ChampionBuilder.createRank(entity);
+          champion.setRank(newRank);
+          ChampionBuilder.applyGrowth(entity, newRank.getGrowthFactor());
         }
       });
     }

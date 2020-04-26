@@ -79,6 +79,7 @@ public class Champions {
   private void config(final ModConfigEvent evt) {
 
     if (evt.getConfig().getModId().equals(MODID)) {
+      ChampionsConfig.bake();
 
       if (evt.getConfig().getSpec() == ChampionsConfig.RANKS_SPEC) {
         ChampionsConfig.transform(evt.getConfig().getConfigData());
