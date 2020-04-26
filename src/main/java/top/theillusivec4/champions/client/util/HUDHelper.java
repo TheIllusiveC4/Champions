@@ -27,6 +27,8 @@ public class HUDHelper {
         float r = (float) ((color >> 16) & 0xFF) / 255f;
         float g = (float) ((color >> 8) & 0xFF) / 255f;
         float b = (float) ((color) & 0xFF) / 255f;
+        GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        GlStateManager.enableBlend();
         GlStateManager.color4f(r, g, b, 1.0F);
         client.getTextureManager().bindTexture(GUI_BAR_TEXTURES);
         renderHealthBar(k, j, livingEntity.getHealth() / livingEntity.getMaxHealth());
@@ -46,8 +48,10 @@ public class HUDHelper {
               .blit(startStarsX - client.fontRenderer.getStringWidth(count) / 2, 1, 0, 0, 9, 9, 9, 9);
           client.fontRenderer.drawStringWithShadow(count, startStarsX + 10 - client.fontRenderer.getStringWidth(count) / 2.0F, 2, 16777215);
         }
-        String name = new TranslationTextComponent("rank.champions.title.%d", num).getString();
+        String name = new TranslationTextComponent("rank.champions.title." + num).getString();
+        name += " " + livingEntity.getName().getString();
         client.fontRenderer.drawStringWithShadow(name, (float)(i / 2 - client.fontRenderer.getStringWidth(name) / 2), (float) (j - 9), color);
+        GlStateManager.disableBlend();
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
       }
     });

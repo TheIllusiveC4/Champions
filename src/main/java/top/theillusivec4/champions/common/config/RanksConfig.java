@@ -10,7 +10,7 @@ public class RanksConfig {
     public Integer tier;
     public Integer numAffixes;
     public Integer growthFactor;
-    public String defaultColor;
+    public Integer defaultColor;
     public Double chance;
     public List<String> effects;
   }

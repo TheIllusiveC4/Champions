@@ -43,8 +43,12 @@ public class RankManager {
       return;
     }
     ranks.forEach(rank -> {
-      Rank newRank = getRankFromConfig(rank);
-      RANKS.put(newRank.getTier(), newRank);
+      try {
+        Rank newRank = getRankFromConfig(rank);
+        RANKS.put(newRank.getTier(), newRank);
+      } catch (IllegalArgumentException e) {
+        Champions.LOGGER.error("Invalid attribute found while building rank, skipping...");
+      }
     });
   }
 
@@ -66,47 +70,35 @@ public class RankManager {
   private static Rank getRankFromConfig(RankConfig rank) throws IllegalArgumentException {
     if (rank.tier == null || rank.numAffixes == null || rank.chance == null
         || rank.defaultColor == null || rank.growthFactor == null || rank.effects == null) {
-      Champions.LOGGER
-          .error("Attempted to build rank " + rank + " with missing attribute! Skipping...");
-      throw new IllegalArgumentException();
+      throw new IllegalArgumentException("Missing rank attribute");
     }
     int tier;
 
-    if (rank.tier <= 0) {
-      Champions.LOGGER.error("Found non-positive tier in rank, skipping...");
-      throw new IllegalArgumentException();
+    if (rank.tier < 0) {
+      throw new IllegalArgumentException("Negative tier");
     } else {
       tier = rank.tier;
     }
     int numAffixes;
 
     if (rank.numAffixes < 0) {
-      Champions.LOGGER.error("Found negative number of affixes in rank, skipping...");
-      throw new IllegalArgumentException();
+      throw new IllegalArgumentException("Negative number of affixes");
     } else {
       numAffixes = rank.numAffixes;
     }
     double chance;
 
     if (rank.chance <= 0) {
-      Champions.LOGGER.error("Found non-positive chance in rank, skipping...");
-      throw new IllegalArgumentException();
+      throw new IllegalArgumentException("Non-positive chance");
     } else {
       chance = rank.chance;
     }
-    int defaultColor;
+    int defaultColor = rank.defaultColor;
 
-    try {
-      defaultColor = Integer.parseInt(rank.defaultColor, 16);
-    } catch (NumberFormatException e) {
-      Champions.LOGGER.error("Found invalid hex code in rank, skipping...");
-      throw new IllegalArgumentException();
-    }
     int growthFactor;
 
     if (rank.growthFactor < 0) {
-      Champions.LOGGER.error("Found negative growth factor in rank, skipping...");
-      throw new IllegalArgumentException();
+      throw new IllegalArgumentException("Negative growth factor");
     } else {
       growthFactor = rank.growthFactor;
     }
