@@ -11,8 +11,10 @@ import top.theillusivec4.champions.common.capability.ChampionCapability;
 
 public class HUDHelper {
 
-  private static final ResourceLocation GUI_BAR_TEXTURES = new ResourceLocation("textures/gui/bars.png");
-  private static final ResourceLocation GUI_STAR = new ResourceLocation(Champions.MODID, "textures/gui/staricon.png");
+  private static final ResourceLocation GUI_BAR_TEXTURES = new ResourceLocation(
+      "textures/gui/bars.png");
+  private static final ResourceLocation GUI_STAR = new ResourceLocation(Champions.MODID,
+      "textures/gui/staricon.png");
 
   public static void renderHealthBar(final LivingEntity livingEntity) {
     ChampionCapability.getCapability(livingEntity).ifPresent(champion -> {
@@ -27,7 +29,9 @@ public class HUDHelper {
         float r = (float) ((color >> 16) & 0xFF) / 255f;
         float g = (float) ((color >> 8) & 0xFF) / 255f;
         float b = (float) ((color) & 0xFF) / 255f;
-        GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA,
+            GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE,
+            GlStateManager.DestFactor.ZERO);
         GlStateManager.enableBlend();
         GlStateManager.color4f(r, g, b, 1.0F);
         client.getTextureManager().bindTexture(GUI_BAR_TEXTURES);
@@ -45,12 +49,15 @@ public class HUDHelper {
           int startStarsX = i / 2 - 5;
           String count = "x" + num;
           AbstractGui
-              .blit(startStarsX - client.fontRenderer.getStringWidth(count) / 2, 1, 0, 0, 9, 9, 9, 9);
-          client.fontRenderer.drawStringWithShadow(count, startStarsX + 10 - client.fontRenderer.getStringWidth(count) / 2.0F, 2, 16777215);
+              .blit(startStarsX - client.fontRenderer.getStringWidth(count) / 2, 1, 0, 0, 9, 9, 9,
+                  9);
+          client.fontRenderer.drawStringWithShadow(count,
+              startStarsX + 10 - client.fontRenderer.getStringWidth(count) / 2.0F, 2, 16777215);
         }
         String name = new TranslationTextComponent("rank.champions.title." + num).getString();
         name += " " + livingEntity.getName().getString();
-        client.fontRenderer.drawStringWithShadow(name, (float)(i / 2 - client.fontRenderer.getStringWidth(name) / 2), (float) (j - 9), color);
+        client.fontRenderer.drawStringWithShadow(name,
+            (float) (i / 2 - client.fontRenderer.getStringWidth(name) / 2), (float) (j - 9), color);
         GlStateManager.disableBlend();
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
       }

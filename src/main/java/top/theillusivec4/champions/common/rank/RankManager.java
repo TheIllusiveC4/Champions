@@ -62,6 +62,8 @@ public class RankManager {
 
       if (RAND.nextFloat() < rank.getChance()) {
         result = rank;
+      } else {
+        return result;
       }
     }
     return result;
