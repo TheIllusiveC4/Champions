@@ -26,6 +26,7 @@ import c4.champions.common.config.ConfigHandler;
 import c4.champions.common.init.ChampionsRegistry;
 import c4.champions.common.util.ChampionHelper;
 import java.util.List;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -59,6 +60,12 @@ public class EventHandlerCommon {
     public void livingDeath(LivingDeathEvent evt) {
         EntityLivingBase entityLivingBase = evt.getEntityLiving();
         boolean flag = entityLivingBase.world.getGameRules().getBoolean("showDeathMessages");
+        Entity source = evt.getSource().getTrueSource();
+
+        if (!(source instanceof EntityPlayer)) {
+            return;
+        }
+
         if (flag && !entityLivingBase.world.isRemote && ChampionHelper.isValidChampion(entityLivingBase)) {
             IChampionship chp = CapabilityChampionship.getChampionship((EntityLiving)entityLivingBase);
             int messageTier = ConfigHandler.deathMessageTier;
