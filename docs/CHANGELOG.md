@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
+## [1.0.11.5] - 2020.05.01
+### Changed
+- Death messages will only activate from kills caused by players
+
 ## [1.0.11.4] - 2020.04.14
 ### Changed
 - Added random tier range to Champion Mobs config option [#40](https://github.com/TheIllusiveC4/Champions/issues/40)
