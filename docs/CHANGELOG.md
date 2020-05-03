@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
+## [1.0.11.6] - 2020.05.03
+### Fixed
+- Fixed rank spawning issues with Champions Mob List configuration [#43](https://github.com/TheIllusiveC4/Champions/issues/43)
+
 ## [1.0.11.5] - 2020.05.01
 ### Changed
 - Death messages will only activate from kills caused by players
