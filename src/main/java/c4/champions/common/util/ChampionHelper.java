@@ -87,13 +87,18 @@ public class ChampionHelper {
         }
 
         ResourceLocation entityKey = EntityList.getKey(entityLivingIn);
-        Tuple<Integer, Integer> curated = champions.getOrDefault(entityKey, new Tuple<>(0, 0));
+        Tuple<Integer, Integer> curated = champions.get(entityKey);
 
-        if (curated.getFirst() > 0) {
-            finalTier = curated.getFirst();
+        if (curated != null) {
 
-            if (curated.getSecond() == 0) {
-                return ranks.get(finalTier);
+            if (curated.getFirst() > 0) {
+                finalTier = curated.getFirst();
+
+                if (curated.getSecond() == 0) {
+                    return ranks.get(finalTier);
+                }
+            } else {
+                finalTier = firstTier;
             }
         } else if (rand.nextFloat() < chance) {
 
@@ -105,8 +110,9 @@ public class ChampionHelper {
         }
 
         if (finalTier > 0) {
+            Set<Integer> check = ranks.keySet().tailSet(finalTier, false);
 
-            for (Integer tier : ranks.keySet().tailSet(firstTier, false)) {
+            for (Integer tier : check) {
                 chance = ranks.get(tier).getChance();
 
                 if (Champions.isScalingHealthLoaded) {
@@ -130,7 +136,7 @@ public class ChampionHelper {
         if (finalTier == 0) {
             return RankManager.getEmptyRank();
         } else {
-            if (curated.getSecond() > 0) {
+            if (curated != null && curated.getSecond() > 0) {
                 finalTier = Math.min(finalTier, curated.getSecond());
             }
             return ranks.get(finalTier);
