@@ -5,6 +5,7 @@ import com.electronwill.nightconfig.core.conversion.ObjectConverter;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
 import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 import org.apache.commons.lang3.tuple.Pair;
@@ -33,6 +34,8 @@ public class ChampionsConfig {
     public final DoubleValue toughnessGrowth;
     public final DoubleValue knockbackResistanceGrowth;
     public final IntValue experienceGrowth;
+
+    public final BooleanValue moltenWaterResistance;
 
     public Server(ForgeConfigSpec.Builder builder) {
       builder.push("growth");
@@ -65,6 +68,21 @@ public class ChampionsConfig {
           .comment("The increase in experience multiplied by the growth factor")
           .translation(CONFIG_PREFIX + "experienceGrowth")
           .defineInRange("experienceGrowth", 1, 0, Integer.MAX_VALUE);
+
+      builder.pop();
+
+      builder.push("affixes");
+
+      builder.push("molten");
+
+      moltenWaterResistance = builder
+          .comment("Set to true to have Molten champions not be damaged by water")
+          .translation(CONFIG_PREFIX + "moltenWaterResistance")
+          .define("moltenWaterResistance", false);
+
+      builder.pop();
+
+      builder.pop();
     }
   }
 
@@ -102,6 +120,8 @@ public class ChampionsConfig {
   public static double knockbackResistanceGrowth;
   public static int experienceGrowth;
 
+  public static boolean moltenWaterResistance;
+
   public static void bake() {
     healthGrowth = SERVER.healthGrowth.get();
     attackGrowth = SERVER.attackGrowth.get();
@@ -109,6 +129,8 @@ public class ChampionsConfig {
     toughnessGrowth = SERVER.toughnessGrowth.get();
     knockbackResistanceGrowth = SERVER.knockbackResistanceGrowth.get();
     experienceGrowth = SERVER.experienceGrowth.get();
+
+    moltenWaterResistance = SERVER.moltenWaterResistance.get();
   }
 }
 

@@ -35,7 +35,10 @@ import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import top.theillusivec4.champions.api.IChampionsApi;
+import top.theillusivec4.champions.api.impl.ChampionsApiImpl;
 import top.theillusivec4.champions.client.ClientEventHandler;
+import top.theillusivec4.champions.common.affix.AffixManager;
 import top.theillusivec4.champions.common.capability.ChampionCapability;
 import top.theillusivec4.champions.common.config.ChampionsConfig;
 import top.theillusivec4.champions.common.network.NetworkHandler;
@@ -46,6 +49,7 @@ public class Champions {
 
   public static final String MODID = "champions";
   public static final Logger LOGGER = LogManager.getLogger();
+  public static final IChampionsApi API = ChampionsApiImpl.getInstance();
 
   public Champions() {
     ModLoadingContext.get()
@@ -70,6 +74,7 @@ public class Champions {
   private void setup(final FMLCommonSetupEvent evt) {
     ChampionCapability.register();
     NetworkHandler.register();
+    AffixManager.register();
   }
 
   private void clientSetup(final FMLClientSetupEvent evt) {

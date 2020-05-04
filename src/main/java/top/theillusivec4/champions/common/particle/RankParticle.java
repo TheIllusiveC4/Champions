@@ -1,4 +1,4 @@
-package top.theillusivec4.champions.common.particles;
+package top.theillusivec4.champions.common.particle;
 
 import java.util.Random;
 import javax.annotation.Nonnull;

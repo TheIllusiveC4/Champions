@@ -8,7 +8,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
-import top.theillusivec4.champions.common.particles.RankParticle.RankFactory;
+import top.theillusivec4.champions.common.particle.RankParticle.RankFactory;
 
 @EventBusSubscriber(bus = Bus.MOD)
 public class RegistryEventsHandler {
