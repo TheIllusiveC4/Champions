@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -48,11 +49,7 @@ public class ChampionCapability {
       @Override
       public INBT writeNBT(Capability<IChampion> capability, IChampion instance, Direction side) {
         CompoundNBT compoundNBT = new CompoundNBT();
-        Rank rank = instance.getRank();
-
-        if (rank != null) {
-          compoundNBT.putInt(TIER_TAG, rank.getTier());
-        }
+        instance.getRank().ifPresent(rank -> compoundNBT.putInt(TIER_TAG, rank.getTier()));
         List<IAffix> affixes = instance.getAffixes();
         ListNBT list = new ListNBT();
         affixes.forEach(affix -> {
@@ -105,8 +102,8 @@ public class ChampionCapability {
     private Set<String> affixIds = new HashSet<>();
 
     @Override
-    public Rank getRank() {
-      return rank;
+    public Optional<Rank> getRank() {
+      return Optional.ofNullable(rank);
     }
 
     @Override
@@ -139,7 +136,7 @@ public class ChampionCapability {
 
   public interface IChampion {
 
-    Rank getRank();
+    Optional<Rank> getRank();
 
     void setRank(Rank rank);
 

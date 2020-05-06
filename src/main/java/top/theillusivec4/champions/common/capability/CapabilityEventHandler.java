@@ -35,20 +35,21 @@ public class CapabilityEventHandler {
     LivingEntity entity = evt.getEntityLiving();
 
     if (entity.getEntityWorld().isRemote()) {
-      ChampionCapability.getCapability(entity).ifPresent(champion -> {
+      ChampionCapability.getCapability(entity)
+          .ifPresent(champion -> champion.getRank().ifPresent(rank -> {
 
-        if (champion.getRank().getTier() > 0) {
-          int color = champion.getRank().getDefaultColor();
-          float r = (float) ((color >> 16) & 0xFF) / 255f;
-          float g = (float) ((color >> 8) & 0xFF) / 255f;
-          float b = (float) ((color) & 0xFF) / 255f;
-          entity.getEntityWorld().addParticle(ChampionsRegistry.RANK,
-              entity.posX + (entity.getRNG().nextDouble() - 0.5D) * (double) entity.getWidth(),
-              entity.posY + entity.getRNG().nextDouble() * entity.getHeight(),
-              entity.posZ + (entity.getRNG().nextDouble() - 0.5D) * (double) entity.getWidth(), r,
-              g, b);
-        }
-      });
+            if (rank.getTier() > 0) {
+              int color = rank.getDefaultColor();
+              float r = (float) ((color >> 16) & 0xFF) / 255f;
+              float g = (float) ((color >> 8) & 0xFF) / 255f;
+              float b = (float) ((color) & 0xFF) / 255f;
+              entity.getEntityWorld().addParticle(ChampionsRegistry.RANK,
+                  entity.posX + (entity.getRNG().nextDouble() - 0.5D) * (double) entity.getWidth(),
+                  entity.posY + entity.getRNG().nextDouble() * entity.getHeight(),
+                  entity.posZ + (entity.getRNG().nextDouble() - 0.5D) * (double) entity.getWidth(),
+                  r, g, b);
+            }
+          }));
     }
   }
 
@@ -58,13 +59,13 @@ public class CapabilityEventHandler {
 
     if (!entity.getEntityWorld().isRemote()) {
       ChampionCapability.getCapability(entity).ifPresent(champion -> {
-
-        if (champion.getRank() == null) {
+        if (champion.getRank().isPresent()) {
           Rank newRank = ChampionBuilder.createRank(entity);
           champion.setRank(newRank);
           ChampionBuilder.applyGrowth(entity, newRank.getGrowthFactor());
           List<IAffix> newAffixes = ChampionBuilder.createAffixes(newRank, entity);
           champion.setAffixes(newAffixes);
+          newAffixes.forEach(affix -> affix.onInitialSpawn(entity));
         }
       });
     }
@@ -79,8 +80,8 @@ public class CapabilityEventHandler {
       ChampionCapability.getCapability((LivingEntity) entity).ifPresent(
           champion -> NetworkHandler.INSTANCE
               .send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) playerEntity),
-                  new SPacketSyncChampion(entity.getEntityId(), champion.getRank().getTier(),
-                      champion.getAffixIds())));
+                  new SPacketSyncChampion(entity.getEntityId(),
+                      champion.getRank().map(Rank::getTier).orElse(0), champion.getAffixIds())));
     }
   }
 }

@@ -35,11 +35,11 @@ public interface IAffix {
     return newAmount;
   }
 
-  default float onHealed(LivingEntity livingEntity, float amount, float newAmount) {
+  default float onHeal(LivingEntity livingEntity, float amount, float newAmount) {
     return newAmount;
   }
 
-  default float onDamaged(LivingEntity livingEntity, DamageSource source, float amount,
+  default float onDamage(LivingEntity livingEntity, DamageSource source, float amount,
       float newAmount) {
     return newAmount;
   }
@@ -48,8 +48,8 @@ public interface IAffix {
     return true;
   }
 
-  default float onKnockback(LivingEntity livingEntity) {
-    return 1.0F;
+  default float onKnockBack(LivingEntity livingEntity, float strength, float newStrength) {
+    return newStrength;
   }
 
   default boolean canApply(LivingEntity livingEntity) {
