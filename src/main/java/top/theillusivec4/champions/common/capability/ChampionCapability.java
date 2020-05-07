@@ -2,8 +2,10 @@ package top.theillusivec4.champions.common.capability;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import javax.annotation.Nonnull;
@@ -24,6 +26,7 @@ import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.LazyOptional;
 import top.theillusivec4.champions.Champions;
 import top.theillusivec4.champions.api.IAffix;
+import top.theillusivec4.champions.api.IChampion;
 import top.theillusivec4.champions.common.rank.Rank;
 import top.theillusivec4.champions.common.rank.RankManager;
 
@@ -54,7 +57,9 @@ public class ChampionCapability {
         ListNBT list = new ListNBT();
         affixes.forEach(affix -> {
           CompoundNBT tag = new CompoundNBT();
-          tag.putString(ID_TAG, affix.getIdentifier());
+          String id = affix.getIdentifier();
+          tag.putString(ID_TAG, id);
+          tag.put(DATA_TAG, instance.getData(id));
           list.add(tag);
         });
         compoundNBT.put(AFFIX_TAG, list);
@@ -78,7 +83,13 @@ public class ChampionCapability {
           for (int i = 0; i < list.size(); i++) {
             CompoundNBT tag = list.getCompound(i);
             String id = tag.getString(ID_TAG);
-            Champions.API.getAffix(id).ifPresent(affixes::add);
+            Champions.API.getAffix(id).ifPresent(affix -> {
+              affixes.add(affix);
+
+              if (tag.hasUniqueId(DATA_TAG)) {
+                instance.setData(id, tag.getCompound(DATA_TAG));
+              }
+            });
           }
           instance.setAffixes(affixes);
         }
@@ -87,8 +98,8 @@ public class ChampionCapability {
     MinecraftForge.EVENT_BUS.register(new CapabilityEventHandler());
   }
 
-  public static Provider createProvider() {
-    return new Provider();
+  public static Provider createProvider(final LivingEntity livingEntity) {
+    return new Provider(livingEntity);
   }
 
   public static LazyOptional<IChampion> getCapability(final LivingEntity livingEntity) {
@@ -97,9 +108,22 @@ public class ChampionCapability {
 
   public static class Champion implements IChampion {
 
+    private LivingEntity champion = null;
     private Rank rank = null;
     private List<IAffix> affixes = new ArrayList<>();
     private Set<String> affixIds = new HashSet<>();
+    private Map<String, CompoundNBT> data = new HashMap<>();
+
+    private Champion() {}
+
+    private Champion(final LivingEntity livingEntity) {
+      this.champion = livingEntity;
+    }
+
+    @Override
+    public LivingEntity getLivingEntity() {
+      return this.champion;
+    }
 
     @Override
     public Optional<Rank> getRank() {
@@ -132,21 +156,16 @@ public class ChampionCapability {
     public void setAffixIds(Set<String> affixIds) {
       this.affixIds = affixIds;
     }
-  }
 
-  public interface IChampion {
+    @Override
+    public void setData(String identifier, CompoundNBT data) {
+      this.data.put(identifier, data);
+    }
 
-    Optional<Rank> getRank();
-
-    void setRank(Rank rank);
-
-    List<IAffix> getAffixes();
-
-    void setAffixes(List<IAffix> affixes);
-
-    Set<String> getAffixIds();
-
-    void setAffixIds(Set<String> affixIds);
+    @Override
+    public CompoundNBT getData(String identifier) {
+      return this.data.getOrDefault(identifier, new CompoundNBT());
+    }
   }
 
   public static class Provider implements ICapabilitySerializable<INBT> {
@@ -154,8 +173,8 @@ public class ChampionCapability {
     final LazyOptional<IChampion> optional;
     final IChampion data;
 
-    Provider() {
-      this.data = new Champion();
+    Provider(final LivingEntity livingEntity) {
+      this.data = new Champion(livingEntity);
       this.optional = LazyOptional.of(() -> data);
     }
 

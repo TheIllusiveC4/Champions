@@ -26,7 +26,7 @@ public class CapabilityEventHandler {
     Entity entity = evt.getObject();
 
     if (ChampionHelper.isValidEntity(entity)) {
-      evt.addCapability(ChampionCapability.ID, ChampionCapability.createProvider());
+      evt.addCapability(ChampionCapability.ID, ChampionCapability.createProvider((LivingEntity) entity));
     }
   }
 
@@ -59,13 +59,13 @@ public class CapabilityEventHandler {
 
     if (!entity.getEntityWorld().isRemote()) {
       ChampionCapability.getCapability(entity).ifPresent(champion -> {
-        if (champion.getRank().isPresent()) {
+        if (!champion.getRank().isPresent()) {
           Rank newRank = ChampionBuilder.createRank(entity);
           champion.setRank(newRank);
           ChampionBuilder.applyGrowth(entity, newRank.getGrowthFactor());
-          List<IAffix> newAffixes = ChampionBuilder.createAffixes(newRank, entity);
+          List<IAffix> newAffixes = ChampionBuilder.createAffixes(newRank, champion);
           champion.setAffixes(newAffixes);
-          newAffixes.forEach(affix -> affix.onInitialSpawn(entity));
+          newAffixes.forEach(affix -> affix.onInitialSpawn(champion));
         }
       });
     }

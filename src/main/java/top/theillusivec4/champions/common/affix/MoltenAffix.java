@@ -18,6 +18,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import top.theillusivec4.champions.Champions;
 import top.theillusivec4.champions.api.AffixCategory;
+import top.theillusivec4.champions.api.IChampion;
+import top.theillusivec4.champions.common.affix.core.BasicAffix;
 import top.theillusivec4.champions.common.config.ChampionsConfig;
 
 public class MoltenAffix extends BasicAffix {
@@ -30,7 +32,8 @@ public class MoltenAffix extends BasicAffix {
   }
 
   @Override
-  public void onSpawn(LivingEntity livingEntity) {
+  public void onSpawn(IChampion champion) {
+    LivingEntity livingEntity = champion.getLivingEntity();
     livingEntity.addPotionEffect(new EffectInstance(Effects.FIRE_RESISTANCE, 40, 0, true, false));
 
     if (livingEntity instanceof MobEntity) {
@@ -65,7 +68,8 @@ public class MoltenAffix extends BasicAffix {
   }
 
   @Override
-  public void onUpdate(LivingEntity livingEntity) {
+  public void onUpdate(IChampion champion) {
+    LivingEntity livingEntity = champion.getLivingEntity();
 
     if (!livingEntity.getEntityWorld().isRemote() && livingEntity.ticksExisted % 20 == 0) {
       livingEntity.setFire(10);
@@ -78,7 +82,7 @@ public class MoltenAffix extends BasicAffix {
   }
 
   @Override
-  public boolean onAttack(LivingEntity livingEntity, LivingEntity target, DamageSource source,
+  public boolean onAttack(IChampion champion, LivingEntity target, DamageSource source,
       float amount) {
     target.setFire(10);
     source.setFireDamage();

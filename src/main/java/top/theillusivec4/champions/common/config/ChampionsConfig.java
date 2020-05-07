@@ -35,7 +35,18 @@ public class ChampionsConfig {
     public final DoubleValue knockbackResistanceGrowth;
     public final IntValue experienceGrowth;
 
+    public final DoubleValue hastyMovementBonus;
+
+    public final DoubleValue livelyHealAmount;
+    public final DoubleValue livelyPassiveMultiplier;
+    public final IntValue livelyCooldown;
+
     public final BooleanValue moltenWaterResistance;
+
+    public final DoubleValue reflectingMinPercent;
+    public final DoubleValue reflectingMaxPercent;
+    public final IntValue reflectingMax;
+    public final BooleanValue reflectingLethal;
 
     public Server(ForgeConfigSpec.Builder builder) {
       builder.push("growth");
@@ -73,12 +84,57 @@ public class ChampionsConfig {
 
       builder.push("affixes");
 
+      builder.push("hasty");
+
+      hastyMovementBonus = builder.comment("The base movement speed bonus")
+          .translation(CONFIG_PREFIX + "hastyMovementBonus")
+          .defineInRange("hastyMovementBonus", 0.25D, 0.0D, Double.MAX_VALUE);
+
+      builder.pop();
+
+      builder.push("lively");
+
+      livelyHealAmount = builder.comment("The amount of health per second regeneration")
+          .translation(CONFIG_PREFIX + "livelyHealAmount")
+          .defineInRange("livelyHealAmount", 1.0D, 0.0D, Double.MAX_VALUE);
+
+      livelyPassiveMultiplier = builder
+          .comment("Multiplier to health regeneration when not aggressive")
+          .translation(CONFIG_PREFIX + "livelyPassiveMultiplier")
+          .defineInRange("livelyPassiveMultiplier", 5.0D, 1.0D, Double.MAX_VALUE);
+
+      livelyCooldown = builder
+          .comment("Set cooldown (in seconds) for regeneration after getting attacked")
+          .translation(CONFIG_PREFIX + "livelyCooldown")
+          .defineInRange("livelyCooldown", 3, 1, Integer.MAX_VALUE);
+
+      builder.pop();
+
       builder.push("molten");
 
       moltenWaterResistance = builder
           .comment("Set to true to have Molten champions not be damaged by water")
           .translation(CONFIG_PREFIX + "moltenWaterResistance")
           .define("moltenWaterResistance", false);
+
+      builder.pop();
+
+      builder.push("reflecting");
+
+      reflectingMinPercent = builder.comment("The minimum percent of damage to reflect back")
+          .translation(CONFIG_PREFIX + "reflectingMinPercent")
+          .defineInRange("reflectingMinPercent", 0.1D, 0.0D, 1.0D);
+
+      reflectingMaxPercent = builder.comment("The maximum percent of damage to reflect back")
+          .translation(CONFIG_PREFIX + "reflectingMaxPercent")
+          .defineInRange("reflectingMaxPercent", 0.35D, 0.0D, 1.0D);
+
+      reflectingMax = builder.comment("The maximum amount of damage to reflect back")
+          .translation(CONFIG_PREFIX + "reflectingMax")
+          .defineInRange("reflectingMax", 100, 0, Integer.MAX_VALUE);
+
+      reflectingLethal = builder.comment("Set to true to enable deadly reflecting strikes")
+          .translation(CONFIG_PREFIX + "reflectingLethal").define("reflectingLethal", true);
 
       builder.pop();
 
@@ -120,7 +176,18 @@ public class ChampionsConfig {
   public static double knockbackResistanceGrowth;
   public static int experienceGrowth;
 
+  public static double hastyMovementBonus;
+
   public static boolean moltenWaterResistance;
+
+  public static double reflectingMaxPercent;
+  public static double reflectingMinPercent;
+  public static int reflectingMax;
+  public static boolean reflectingLethal;
+
+  public static int livelyCooldown;
+  public static double livelyHealAmount;
+  public static double livelyPassiveMultiplier;
 
   public static void bake() {
     healthGrowth = SERVER.healthGrowth.get();
@@ -130,7 +197,18 @@ public class ChampionsConfig {
     knockbackResistanceGrowth = SERVER.knockbackResistanceGrowth.get();
     experienceGrowth = SERVER.experienceGrowth.get();
 
+    hastyMovementBonus = SERVER.hastyMovementBonus.get();
+
+    livelyHealAmount = SERVER.livelyHealAmount.get();
+    livelyPassiveMultiplier = SERVER.livelyPassiveMultiplier.get();
+    livelyCooldown = SERVER.livelyCooldown.get();
+
     moltenWaterResistance = SERVER.moltenWaterResistance.get();
+
+    reflectingLethal = SERVER.reflectingLethal.get();
+    reflectingMax = SERVER.reflectingMax.get();
+    reflectingMaxPercent = SERVER.reflectingMaxPercent.get();
+    reflectingMinPercent = SERVER.reflectingMinPercent.get();
   }
 }
 

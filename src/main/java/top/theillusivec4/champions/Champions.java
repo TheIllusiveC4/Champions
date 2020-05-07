@@ -38,7 +38,7 @@ import org.apache.logging.log4j.Logger;
 import top.theillusivec4.champions.api.IChampionsApi;
 import top.theillusivec4.champions.api.impl.ChampionsApiImpl;
 import top.theillusivec4.champions.client.ClientEventHandler;
-import top.theillusivec4.champions.common.affix.AffixManager;
+import top.theillusivec4.champions.common.affix.core.AffixManager;
 import top.theillusivec4.champions.common.capability.ChampionCapability;
 import top.theillusivec4.champions.common.config.ChampionsConfig;
 import top.theillusivec4.champions.common.network.NetworkHandler;

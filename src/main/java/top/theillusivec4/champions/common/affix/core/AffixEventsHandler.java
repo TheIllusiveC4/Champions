@@ -1,4 +1,4 @@
-package top.theillusivec4.champions.common.affix;
+package top.theillusivec4.champions.common.affix.core;
 
 import java.util.List;
 import net.minecraft.entity.Entity;
@@ -26,7 +26,7 @@ public class AffixEventsHandler {
     if (!entity.getEntityWorld().isRemote() && entity instanceof LivingEntity) {
       LivingEntity livingEntity = (LivingEntity) entity;
       ChampionCapability.getCapability(livingEntity).ifPresent(champion -> {
-        champion.getAffixes().forEach(affix -> affix.onSpawn(livingEntity));
+        champion.getAffixes().forEach(affix -> affix.onSpawn(champion));
         champion.getRank().ifPresent(rank -> {
           List<Tuple<Effect, Integer>> effects = rank.getEffects();
           effects.forEach(effectPair -> livingEntity
@@ -43,7 +43,7 @@ public class AffixEventsHandler {
     if (entity instanceof LivingEntity) {
       LivingEntity livingEntity = (LivingEntity) entity;
       ChampionCapability.getCapability(livingEntity).ifPresent(champion -> {
-        champion.getAffixes().forEach(affix -> affix.onUpdate(livingEntity));
+        champion.getAffixes().forEach(affix -> affix.onUpdate(champion));
 
         if (entity.ticksExisted % 40 == 0) {
           champion.getRank().ifPresent(rank -> {
@@ -65,7 +65,7 @@ public class AffixEventsHandler {
       ChampionCapability.getCapability(livingEntity)
           .ifPresent(champion -> champion.getAffixes().forEach(affix -> {
 
-            if (!affix.onAttacked(livingEntity, evt.getSource(), evt.getAmount())) {
+            if (!affix.onAttacked(champion, evt.getSource(), evt.getAmount())) {
               evt.setCanceled(true);
             }
           }));
@@ -82,7 +82,7 @@ public class AffixEventsHandler {
           .ifPresent(champion -> champion.getAffixes().forEach(affix -> {
 
             if (!affix
-                .onAttack(livingEntity, evt.getEntityLiving(), evt.getSource(), evt.getAmount())) {
+                .onAttack(champion, evt.getEntityLiving(), evt.getSource(), evt.getAmount())) {
               evt.setCanceled(true);
             }
           }));
@@ -98,7 +98,7 @@ public class AffixEventsHandler {
       float[] amounts = new float[]{evt.getAmount(), evt.getAmount()};
       ChampionCapability.getCapability(livingEntity).ifPresent(champion -> champion.getAffixes()
           .forEach(affix -> amounts[1] = affix
-              .onHurt(livingEntity, evt.getSource(), amounts[0], amounts[1])));
+              .onHurt(champion, evt.getSource(), amounts[0], amounts[1])));
       evt.setAmount(amounts[1]);
     }
   }
@@ -112,7 +112,7 @@ public class AffixEventsHandler {
       float[] amounts = new float[]{evt.getAmount(), evt.getAmount()};
       ChampionCapability.getCapability(livingEntity).ifPresent(champion -> champion.getAffixes()
           .forEach(affix -> amounts[1] = affix
-              .onDamage(livingEntity, evt.getSource(), amounts[0], amounts[1])));
+              .onDamage(champion, evt.getSource(), amounts[0], amounts[1])));
       evt.setAmount(amounts[1]);
     }
   }
@@ -125,7 +125,7 @@ public class AffixEventsHandler {
       LivingEntity livingEntity = (LivingEntity) entity;
       float[] amounts = new float[]{evt.getOriginalStrength(), evt.getOriginalStrength()};
       ChampionCapability.getCapability(livingEntity).ifPresent(champion -> champion.getAffixes()
-          .forEach(affix -> amounts[1] = affix.onKnockBack(livingEntity, amounts[0], amounts[1])));
+          .forEach(affix -> amounts[1] = affix.onKnockBack(champion, amounts[0], amounts[1])));
       evt.setStrength(amounts[1]);
     }
   }
@@ -139,7 +139,7 @@ public class AffixEventsHandler {
       ChampionCapability.getCapability(livingEntity)
           .ifPresent(champion -> champion.getAffixes().forEach(affix -> {
 
-            if (!affix.onDeath(livingEntity, evt.getSource())) {
+            if (!affix.onDeath(champion, evt.getSource())) {
               evt.setCanceled(true);
             }
           }));
@@ -154,7 +154,7 @@ public class AffixEventsHandler {
       LivingEntity livingEntity = (LivingEntity) entity;
       float[] amounts = new float[]{evt.getAmount(), evt.getAmount()};
       ChampionCapability.getCapability(livingEntity).ifPresent(champion -> champion.getAffixes()
-          .forEach(affix -> amounts[1] = affix.onHeal(livingEntity, amounts[0], amounts[1])));
+          .forEach(affix -> amounts[1] = affix.onHeal(champion, amounts[0], amounts[1])));
       evt.setAmount(amounts[1]);
     }
   }

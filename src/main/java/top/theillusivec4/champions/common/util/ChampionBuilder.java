@@ -17,6 +17,7 @@ import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import top.theillusivec4.champions.Champions;
 import top.theillusivec4.champions.api.AffixCategory;
 import top.theillusivec4.champions.api.IAffix;
+import top.theillusivec4.champions.api.IChampion;
 import top.theillusivec4.champions.common.config.ChampionsConfig;
 import top.theillusivec4.champions.common.rank.Rank;
 import top.theillusivec4.champions.common.rank.RankManager;
@@ -25,7 +26,7 @@ public class ChampionBuilder {
 
   private static final Random RAND = new Random();
 
-  public static List<IAffix> createAffixes(final Rank rank, final LivingEntity livingEntity) {
+  public static List<IAffix> createAffixes(final Rank rank, final IChampion champion) {
     int size = rank.getNumAffixes();
     int tier = rank.getTier();
     List<IAffix> affixesToAdd = new ArrayList<>();
@@ -36,7 +37,8 @@ public class ChampionBuilder {
       validAffixes.put(category, new ArrayList<>());
     }
     allAffixes.forEach((k, v) -> validAffixes.get(k).addAll(
-        v.stream().filter(affix -> affix.canApply(livingEntity)).collect(Collectors.toList())));
+        v.stream().filter(affix -> affix.getTier() <= tier && affix.canApply(champion))
+            .collect(Collectors.toList())));
     double chance = 0.33D;
 
     if (affixesToAdd.size() < size) {

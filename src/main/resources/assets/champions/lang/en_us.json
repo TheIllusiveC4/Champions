@@ -4,5 +4,8 @@
   "rank.champions.title.2": "Elite",
   "rank.champions.title.3": "Legendary",
   "rank.champions.title.4": "Ultimate",
-  "affix.champions.molten": "Molten"
+  "affix.champions.molten": "Molten",
+  "affix.champions.hasty": "Hasty",
+  "affix.champions.reflecting": "Reflecting",
+  "affix.champions.lively": "Lively"
 }
