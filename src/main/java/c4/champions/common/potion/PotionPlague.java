@@ -69,33 +69,10 @@ public class PotionPlague extends Potion {
     public void performEffect(@Nonnull EntityLivingBase entityLivingBaseIn, int amplifier) {
 
         if (!entityLivingBaseIn.world.isRemote) {
-            List<EntityLivingBase> entities = entityLivingBaseIn.world.getEntitiesWithinAABB(EntityLivingBase.class,
-                    entityLivingBaseIn.getEntityBoundingBox().grow(ConfigHandler.affix.plagued.infectRange));
 
-            if (!entities.isEmpty()) {
-
-                for (EntityLivingBase ent : entities) {
-
-                    if (AffixPlagued.canEntityBeInfected(entityLivingBaseIn, ent)) {
-
-                        if (ChampionHelper.isValidChampion(ent)) {
-                            IChampionship chp = CapabilityChampionship.getChampionship((EntityLiving) ent);
-
-                            if (chp != null && chp.getAffixes().contains(Affixes.plagued.getIdentifier())) {
-                                continue;
-                            }
-                        }
-
-                        if (!ent.isPotionActive(INFECTION)) {
-                            ent.addPotionEffect(new PotionEffect(INFECTION, ConfigHandler.affix.plagued.infectDuration,
-                                    ConfigHandler.affix.plagued.infectPower - 1));
-                        }
-
-                        if (!ent.isPotionActive(this) && ent != entityLivingBaseIn) {
-                            ent.addPotionEffect(new PotionEffect(this, ConfigHandler.affix.plagued.duration));
-                        }
-                    }
-                }
+            if (!entityLivingBaseIn.isPotionActive(INFECTION)) {
+                entityLivingBaseIn.addPotionEffect(new PotionEffect(INFECTION, ConfigHandler.affix.plagued.infectDuration,
+                        ConfigHandler.affix.plagued.infectPower - 1));
             }
 
             if (entityLivingBaseIn instanceof EntityPlayer) {
