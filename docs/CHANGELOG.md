@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
+## [1.0.11.7] - 2020.05.07
+### Changed
+- Plagued effect no longer spreads between non-source entities [#44](https://github.com/TheIllusiveC4/Champions/issues/44)
+
 ## [1.0.11.6] - 2020.05.03
 ### Fixed
 - Fixed rank spawning issues with Champions Mob List configuration [#43](https://github.com/TheIllusiveC4/Champions/issues/43)
