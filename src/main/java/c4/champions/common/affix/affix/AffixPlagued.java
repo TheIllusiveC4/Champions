@@ -29,6 +29,7 @@ import java.util.List;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.Vec3d;
@@ -36,43 +37,46 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent;
 
 public class AffixPlagued extends AffixBase {
 
-    public AffixPlagued() {
-        super("plagued", AffixCategory.OFFENSE);
-    }
+  public AffixPlagued() {
+    super("plagued", AffixCategory.OFFENSE);
+  }
 
-    @Override
-    public void onUpdate(EntityLiving entity, IChampionship cap) {
+  @Override
+  public void onUpdate(EntityLiving entity, IChampionship cap) {
 
-        if (!entity.world.isRemote) {
-            List<Entity> list = entity.world.getEntitiesWithinAABBExcludingEntity(entity, entity.getEntityBoundingBox
-                    ().grow(ConfigHandler.affix.plagued.infectRange));
+    if (!entity.world.isRemote) {
+      List<Entity> list = entity.world.getEntitiesWithinAABBExcludingEntity(entity,
+          entity.getEntityBoundingBox().grow(ConfigHandler.affix.plagued.infectRange));
 
-            for (Entity entity1 : list) {
+      for (Entity entity1 : list) {
 
-                if (entity1 instanceof EntityLivingBase) {
-                    EntityLivingBase target = (EntityLivingBase)entity1;
+        if (entity1 instanceof EntityLivingBase) {
+          EntityLivingBase target = (EntityLivingBase) entity1;
 
-                    if (canEntityBeInfected(entity, target)) {
-                        target.addPotionEffect(new PotionEffect(ChampionsRegistry.plague, ConfigHandler.affix.plagued.duration));
-                    }
-                }
-            }
-
-            if (entity.isPotionActive(PotionPlague.getInfectionPotion())) {
-                entity.removePotionEffect(PotionPlague.getInfectionPotion());
-            }
+          if (canEntityBeInfected(entity, target)) {
+            target.addPotionEffect(
+                new PotionEffect(ChampionsRegistry.plague, ConfigHandler.affix.plagued.duration));
+          }
         }
-    }
+      }
 
-    @Override
-    public void onAttack(EntityLiving entity, IChampionship cap, EntityLivingBase target, DamageSource source, float
-            amount, LivingAttackEvent evt) {
-        target.addPotionEffect(new PotionEffect(ChampionsRegistry.plague, ConfigHandler.affix.plagued.duration));
+      if (entity.isPotionActive(PotionPlague.getInfectionPotion())) {
+        entity.removePotionEffect(PotionPlague.getInfectionPotion());
+      }
     }
+  }
 
-    public static boolean canEntityBeInfected(EntityLivingBase host, EntityLivingBase target) {
-        return host.world.rayTraceBlocks(new Vec3d(host.posX, host.posY + host.height / 2.0f, host.posZ),
-                new Vec3d(target.posX, target.posY + target.height / 2.0f, target.posZ), true,
-                true, false) == null;
-    }
+  @Override
+  public void onAttack(EntityLiving entity, IChampionship cap, EntityLivingBase target,
+      DamageSource source, float amount, LivingAttackEvent evt) {
+    target.addPotionEffect(
+        new PotionEffect(ChampionsRegistry.plague, ConfigHandler.affix.plagued.duration));
+  }
+
+  public static boolean canEntityBeInfected(EntityLivingBase host, EntityLivingBase target) {
+    return !(target instanceof EntityArmorStand) && host.world
+        .rayTraceBlocks(new Vec3d(host.posX, host.posY + host.height / 2.0f, host.posZ),
+            new Vec3d(target.posX, target.posY + target.height / 2.0f, target.posZ), true, true,
+            false) == null;
+  }
 }
