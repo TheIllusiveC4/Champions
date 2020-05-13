@@ -26,6 +26,25 @@ public class ChampionBuilder {
 
   private static final Random RAND = new Random();
 
+  public static void spawn(final IChampion champion) {
+    LivingEntity entity = champion.getLivingEntity();
+    Rank newRank = ChampionBuilder.createRank(entity);
+    champion.setRank(newRank);
+    ChampionBuilder.applyGrowth(entity, newRank.getGrowthFactor());
+    List<IAffix> newAffixes = ChampionBuilder.createAffixes(newRank, champion);
+    champion.setAffixes(newAffixes);
+    newAffixes.forEach(affix -> affix.onInitialSpawn(champion));
+  }
+
+  public static void spawnPreset(final IChampion champion, int tier, List<IAffix> affixes) {
+    LivingEntity entity = champion.getLivingEntity();
+    Rank newRank = RankManager.getRank(tier);
+    champion.setRank(newRank);
+    ChampionBuilder.applyGrowth(entity, newRank.getGrowthFactor());
+    champion.setAffixes(affixes);
+    affixes.forEach(affix -> affix.onInitialSpawn(champion));
+  }
+
   public static List<IAffix> createAffixes(final Rank rank, final IChampion champion) {
     int size = rank.getNumAffixes();
     int tier = rank.getTier();
@@ -90,6 +109,10 @@ public class ChampionBuilder {
   }
 
   public static void applyGrowth(final LivingEntity livingEntity, int growthFactor) {
+
+    if (growthFactor <= 1) {
+      return;
+    }
     grow(livingEntity, SharedMonsterAttributes.MAX_HEALTH,
         ChampionsConfig.healthGrowth * growthFactor, Operation.MULTIPLY_TOTAL);
     livingEntity.setHealth(livingEntity.getMaxHealth());

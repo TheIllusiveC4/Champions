@@ -60,12 +60,7 @@ public class CapabilityEventHandler {
     if (!entity.getEntityWorld().isRemote()) {
       ChampionCapability.getCapability(entity).ifPresent(champion -> {
         if (!champion.getRank().isPresent()) {
-          Rank newRank = ChampionBuilder.createRank(entity);
-          champion.setRank(newRank);
-          ChampionBuilder.applyGrowth(entity, newRank.getGrowthFactor());
-          List<IAffix> newAffixes = ChampionBuilder.createAffixes(newRank, champion);
-          champion.setAffixes(newAffixes);
-          newAffixes.forEach(affix -> affix.onInitialSpawn(champion));
+          ChampionBuilder.spawn(champion);
         }
       });
     }

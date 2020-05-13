@@ -22,6 +22,7 @@ package top.theillusivec4.champions;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -41,8 +42,10 @@ import top.theillusivec4.champions.client.ClientEventHandler;
 import top.theillusivec4.champions.common.affix.core.AffixManager;
 import top.theillusivec4.champions.common.capability.ChampionCapability;
 import top.theillusivec4.champions.common.config.ChampionsConfig;
+import top.theillusivec4.champions.common.item.ChampionEggItem;
 import top.theillusivec4.champions.common.network.NetworkHandler;
 import top.theillusivec4.champions.common.rank.RankManager;
+import top.theillusivec4.champions.common.registry.ChampionsRegistry;
 
 @Mod(Champions.MODID)
 public class Champions {
@@ -79,6 +82,8 @@ public class Champions {
 
   private void clientSetup(final FMLClientSetupEvent evt) {
     MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
+    Minecraft.getInstance().getItemColors()
+        .register(ChampionEggItem::getColor, ChampionsRegistry.EGG);
   }
 
   private void config(final ModConfigEvent evt) {

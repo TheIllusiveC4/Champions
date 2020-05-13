@@ -35,6 +35,10 @@ public class RankManager {
     return emptyRank;
   }
 
+  public static Integer getLowestTier() { return RANKS.firstKey(); }
+
+  public static Integer getHighestTier() { return RANKS.lastKey(); }
+
   public static void buildRanks() {
     List<RankConfig> ranks = ChampionsConfig.ranks;
 
