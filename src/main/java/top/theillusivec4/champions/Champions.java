@@ -31,6 +31,7 @@ import net.minecraftforge.fml.config.ModConfig.ModConfigEvent;
 import net.minecraftforge.fml.config.ModConfig.Type;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.commons.io.FileUtils;
@@ -46,6 +47,7 @@ import top.theillusivec4.champions.common.item.ChampionEggItem;
 import top.theillusivec4.champions.common.network.NetworkHandler;
 import top.theillusivec4.champions.common.rank.RankManager;
 import top.theillusivec4.champions.common.registry.ChampionsRegistry;
+import top.theillusivec4.champions.server.command.ChampionsCommand;
 
 @Mod(Champions.MODID)
 public class Champions {
@@ -72,6 +74,7 @@ public class Champions {
     eventBus.addListener(this::config);
     eventBus.addListener(this::setup);
     eventBus.addListener(this::clientSetup);
+    MinecraftForge.EVENT_BUS.addListener(this::serverStarting);
   }
 
   private void setup(final FMLCommonSetupEvent evt) {
@@ -84,6 +87,10 @@ public class Champions {
     MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
     Minecraft.getInstance().getItemColors()
         .register(ChampionEggItem::getColor, ChampionsRegistry.EGG);
+  }
+
+  private void serverStarting(final FMLServerStartingEvent evt) {
+    ChampionsCommand.register(evt.getCommandDispatcher());
   }
 
   private void config(final ModConfigEvent evt) {

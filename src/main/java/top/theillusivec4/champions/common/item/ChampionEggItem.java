@@ -1,12 +1,15 @@
 package top.theillusivec4.champions.common.item;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FlowingFluidBlock;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -30,6 +33,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -51,6 +56,43 @@ public class ChampionEggItem extends Item {
   public ChampionEggItem() {
     super(new Item.Properties().group(ItemGroup.MISC));
     this.setRegistryName(RegistryReference.EGG);
+  }
+
+  @Nonnull
+  @Override
+  public ITextComponent getDisplayName(@Nonnull ItemStack stack) {
+    int tier = 0;
+    Optional<EntityType<?>> type = getType(stack);
+
+    if (stack.hasTag()) {
+      CompoundNBT tag = stack.getChildTag(CHAMPION_TAG);
+
+      if (tag != null) {
+        tier = tag.getInt(TIER_TAG);
+      }
+    }
+    ITextComponent root = new TranslationTextComponent("rank.champions.title." + tier);
+    root.appendText(" ");
+    root.appendSibling(type.map(EntityType::getName).orElse(EntityType.ZOMBIE.getName()));
+    root.appendText(" ");
+    root.appendSibling(new TranslationTextComponent(this.getTranslationKey(stack)));
+    return root;
+  }
+
+  @Override
+  public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip,
+      ITooltipFlag flagIn) {
+
+    if (stack.hasTag()) {
+      CompoundNBT tag = stack.getChildTag(CHAMPION_TAG);
+
+      if (tag != null) {
+        ListNBT listNBT = tag.getList(AFFIX_TAG, NBT.TAG_STRING);
+        listNBT.forEach(affix -> Champions.API.getAffix(affix.getString()).ifPresent(
+            affix1 -> tooltip
+                .add(new TranslationTextComponent("affix.champions." + affix1.getIdentifier()))));
+      }
+    }
   }
 
   @Nonnull
@@ -175,7 +217,7 @@ public class ChampionEggItem extends Item {
   }
 
   public static void write(ItemStack stack, ResourceLocation entityId, int tier,
-      List<IAffix> affixes) {
+      Collection<IAffix> affixes) {
     CompoundNBT tag = stack.hasTag() ? stack.getTag() : new CompoundNBT();
     assert tag != null;
 

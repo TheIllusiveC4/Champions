@@ -41,7 +41,8 @@ public class ChampionBuilder {
     Rank newRank = RankManager.getRank(tier);
     champion.setRank(newRank);
     ChampionBuilder.applyGrowth(entity, newRank.getGrowthFactor());
-    champion.setAffixes(affixes);
+    champion
+        .setAffixes(affixes.isEmpty() ? ChampionBuilder.createAffixes(newRank, champion) : affixes);
     affixes.forEach(affix -> affix.onInitialSpawn(champion));
   }
 
