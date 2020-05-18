@@ -34,6 +34,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
@@ -82,16 +83,27 @@ public class ChampionEggItem extends Item {
   @Override
   public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip,
       ITooltipFlag flagIn) {
+    boolean hasAffix = false;
 
     if (stack.hasTag()) {
       CompoundNBT tag = stack.getChildTag(CHAMPION_TAG);
 
       if (tag != null) {
         ListNBT listNBT = tag.getList(AFFIX_TAG, NBT.TAG_STRING);
+
+        if (!listNBT.isEmpty()) {
+          hasAffix = true;
+        }
         listNBT.forEach(affix -> Champions.API.getAffix(affix.getString()).ifPresent(
-            affix1 -> tooltip
-                .add(new TranslationTextComponent("affix.champions." + affix1.getIdentifier()))));
+            affix1 -> tooltip.add(
+                new TranslationTextComponent("affix.champions." + affix1.getIdentifier())
+                    .applyTextStyle(TextFormatting.GRAY))));
       }
+    }
+
+    if (!hasAffix) {
+      tooltip.add(new TranslationTextComponent("item.champions.egg.tooltip")
+          .applyTextStyle(TextFormatting.AQUA));
     }
   }
 

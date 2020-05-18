@@ -44,6 +44,10 @@ public class AffixArgument implements ArgumentType<IAffixProvider> {
     for (String id : split) {
       affixes.add(Champions.API.getAffix(id).orElseThrow(() -> UNKNOWN_AFFIX.create(id)));
     }
+
+    while (reader.canRead()) {
+      reader.skip();
+    }
     return (source) -> affixes;
   }
 
