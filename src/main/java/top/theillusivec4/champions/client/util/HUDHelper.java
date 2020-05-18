@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import top.theillusivec4.champions.Champions;
 import top.theillusivec4.champions.common.capability.ChampionCapability;
@@ -55,8 +56,15 @@ public class HUDHelper {
               client.fontRenderer.drawStringWithShadow(count,
                   startStarsX + 10 - client.fontRenderer.getStringWidth(count) / 2.0F, 2, 16777215);
             }
-            String name = new TranslationTextComponent("rank.champions.title." + num).getString();
-            name += " " + livingEntity.getName().getString();
+            ITextComponent customName = livingEntity.getCustomName();
+            String name;
+
+            if (customName == null) {
+              name = new TranslationTextComponent("rank.champions.title." + num).getString();
+              name += " " + livingEntity.getName().getString();
+            } else {
+              name = customName.getString();
+            }
             client.fontRenderer.drawStringWithShadow(name,
                 (float) (i / 2 - client.fontRenderer.getStringWidth(name) / 2), (float) (j - 9),
                 color);
