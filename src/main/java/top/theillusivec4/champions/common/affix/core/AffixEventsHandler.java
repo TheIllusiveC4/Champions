@@ -119,13 +119,14 @@ public class AffixEventsHandler {
 
   @SubscribeEvent
   public void onLivingKnockBack(LivingKnockBackEvent evt) {
-    Entity entity = evt.getEntity();
+    Entity entity = evt.getOriginalAttacker();
 
     if (entity instanceof LivingEntity) {
       LivingEntity livingEntity = (LivingEntity) entity;
       float[] amounts = new float[]{evt.getOriginalStrength(), evt.getOriginalStrength()};
       ChampionCapability.getCapability(livingEntity).ifPresent(champion -> champion.getAffixes()
-          .forEach(affix -> amounts[1] = affix.onKnockBack(champion, amounts[0], amounts[1])));
+          .forEach(affix -> amounts[1] = affix
+              .onKnockBack(champion, evt.getEntityLiving(), amounts[0], amounts[1])));
       evt.setStrength(amounts[1]);
     }
   }

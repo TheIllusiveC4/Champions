@@ -19,6 +19,8 @@ public class ReflectiveAffix extends BasicAffix {
   private static final Field DAMAGE_TYPE = ObfuscationReflectionHelper
       .findField(DamageSource.class, "field_76373_n");
 
+  private static final String REFLECTION_DAMAGE = "reflection";
+
   public ReflectiveAffix() {
     super("reflective", AffixCategory.OFFENSE, true);
   }
@@ -26,7 +28,7 @@ public class ReflectiveAffix extends BasicAffix {
   @SubscribeEvent
   public void onDamageEvent(LivingDamageEvent evt) {
 
-    if (!ChampionsConfig.reflectiveLethal && evt.getSource().damageType.equals("reflective")) {
+    if (!ChampionsConfig.reflectiveLethal && evt.getSource().damageType.equals(REFLECTION_DAMAGE)) {
       LivingEntity living = evt.getEntityLiving();
       float currentDamage = evt.getAmount();
 
@@ -37,22 +39,22 @@ public class ReflectiveAffix extends BasicAffix {
   }
 
   @Override
-  public float onDamage(IChampion champion, DamageSource source, float amount,
-      float newAmount) {
+  public float onDamage(IChampion champion, DamageSource source, float amount, float newAmount) {
 
     if (source.getTrueSource() instanceof LivingEntity) {
       LivingEntity sourceEntity = (LivingEntity) source.getTrueSource();
 
-      if (source.damageType.equals("reflecting") || (source instanceof IndirectEntityDamageSource
-          && ((IndirectEntityDamageSource) source).getIsThornsDamage())) {
+      if (source.damageType.equals(REFLECTION_DAMAGE) || (
+          source instanceof IndirectEntityDamageSource && ((IndirectEntityDamageSource) source)
+              .getIsThornsDamage())) {
         return newAmount;
       }
       float min = (float) ChampionsConfig.reflectiveMinPercent;
 
       try {
-        DAMAGE_TYPE.set(source, "reflective");
+        DAMAGE_TYPE.set(source, REFLECTION_DAMAGE);
       } catch (IllegalAccessException e) {
-        Champions.LOGGER.error("Error trying to reset damage type in reflecting!");
+        Champions.LOGGER.error("Error trying to reset reflected damage type!");
       }
 
       if (source instanceof EntityDamageSource) {

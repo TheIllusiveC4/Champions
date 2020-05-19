@@ -37,7 +37,14 @@ public class ChampionsConfig {
 
     public final DoubleValue affixTargetRange;
 
+    public final DoubleValue adaptableDamageReductionIncrement;
+    public final DoubleValue adaptableMaxDamageReduction;
+
+    public final DoubleValue dampenedDamageReduction;
+
     public final DoubleValue hastyMovementBonus;
+
+    public final DoubleValue knockingMultiplier;
 
     public final DoubleValue livelyHealAmount;
     public final DoubleValue livelyPassiveMultiplier;
@@ -93,11 +100,41 @@ public class ChampionsConfig {
           .translation(CONFIG_PREFIX + "affixTargetRange")
           .defineInRange("affixTargetRange", 0.0D, 0.0D, 100.0D);
 
+      builder.push("adaptable");
+
+      adaptableDamageReductionIncrement = builder.comment(
+          "The increase in damage reduction for each consecutive attack of the same damage type")
+          .translation(CONFIG_PREFIX + "adaptableDamageReductionIncrement")
+          .defineInRange("adaptableDamageReductionIncrement", 0.15D, 0.0D, 1.0D);
+
+      adaptableMaxDamageReduction = builder.comment("The maximum damage reduction")
+          .translation(CONFIG_PREFIX + "adaptableMaxDamageReduction")
+          .defineInRange("adaptableMaxDamageReduction", 0.9D, 0.0D, 1.0D);
+
+      builder.pop();
+
+      builder.push("dampened");
+
+      dampenedDamageReduction = builder
+          .comment("The amount of damage reduction to apply to indirect attacks")
+          .translation(CONFIG_PREFIX + "dampenedDamageReduction")
+          .defineInRange("dampenedDamageReduction", 0.8D, 0.0D, 1.0D);
+
+      builder.pop();
+
       builder.push("hasty");
 
       hastyMovementBonus = builder.comment("The base movement speed bonus")
           .translation(CONFIG_PREFIX + "hastyMovementBonus")
           .defineInRange("hastyMovementBonus", 0.25D, 0.0D, Double.MAX_VALUE);
+
+      builder.pop();
+
+      builder.push("knocking");
+
+      knockingMultiplier = builder.comment("The multiplier to apply to the knockback strength")
+          .translation(CONFIG_PREFIX + "knockingMultiplier")
+          .defineInRange("knockingMultiplier", 5.0D, 0.0D, Double.MAX_VALUE);
 
       builder.pop();
 
@@ -195,7 +232,14 @@ public class ChampionsConfig {
 
   public static double affixTargetRange;
 
+  public static double adaptableDamageReductionIncrement;
+  public static double adaptableMaxDamageReduction;
+
+  public static double dampenedDamageReduction;
+
   public static double hastyMovementBonus;
+
+  public static double knockingMultiplier;
 
   public static int livelyCooldown;
   public static double livelyHealAmount;
@@ -220,7 +264,14 @@ public class ChampionsConfig {
 
     affixTargetRange = SERVER.affixTargetRange.get();
 
+    adaptableDamageReductionIncrement = SERVER.adaptableDamageReductionIncrement.get();
+    adaptableMaxDamageReduction = SERVER.adaptableMaxDamageReduction.get();
+
+    dampenedDamageReduction = SERVER.dampenedDamageReduction.get();
+
     hastyMovementBonus = SERVER.hastyMovementBonus.get();
+
+    knockingMultiplier = SERVER.knockingMultiplier.get();
 
     livelyHealAmount = SERVER.livelyHealAmount.get();
     livelyPassiveMultiplier = SERVER.livelyPassiveMultiplier.get();

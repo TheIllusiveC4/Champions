@@ -48,7 +48,7 @@ public interface IAffix {
     return true;
   }
 
-  default float onKnockBack(IChampion champion, float strength, float newStrength) {
+  default float onKnockBack(IChampion champion, LivingEntity target, float strength, float newStrength) {
     return newStrength;
   }
 
