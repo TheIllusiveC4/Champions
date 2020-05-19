@@ -14,19 +14,19 @@ import top.theillusivec4.champions.api.IChampion;
 import top.theillusivec4.champions.common.affix.core.BasicAffix;
 import top.theillusivec4.champions.common.config.ChampionsConfig;
 
-public class ReflectingAffix extends BasicAffix {
+public class ReflectiveAffix extends BasicAffix {
 
   private static final Field DAMAGE_TYPE = ObfuscationReflectionHelper
       .findField(DamageSource.class, "field_76373_n");
 
-  public ReflectingAffix() {
-    super("reflecting", AffixCategory.OFFENSE, true);
+  public ReflectiveAffix() {
+    super("reflective", AffixCategory.OFFENSE, true);
   }
 
   @SubscribeEvent
   public void onDamageEvent(LivingDamageEvent evt) {
 
-    if (!ChampionsConfig.reflectingLethal && evt.getSource().damageType.equals("reflecting")) {
+    if (!ChampionsConfig.reflectiveLethal && evt.getSource().damageType.equals("reflective")) {
       LivingEntity living = evt.getEntityLiving();
       float currentDamage = evt.getAmount();
 
@@ -47,10 +47,10 @@ public class ReflectingAffix extends BasicAffix {
           && ((IndirectEntityDamageSource) source).getIsThornsDamage())) {
         return newAmount;
       }
-      float min = (float) ChampionsConfig.reflectingMinPercent;
+      float min = (float) ChampionsConfig.reflectiveMinPercent;
 
       try {
-        DAMAGE_TYPE.set(source, "reflecting");
+        DAMAGE_TYPE.set(source, "reflective");
       } catch (IllegalAccessException e) {
         Champions.LOGGER.error("Error trying to reset damage type in reflecting!");
       }
@@ -59,8 +59,8 @@ public class ReflectingAffix extends BasicAffix {
         ((EntityDamageSource) source).setIsThornsDamage();
       }
       float damage = (float) Math.min(
-          amount * (sourceEntity.getRNG().nextFloat() * (ChampionsConfig.reflectingMaxPercent - min)
-              + min), ChampionsConfig.reflectingMax);
+          amount * (sourceEntity.getRNG().nextFloat() * (ChampionsConfig.reflectiveMaxPercent - min)
+              + min), ChampionsConfig.reflectiveMax);
       sourceEntity.attackEntityFrom(source, damage);
     }
     return newAmount;

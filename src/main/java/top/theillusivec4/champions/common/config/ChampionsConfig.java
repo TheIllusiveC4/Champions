@@ -35,18 +35,22 @@ public class ChampionsConfig {
     public final DoubleValue knockbackResistanceGrowth;
     public final IntValue experienceGrowth;
 
+    public final DoubleValue affixTargetRange;
+
     public final DoubleValue hastyMovementBonus;
 
     public final DoubleValue livelyHealAmount;
     public final DoubleValue livelyPassiveMultiplier;
     public final IntValue livelyCooldown;
 
+    public final DoubleValue magneticStrength;
+
     public final BooleanValue moltenWaterResistance;
 
-    public final DoubleValue reflectingMinPercent;
-    public final DoubleValue reflectingMaxPercent;
-    public final IntValue reflectingMax;
-    public final BooleanValue reflectingLethal;
+    public final DoubleValue reflectiveMinPercent;
+    public final DoubleValue reflectiveMaxPercent;
+    public final IntValue reflectiveMax;
+    public final BooleanValue reflectiveLethal;
 
     public Server(ForgeConfigSpec.Builder builder) {
       builder.push("growth");
@@ -84,6 +88,11 @@ public class ChampionsConfig {
 
       builder.push("affixes");
 
+      affixTargetRange = builder.comment(
+          "Set the maximum distance that mobs can use their targeted abilities from, 0 to disable")
+          .translation(CONFIG_PREFIX + "affixTargetRange")
+          .defineInRange("affixTargetRange", 0.0D, 0.0D, 100.0D);
+
       builder.push("hasty");
 
       hastyMovementBonus = builder.comment("The base movement speed bonus")
@@ -119,22 +128,30 @@ public class ChampionsConfig {
 
       builder.pop();
 
-      builder.push("reflecting");
+      builder.push("reflective");
 
-      reflectingMinPercent = builder.comment("The minimum percent of damage to reflect back")
-          .translation(CONFIG_PREFIX + "reflectingMinPercent")
-          .defineInRange("reflectingMinPercent", 0.1D, 0.0D, 1.0D);
+      reflectiveMinPercent = builder.comment("The minimum percent of damage to reflect back")
+          .translation(CONFIG_PREFIX + "reflectiveMinPercent")
+          .defineInRange("reflectiveMinPercent", 0.1D, 0.0D, 1.0D);
 
-      reflectingMaxPercent = builder.comment("The maximum percent of damage to reflect back")
-          .translation(CONFIG_PREFIX + "reflectingMaxPercent")
-          .defineInRange("reflectingMaxPercent", 0.35D, 0.0D, 1.0D);
+      reflectiveMaxPercent = builder.comment("The maximum percent of damage to reflect back")
+          .translation(CONFIG_PREFIX + "reflectiveMaxPercent")
+          .defineInRange("reflectiveMaxPercent", 0.35D, 0.0D, 1.0D);
 
-      reflectingMax = builder.comment("The maximum amount of damage to reflect back")
-          .translation(CONFIG_PREFIX + "reflectingMax")
-          .defineInRange("reflectingMax", 100, 0, Integer.MAX_VALUE);
+      reflectiveMax = builder.comment("The maximum amount of damage to reflect back")
+          .translation(CONFIG_PREFIX + "reflectiveMax")
+          .defineInRange("reflectiveMax", 100, 0, Integer.MAX_VALUE);
 
-      reflectingLethal = builder.comment("Set to true to enable deadly reflecting strikes")
-          .translation(CONFIG_PREFIX + "reflectingLethal").define("reflectingLethal", true);
+      reflectiveLethal = builder.comment("Set to true to enable deadly reflected strikes")
+          .translation(CONFIG_PREFIX + "reflectiveLethal").define("reflectiveLethal", true);
+
+      builder.pop();
+
+      builder.push("magnetic");
+
+      magneticStrength = builder.comment("Strength of the magnetic pulling effect")
+          .translation(CONFIG_PREFIX + "magneticStrength")
+          .defineInRange("magneticStrength", 0.05D, 0.0D, 100.0D);
 
       builder.pop();
 
@@ -176,18 +193,22 @@ public class ChampionsConfig {
   public static double knockbackResistanceGrowth;
   public static int experienceGrowth;
 
+  public static double affixTargetRange;
+
   public static double hastyMovementBonus;
-
-  public static boolean moltenWaterResistance;
-
-  public static double reflectingMaxPercent;
-  public static double reflectingMinPercent;
-  public static int reflectingMax;
-  public static boolean reflectingLethal;
 
   public static int livelyCooldown;
   public static double livelyHealAmount;
   public static double livelyPassiveMultiplier;
+
+  public static double magneticStrength;
+
+  public static boolean moltenWaterResistance;
+
+  public static double reflectiveMaxPercent;
+  public static double reflectiveMinPercent;
+  public static int reflectiveMax;
+  public static boolean reflectiveLethal;
 
   public static void bake() {
     healthGrowth = SERVER.healthGrowth.get();
@@ -197,6 +218,8 @@ public class ChampionsConfig {
     knockbackResistanceGrowth = SERVER.knockbackResistanceGrowth.get();
     experienceGrowth = SERVER.experienceGrowth.get();
 
+    affixTargetRange = SERVER.affixTargetRange.get();
+
     hastyMovementBonus = SERVER.hastyMovementBonus.get();
 
     livelyHealAmount = SERVER.livelyHealAmount.get();
@@ -205,10 +228,12 @@ public class ChampionsConfig {
 
     moltenWaterResistance = SERVER.moltenWaterResistance.get();
 
-    reflectingLethal = SERVER.reflectingLethal.get();
-    reflectingMax = SERVER.reflectingMax.get();
-    reflectingMaxPercent = SERVER.reflectingMaxPercent.get();
-    reflectingMinPercent = SERVER.reflectingMinPercent.get();
+    reflectiveLethal = SERVER.reflectiveLethal.get();
+    reflectiveMax = SERVER.reflectiveMax.get();
+    reflectiveMaxPercent = SERVER.reflectiveMaxPercent.get();
+    reflectiveMinPercent = SERVER.reflectiveMinPercent.get();
+
+    magneticStrength = SERVER.magneticStrength.get();
   }
 }
 

@@ -57,6 +57,7 @@ public class Champions {
   public static final IChampionsApi API = ChampionsApiImpl.getInstance();
 
   public Champions() {
+    ModLoadingContext.get().registerConfig(Type.SERVER, ChampionsConfig.SERVER_SPEC);
     ModLoadingContext.get()
         .registerConfig(Type.SERVER, ChampionsConfig.RANKS_SPEC, "champions-ranks.toml");
     File defaultRanks = new File(FMLPaths.GAMEDIR.get() + "/defaultconfigs/champions-ranks.toml");
