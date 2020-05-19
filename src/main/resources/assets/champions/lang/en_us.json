@@ -2,6 +2,8 @@
   "item.champions.egg": "Champion Egg",
   "item.champions.egg.tooltip": "Random Affixes",
   "argument.champions.affix.unknown": "Unknown affix %s",
+  "commands.champions.summon.success": "Summoned new %s",
+  "commands.champions.egg.success": "Created new %s",
   "rank.champions.title.0": "Common",
   "rank.champions.title.1": "Skilled",
   "rank.champions.title.2": "Elite",

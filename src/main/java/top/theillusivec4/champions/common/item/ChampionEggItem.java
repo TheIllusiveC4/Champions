@@ -163,8 +163,8 @@ public class ChampionEggItem extends Item {
           return new ActionResult<>(ActionResultType.PASS, itemstack);
         } else if (worldIn.isBlockModifiable(playerIn, blockpos) && playerIn
             .canPlayerEdit(blockpos, blockraytraceresult.getFace(), itemstack)) {
-          Optional<EntityType<?>> entitytype = getType(itemstack);
-          return entitytype.map(type -> {
+          Optional<EntityType<?>> entityType = getType(itemstack);
+          return entityType.map(type -> {
             Entity entity = type.create(worldIn, itemstack.getTag(), null, playerIn, blockpos,
                 SpawnReason.SPAWN_EGG, false, false);
 
