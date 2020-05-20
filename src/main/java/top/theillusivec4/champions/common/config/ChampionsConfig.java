@@ -4,10 +4,16 @@ import com.electronwill.nightconfig.core.CommentedConfig;
 import com.electronwill.nightconfig.core.conversion.ObjectConverter;
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.potion.Effect;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
+import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
 import net.minecraftforge.common.ForgeConfigSpec.IntValue;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
 import top.theillusivec4.champions.Champions;
 import top.theillusivec4.champions.common.config.RanksConfig.RankConfig;
@@ -42,6 +48,11 @@ public class ChampionsConfig {
 
     public final DoubleValue dampenedDamageReduction;
 
+    public final IntValue desecratingCloudInterval;
+    public final IntValue desecratingCloudActivationTime;
+    public final DoubleValue desecratingCloudRadius;
+    public final IntValue desecratingCloudDuration;
+
     public final DoubleValue hastyMovementBonus;
 
     public final DoubleValue knockingMultiplier;
@@ -53,6 +64,9 @@ public class ChampionsConfig {
     public final DoubleValue magneticStrength;
 
     public final BooleanValue moltenWaterResistance;
+
+    public final ConfigValue<String> plaguedEffect;
+    public final IntValue plaguedRange;
 
     public final DoubleValue reflectiveMinPercent;
     public final DoubleValue reflectiveMaxPercent;
@@ -122,6 +136,27 @@ public class ChampionsConfig {
 
       builder.pop();
 
+      builder.push("desecrating");
+
+      desecratingCloudInterval = builder.comment("How long (in seconds) between cloud placements")
+          .translation(CONFIG_PREFIX + "desecratingCloudInterval")
+          .defineInRange("desecratingCloudInterval", 3, 1, Integer.MAX_VALUE);
+
+      desecratingCloudActivationTime = builder.comment(
+          "How long (in seconds) it takes for the effect cloud to activate after being placed")
+          .translation(CONFIG_PREFIX + "desecratingCloudActivationTime")
+          .defineInRange("desecratingCloudActivationTime", 1, 0, Integer.MAX_VALUE);
+
+      desecratingCloudRadius = builder.comment("The radius of the cloud effect")
+          .translation(CONFIG_PREFIX + "desecratingCloudRadius")
+          .defineInRange("desecratingCloudRadius", 4.0D, 1.0D, Double.MAX_VALUE);
+
+      desecratingCloudDuration = builder.comment("The duration (in seconds) of the cloud effect")
+          .translation(CONFIG_PREFIX + "desecratingCloudDuration")
+          .defineInRange("desecratingCloudDuration", 10, 1, Integer.MAX_VALUE);
+
+      builder.pop();
+
       builder.push("hasty");
 
       hastyMovementBonus = builder.comment("The base movement speed bonus")
@@ -162,6 +197,18 @@ public class ChampionsConfig {
           .comment("Set to true to have Molten champions not be damaged by water")
           .translation(CONFIG_PREFIX + "moltenWaterResistance")
           .define("moltenWaterResistance", false);
+
+      builder.pop();
+
+      builder.push("plagued");
+
+      plaguedEffect = builder
+          .comment("The effect that will be spread\nFormat:[effect];[power];[duration(secs)]")
+          .translation(CONFIG_PREFIX + "plaguedEffect")
+          .define("plaguedEffect", "minecraft:poison;15;1");
+
+      plaguedRange = builder.comment("The range of the plagued effect")
+          .translation(CONFIG_PREFIX + "plaguedRange").defineInRange("plaguedRange", 5, 1, 100);
 
       builder.pop();
 
@@ -237,6 +284,11 @@ public class ChampionsConfig {
 
   public static double dampenedDamageReduction;
 
+  public static int desecratingCloudInterval;
+  public static int desecratingCloudActivationTime;
+  public static double desecratingCloudRadius;
+  public static int desecratingCloudDuration;
+
   public static double hastyMovementBonus;
 
   public static double knockingMultiplier;
@@ -248,6 +300,9 @@ public class ChampionsConfig {
   public static double magneticStrength;
 
   public static boolean moltenWaterResistance;
+
+  public static EffectInstance plaguedEffect;
+  public static int plaguedRange;
 
   public static double reflectiveMaxPercent;
   public static double reflectiveMinPercent;
@@ -269,6 +324,11 @@ public class ChampionsConfig {
 
     dampenedDamageReduction = SERVER.dampenedDamageReduction.get();
 
+    desecratingCloudActivationTime = SERVER.desecratingCloudActivationTime.get();
+    desecratingCloudDuration = SERVER.desecratingCloudDuration.get();
+    desecratingCloudInterval = SERVER.desecratingCloudInterval.get();
+    desecratingCloudRadius = SERVER.desecratingCloudRadius.get();
+
     hastyMovementBonus = SERVER.hastyMovementBonus.get();
 
     knockingMultiplier = SERVER.knockingMultiplier.get();
@@ -277,14 +337,41 @@ public class ChampionsConfig {
     livelyPassiveMultiplier = SERVER.livelyPassiveMultiplier.get();
     livelyCooldown = SERVER.livelyCooldown.get();
 
+    magneticStrength = SERVER.magneticStrength.get();
+
     moltenWaterResistance = SERVER.moltenWaterResistance.get();
+
+    plaguedRange = SERVER.plaguedRange.get();
+
+    try {
+      String[] s = SERVER.plaguedEffect.get().split(";");
+
+      if (s.length < 1) {
+        throw new IllegalArgumentException();
+      }
+      Effect effect = ForgeRegistries.POTIONS.getValue(new ResourceLocation(s[0]));
+
+      if (effect == null) {
+        throw new IllegalArgumentException();
+      }
+
+      if (s.length < 2) {
+        plaguedEffect = new EffectInstance(effect);
+      } else if (s.length < 3) {
+        plaguedEffect = new EffectInstance(effect, Integer.parseInt(s[1]) * 20);
+      } else {
+        plaguedEffect = new EffectInstance(effect, Integer.parseInt(s[1]) * 20,
+            Integer.parseInt(s[2]) - 1);
+      }
+    } catch (IllegalArgumentException e) {
+      plaguedEffect = new EffectInstance(Effects.POISON, 300, 0);
+      Champions.LOGGER.error("Error parsing plaguedEffect config value!");
+    }
 
     reflectiveLethal = SERVER.reflectiveLethal.get();
     reflectiveMax = SERVER.reflectiveMax.get();
     reflectiveMaxPercent = SERVER.reflectiveMaxPercent.get();
     reflectiveMinPercent = SERVER.reflectiveMinPercent.get();
-
-    magneticStrength = SERVER.magneticStrength.get();
   }
 }
 

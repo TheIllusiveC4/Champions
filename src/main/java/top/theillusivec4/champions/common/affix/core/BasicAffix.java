@@ -3,6 +3,7 @@ package top.theillusivec4.champions.common.affix.core;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.item.ArmorStandEntity;
 import net.minecraftforge.common.MinecraftForge;
 import top.theillusivec4.champions.api.AffixCategory;
 import top.theillusivec4.champions.api.IAffix;
@@ -40,8 +41,8 @@ public abstract class BasicAffix implements IAffix {
   public static boolean canTarget(LivingEntity livingEntity, LivingEntity target,
       boolean sightCheck) {
 
-    if (target == null || !target.isAlive() || (sightCheck && !livingEntity
-        .canEntityBeSeen(target))) {
+    if (target == null || !target.isAlive() || target instanceof ArmorStandEntity || (sightCheck
+        && !livingEntity.canEntityBeSeen(target))) {
       return false;
     }
     IAttributeInstance attributeInstance = livingEntity
