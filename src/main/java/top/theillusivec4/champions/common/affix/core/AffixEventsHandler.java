@@ -133,18 +133,14 @@ public class AffixEventsHandler {
 
   @SubscribeEvent
   public void onLivingDeath(LivingDeathEvent evt) {
-    Entity entity = evt.getSource().getTrueSource();
+    LivingEntity livingEntity = evt.getEntityLiving();
+    ChampionCapability.getCapability(livingEntity)
+        .ifPresent(champion -> champion.getAffixes().forEach(affix -> {
 
-    if (entity instanceof LivingEntity) {
-      LivingEntity livingEntity = (LivingEntity) entity;
-      ChampionCapability.getCapability(livingEntity)
-          .ifPresent(champion -> champion.getAffixes().forEach(affix -> {
-
-            if (!affix.onDeath(champion, evt.getSource())) {
-              evt.setCanceled(true);
-            }
-          }));
-    }
+          if (!affix.onDeath(champion, evt.getSource())) {
+            evt.setCanceled(true);
+          }
+        }));
   }
 
   @SubscribeEvent

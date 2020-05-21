@@ -4,6 +4,7 @@ import com.electronwill.nightconfig.core.CommentedConfig;
 import com.electronwill.nightconfig.core.conversion.ObjectConverter;
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.entity.EntityType;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
@@ -54,6 +55,13 @@ public class ChampionsConfig {
     public final IntValue desecratingCloudDuration;
 
     public final DoubleValue hastyMovementBonus;
+
+    public final ConfigValue<String> infestedParasite;
+    public final ConfigValue<String> infestedEnderParasite;
+    public final IntValue infestedAmount;
+    public final IntValue infestedInterval;
+    public final DoubleValue infestedPerHealth;
+    public final IntValue infestedTotal;
 
     public final DoubleValue knockingMultiplier;
 
@@ -162,6 +170,35 @@ public class ChampionsConfig {
       hastyMovementBonus = builder.comment("The base movement speed bonus")
           .translation(CONFIG_PREFIX + "hastyMovementBonus")
           .defineInRange("hastyMovementBonus", 0.25D, 0.0D, Double.MAX_VALUE);
+
+      builder.pop();
+
+      builder.push("infested");
+
+      infestedAmount = builder.comment("The amount of parasites to spawn per interval")
+          .translation(CONFIG_PREFIX + "infestedAmount").defineInRange("infestedAmount", 2, 1, 100);
+
+      infestedInterval = builder.comment("The time (in seconds) between parasite spawns")
+          .translation(CONFIG_PREFIX + "infestedInterval")
+          .defineInRange("infestedInterval", 3, 1, 100);
+
+      infestedPerHealth = builder
+          .comment("The amount of parasites to infest per health point of the champion")
+          .translation(CONFIG_PREFIX + "infestedPerHealth")
+          .defineInRange("infestedPerHealth", 0.5D, 0.0D, Double.MAX_VALUE);
+
+      infestedTotal = builder.comment("The total amount of parasites a champion can house at once")
+          .translation(CONFIG_PREFIX + "infestedTotal")
+          .defineInRange("infestedTotal", 20, 1, Integer.MAX_VALUE);
+
+      infestedParasite = builder.comment("The mob to use as a parasite for infestation")
+          .translation(CONFIG_PREFIX + "infestedParasite")
+          .define("infestedParasite", "minecraft:silverfish");
+
+      infestedEnderParasite = builder
+          .comment("The mob to use as a parasite for infestation of ender mob")
+          .translation(CONFIG_PREFIX + "infestedEnderParasite")
+          .define("infestedEnderParasite", "minecraft:endermite");
 
       builder.pop();
 
@@ -291,6 +328,13 @@ public class ChampionsConfig {
 
   public static double hastyMovementBonus;
 
+  public static int infestedAmount;
+  public static int infestedInterval;
+  public static double infestedPerHealth;
+  public static int infestedTotal;
+  public static EntityType<?> infestedParasite;
+  public static EntityType<?> infestedEnderParasite;
+
   public static double knockingMultiplier;
 
   public static int livelyCooldown;
@@ -330,6 +374,19 @@ public class ChampionsConfig {
     desecratingCloudRadius = SERVER.desecratingCloudRadius.get();
 
     hastyMovementBonus = SERVER.hastyMovementBonus.get();
+
+    infestedAmount = SERVER.infestedAmount.get();
+    infestedTotal = SERVER.infestedTotal.get();
+    infestedPerHealth = SERVER.infestedPerHealth.get();
+    infestedInterval = SERVER.infestedInterval.get();
+
+    EntityType<?> type = ForgeRegistries.ENTITIES
+        .getValue(new ResourceLocation(SERVER.infestedParasite.get()));
+    infestedParasite = type != null ? type : EntityType.SILVERFISH;
+
+    type = ForgeRegistries.ENTITIES
+        .getValue(new ResourceLocation(SERVER.infestedEnderParasite.get()));
+    infestedEnderParasite = type != null ? type : EntityType.ENDERMITE;
 
     knockingMultiplier = SERVER.knockingMultiplier.get();
 

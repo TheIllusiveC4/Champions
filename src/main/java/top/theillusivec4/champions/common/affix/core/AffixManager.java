@@ -6,6 +6,7 @@ import top.theillusivec4.champions.common.affix.AdaptableAffix;
 import top.theillusivec4.champions.common.affix.DampeningAffix;
 import top.theillusivec4.champions.common.affix.DesecratingAffix;
 import top.theillusivec4.champions.common.affix.HastyAffix;
+import top.theillusivec4.champions.common.affix.InfestedAffix;
 import top.theillusivec4.champions.common.affix.KnockingAffix;
 import top.theillusivec4.champions.common.affix.LivelyAffix;
 import top.theillusivec4.champions.common.affix.MagneticAffix;
@@ -19,6 +20,6 @@ public class AffixManager {
     MinecraftForge.EVENT_BUS.register(new AffixEventsHandler());
     Champions.API.registerAffixes(new MoltenAffix(), new HastyAffix(), new ReflectiveAffix(),
         new LivelyAffix(), new MagneticAffix(), new DampeningAffix(), new AdaptableAffix(),
-        new KnockingAffix(), new DesecratingAffix(), new PlaguedAffix());
+        new KnockingAffix(), new DesecratingAffix(), new PlaguedAffix(), new InfestedAffix());
   }
 }
