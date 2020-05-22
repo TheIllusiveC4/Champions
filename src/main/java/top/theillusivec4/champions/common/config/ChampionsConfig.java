@@ -63,6 +63,8 @@ public class ChampionsConfig {
     public final DoubleValue infestedPerHealth;
     public final IntValue infestedTotal;
 
+    public final DoubleValue jailingChance;
+
     public final DoubleValue knockingMultiplier;
 
     public final DoubleValue livelyHealAmount;
@@ -202,6 +204,14 @@ public class ChampionsConfig {
 
       builder.pop();
 
+      builder.push("jailing");
+
+      jailingChance = builder.comment("The percent chance that an attack will jail targets")
+          .translation(CONFIG_PREFIX + "jailingChance")
+          .defineInRange("jailingChance", 0.2D, 0.0D, 1.0D);
+
+      builder.pop();
+
       builder.push("knocking");
 
       knockingMultiplier = builder.comment("The multiplier to apply to the knockback strength")
@@ -335,6 +345,8 @@ public class ChampionsConfig {
   public static EntityType<?> infestedParasite;
   public static EntityType<?> infestedEnderParasite;
 
+  public static double jailingChance;
+
   public static double knockingMultiplier;
 
   public static int livelyCooldown;
@@ -387,6 +399,8 @@ public class ChampionsConfig {
     type = ForgeRegistries.ENTITIES
         .getValue(new ResourceLocation(SERVER.infestedEnderParasite.get()));
     infestedEnderParasite = type != null ? type : EntityType.ENDERMITE;
+
+    jailingChance = SERVER.jailingChance.get();
 
     knockingMultiplier = SERVER.knockingMultiplier.get();
 

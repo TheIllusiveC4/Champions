@@ -40,6 +40,7 @@ import org.apache.logging.log4j.Logger;
 import top.theillusivec4.champions.api.IChampionsApi;
 import top.theillusivec4.champions.api.impl.ChampionsApiImpl;
 import top.theillusivec4.champions.client.ClientEventHandler;
+import top.theillusivec4.champions.client.affix.ClientAffixEventsHandler;
 import top.theillusivec4.champions.common.affix.core.AffixManager;
 import top.theillusivec4.champions.common.capability.ChampionCapability;
 import top.theillusivec4.champions.common.config.ChampionsConfig;
@@ -86,6 +87,7 @@ public class Champions {
 
   private void clientSetup(final FMLClientSetupEvent evt) {
     MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
+    MinecraftForge.EVENT_BUS.register(new ClientAffixEventsHandler());
     Minecraft.getInstance().getItemColors()
         .register(ChampionEggItem::getColor, ChampionsRegistry.EGG);
   }
