@@ -4,7 +4,8 @@
   "argument.champions.affix.unknown": "Unknown affix %s",
   "commands.champions.summon.success": "Summoned new %s",
   "commands.champions.egg.success": "Created new %s",
-  "effect.champions.jailed": "Jailed",
+  "effect.champions.paralysis": "Paralysis",
+  "effect.champions.wound": "Wound",
   "rank.champions.title.0": "Common",
   "rank.champions.title.1": "Skilled",
   "rank.champions.title.2": "Elite",
@@ -21,5 +22,6 @@
   "affix.champions.desecrating": "Desecrating",
   "affix.champions.plagued": "Plagued",
   "affix.champions.infested": "Infested",
-  "affix.champions.jailing": "Jailing"
+  "affix.champions.paralyzing": "Paralyzing",
+  "affix.champions.wounding": "Wounding"
 }

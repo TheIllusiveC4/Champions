@@ -12,7 +12,8 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import top.theillusivec4.champions.common.item.ChampionEggItem;
 import top.theillusivec4.champions.common.particle.RankParticle.RankFactory;
-import top.theillusivec4.champions.common.potion.JailedEffect;
+import top.theillusivec4.champions.common.potion.ParalysisEffect;
+import top.theillusivec4.champions.common.potion.WoundEffect;
 
 @EventBusSubscriber(bus = Bus.MOD)
 public class RegistryEventsHandler {
@@ -34,6 +35,6 @@ public class RegistryEventsHandler {
 
   @SubscribeEvent
   public static void registerEffects(RegistryEvent.Register<Effect> evt) {
-    evt.getRegistry().registerAll(new JailedEffect());
+    evt.getRegistry().registerAll(new ParalysisEffect(), new WoundEffect());
   }
 }

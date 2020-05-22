@@ -10,7 +10,7 @@ public class ClientAffixEventsHandler {
   @SubscribeEvent
   public void handleJailing(InputUpdateEvent evt) {
 
-    if (evt.getPlayer().isPotionActive(ChampionsRegistry.JAILED)) {
+    if (evt.getPlayer().isPotionActive(ChampionsRegistry.PARALYSIS)) {
       MovementInput input = evt.getMovementInput();
       input.sneak = false;
       input.jump = false;

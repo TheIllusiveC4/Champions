@@ -83,6 +83,8 @@ public class ChampionsConfig {
     public final IntValue reflectiveMax;
     public final BooleanValue reflectiveLethal;
 
+    public final DoubleValue woundingChance;
+
     public Server(ForgeConfigSpec.Builder builder) {
       builder.push("growth");
 
@@ -286,6 +288,14 @@ public class ChampionsConfig {
 
       builder.pop();
 
+      builder.push("wounding");
+
+      woundingChance = builder.comment("The percent chance that an attack will wound targets")
+          .translation(CONFIG_PREFIX + "woundingChance")
+          .defineInRange("woundingChance", 0.4D, 0.0D, 1.0D);
+
+      builder.pop();
+
       builder.pop();
     }
   }
@@ -365,6 +375,8 @@ public class ChampionsConfig {
   public static int reflectiveMax;
   public static boolean reflectiveLethal;
 
+  public static double woundingChance;
+
   public static void bake() {
     healthGrowth = SERVER.healthGrowth.get();
     attackGrowth = SERVER.attackGrowth.get();
@@ -443,6 +455,8 @@ public class ChampionsConfig {
     reflectiveMax = SERVER.reflectiveMax.get();
     reflectiveMaxPercent = SERVER.reflectiveMaxPercent.get();
     reflectiveMinPercent = SERVER.reflectiveMinPercent.get();
+
+    woundingChance = SERVER.woundingChance.get();
   }
 }
 

@@ -15,12 +15,16 @@ public class ChampionsRegistry {
   @ObjectHolder(RegistryReference.RANK)
   public static final BasicParticleType RANK;
 
-  @ObjectHolder(RegistryReference.JAILED)
-  public static final Effect JAILED;
+  @ObjectHolder(RegistryReference.PARALYSIS)
+  public static final Effect PARALYSIS;
+
+  @ObjectHolder(RegistryReference.WOUND)
+  public static final Effect WOUND;
 
   static {
     RANK = null;
     EGG = null;
-    JAILED = null;
+    PARALYSIS = null;
+    WOUND = null;
   }
 }

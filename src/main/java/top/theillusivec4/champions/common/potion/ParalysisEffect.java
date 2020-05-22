@@ -6,11 +6,11 @@ import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectType;
 import top.theillusivec4.champions.common.registry.RegistryReference;
 
-public class JailedEffect extends Effect {
+public class ParalysisEffect extends Effect {
 
-  public JailedEffect() {
+  public ParalysisEffect() {
     super(EffectType.HARMFUL, 0xff5733);
-    this.setRegistryName(RegistryReference.JAILED);
+    this.setRegistryName(RegistryReference.PARALYSIS);
     this.addAttributesModifier(SharedMonsterAttributes.KNOCKBACK_RESISTANCE,
         "2e1d5db6-1bb0-49a7-907d-2e5531d04736", 1, Operation.ADDITION);
   }

@@ -9,10 +9,10 @@ import top.theillusivec4.champions.common.affix.core.BasicAffix;
 import top.theillusivec4.champions.common.config.ChampionsConfig;
 import top.theillusivec4.champions.common.registry.ChampionsRegistry;
 
-public class JailingAffix extends BasicAffix {
+public class ParalyzingAffix extends BasicAffix {
 
-  public JailingAffix() {
-    super("jailing", AffixCategory.CC);
+  public ParalyzingAffix() {
+    super("paralyzing", AffixCategory.CC);
   }
 
   @Override
@@ -20,8 +20,8 @@ public class JailingAffix extends BasicAffix {
       float amount) {
 
     if (target.getRNG().nextFloat() < ChampionsConfig.jailingChance && !target.isPotionActive(
-        ChampionsRegistry.JAILED)) {
-      target.addPotionEffect(new EffectInstance(ChampionsRegistry.JAILED, 200, 0));
+        ChampionsRegistry.PARALYSIS)) {
+      target.addPotionEffect(new EffectInstance(ChampionsRegistry.PARALYSIS, 60, 0));
     }
     return true;
   }
