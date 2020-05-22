@@ -14,6 +14,7 @@ import top.theillusivec4.champions.common.affix.MoltenAffix;
 import top.theillusivec4.champions.common.affix.ParalyzingAffix;
 import top.theillusivec4.champions.common.affix.PlaguedAffix;
 import top.theillusivec4.champions.common.affix.ReflectiveAffix;
+import top.theillusivec4.champions.common.affix.ShieldingAffix;
 import top.theillusivec4.champions.common.affix.WoundingAffix;
 
 public class AffixManager {
@@ -23,6 +24,6 @@ public class AffixManager {
     Champions.API.registerAffixes(new MoltenAffix(), new HastyAffix(), new ReflectiveAffix(),
         new LivelyAffix(), new MagneticAffix(), new DampeningAffix(), new AdaptableAffix(),
         new KnockingAffix(), new DesecratingAffix(), new PlaguedAffix(), new InfestedAffix(),
-        new ParalyzingAffix(), new WoundingAffix());
+        new ParalyzingAffix(), new WoundingAffix(), new ShieldingAffix());
   }
 }

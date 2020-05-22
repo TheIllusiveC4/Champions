@@ -57,7 +57,7 @@ public class AffixEventsHandler {
   }
 
   @SubscribeEvent
-  public void onLivingAttacked(LivingAttackEvent evt) {
+  public void onLivingAttack(LivingAttackEvent evt) {
     Entity entity = evt.getEntity();
 
     if (entity instanceof LivingEntity) {
@@ -70,15 +70,15 @@ public class AffixEventsHandler {
             }
           }));
     }
-  }
 
-  @SubscribeEvent
-  public void onLivingAttack(LivingAttackEvent evt) {
-    Entity entity = evt.getSource().getTrueSource();
+    if (evt.isCanceled()) {
+      return;
+    }
+    Entity source = evt.getSource().getTrueSource();
 
-    if (entity instanceof LivingEntity) {
-      LivingEntity livingEntity = (LivingEntity) entity;
-      ChampionCapability.getCapability(livingEntity)
+    if (source instanceof LivingEntity) {
+      LivingEntity livingSource = (LivingEntity) source;
+      ChampionCapability.getCapability(livingSource)
           .ifPresent(champion -> champion.getAffixes().forEach(affix -> {
 
             if (!affix
