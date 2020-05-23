@@ -47,12 +47,16 @@ public class ChampionsConfig {
     public final DoubleValue adaptableDamageReductionIncrement;
     public final DoubleValue adaptableMaxDamageReduction;
 
+    public final IntValue arcticAttackInterval;
+
     public final DoubleValue dampenedDamageReduction;
 
     public final IntValue desecratingCloudInterval;
     public final IntValue desecratingCloudActivationTime;
     public final DoubleValue desecratingCloudRadius;
     public final IntValue desecratingCloudDuration;
+
+    public final IntValue enkindlingAttackInterval;
 
     public final DoubleValue hastyMovementBonus;
 
@@ -139,6 +143,15 @@ public class ChampionsConfig {
 
       builder.pop();
 
+      builder.push("arctic");
+
+      arcticAttackInterval = builder
+          .comment("How often the champion will shoot projectiles (in seconds)")
+          .translation(CONFIG_PREFIX + "arcticAttackInterval")
+          .defineInRange("arcticAttackInterval", 1, 1, 100);
+
+      builder.pop();
+
       builder.push("dampened");
 
       dampenedDamageReduction = builder
@@ -166,6 +179,15 @@ public class ChampionsConfig {
       desecratingCloudDuration = builder.comment("The duration (in seconds) of the cloud effect")
           .translation(CONFIG_PREFIX + "desecratingCloudDuration")
           .defineInRange("desecratingCloudDuration", 10, 1, Integer.MAX_VALUE);
+
+      builder.pop();
+
+      builder.push("enkindling");
+
+      enkindlingAttackInterval = builder
+          .comment("How often the champion will shoot projectiles (in seconds)")
+          .translation(CONFIG_PREFIX + "enkindlingAttackInterval")
+          .defineInRange("enkindlingAttackInterval", 1, 1, 100);
 
       builder.pop();
 
@@ -339,12 +361,16 @@ public class ChampionsConfig {
   public static double adaptableDamageReductionIncrement;
   public static double adaptableMaxDamageReduction;
 
+  public static int arcticAttackInterval;
+
   public static double dampenedDamageReduction;
 
   public static int desecratingCloudInterval;
   public static int desecratingCloudActivationTime;
   public static double desecratingCloudRadius;
   public static int desecratingCloudDuration;
+
+  public static int enkindlingAttackInterval;
 
   public static double hastyMovementBonus;
 
@@ -390,12 +416,16 @@ public class ChampionsConfig {
     adaptableDamageReductionIncrement = SERVER.adaptableDamageReductionIncrement.get();
     adaptableMaxDamageReduction = SERVER.adaptableMaxDamageReduction.get();
 
+    arcticAttackInterval = SERVER.arcticAttackInterval.get();
+
     dampenedDamageReduction = SERVER.dampenedDamageReduction.get();
 
     desecratingCloudActivationTime = SERVER.desecratingCloudActivationTime.get();
     desecratingCloudDuration = SERVER.desecratingCloudDuration.get();
     desecratingCloudInterval = SERVER.desecratingCloudInterval.get();
     desecratingCloudRadius = SERVER.desecratingCloudRadius.get();
+
+    enkindlingAttackInterval = SERVER.enkindlingAttackInterval.get();
 
     hastyMovementBonus = SERVER.hastyMovementBonus.get();
 
