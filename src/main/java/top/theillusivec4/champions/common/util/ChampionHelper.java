@@ -2,12 +2,52 @@ package top.theillusivec4.champions.common.util;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.monster.IMob;
+import net.minecraft.tileentity.BeaconTileEntity;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+import top.theillusivec4.champions.common.config.ChampionsConfig;
+import top.theillusivec4.champions.common.config.ConfigEnums.Permission;
 
 public class ChampionHelper {
 
   public static boolean isValidEntity(final Entity entity) {
     return entity instanceof LivingEntity && entity instanceof IMob;
+  }
+
+  public static boolean checkPotential(final LivingEntity livingEntity) {
+    return !nearActiveBeacon(livingEntity) && isValidDimension(
+        livingEntity.getEntityWorld().getDimension().getType().getId());
+  }
+
+  private static boolean isValidDimension(final int dimension) {
+
+    if (ChampionsConfig.dimensionPermission == Permission.BLACKLIST) {
+      return !ChampionsConfig.dimensionList.contains(dimension);
+    } else {
+      return ChampionsConfig.dimensionList.contains(dimension);
+    }
+  }
+
+  private static boolean nearActiveBeacon(final LivingEntity livingEntity) {
+    int range = ChampionsConfig.beaconProtectionRange;
+
+    if (range <= 0) {
+      return false;
+    }
+
+    for (TileEntity te : livingEntity.getEntityWorld().tickableTileEntities) {
+      BlockPos pos = te.getPos();
+
+      if (Math.sqrt(livingEntity.getDistanceSq(pos.getX(), pos.getY(), pos.getZ())) <= range
+          && te instanceof BeaconTileEntity) {
+        BeaconTileEntity beacon = (BeaconTileEntity) te;
+
+        if (beacon.getLevels() > 0) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 }

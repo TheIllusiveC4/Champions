@@ -13,10 +13,12 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
+import net.minecraftforge.common.ForgeConfigSpec.EnumValue;
 import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
 import top.theillusivec4.champions.Champions;
+import top.theillusivec4.champions.common.config.ConfigEnums.Permission;
 import top.theillusivec4.champions.common.config.RanksConfig.RankConfig;
 
 public class ChampionsConfig {
@@ -34,6 +36,12 @@ public class ChampionsConfig {
   }
 
   public static class Server {
+
+    public final IntValue beaconProtectionRange;
+    public final BooleanValue championSpawners;
+    public final IntValue deathMessageTier;
+    public final ConfigValue<List<? extends Integer>> dimensionList;
+    public final EnumValue<ConfigEnums.Permission> dimensionPermission;
 
     public final DoubleValue healthGrowth;
     public final DoubleValue attackGrowth;
@@ -90,6 +98,33 @@ public class ChampionsConfig {
     public final DoubleValue woundingChance;
 
     public Server(ForgeConfigSpec.Builder builder) {
+      builder.push("general");
+
+      beaconProtectionRange = builder
+          .comment("The range from an active beacon where no champions will spawn (0 to disable)")
+          .translation(CONFIG_PREFIX + "beaconProtectionRange")
+          .defineInRange("beaconProtectionRange", 64, 0, 1000);
+
+      championSpawners = builder.comment("Set to true to enable champions from mob spawners")
+          .translation(CONFIG_PREFIX + "championSpawners").define("championSpawners", false);
+
+      deathMessageTier = builder.comment(
+          "The minimum tier of champions that will have death messages sent out upon defeat (0 to disable)")
+          .translation(CONFIG_PREFIX + "deathMessageTier")
+          .defineInRange("deathMessageTier", 0, 0, Integer.MAX_VALUE);
+
+      dimensionList = builder
+          .comment("A list of dimension ids that are blacklisted/whitelisted for champions")
+          .translation(CONFIG_PREFIX + "dimensionList")
+          .defineList("dimensionList", new ArrayList<>(), i -> i instanceof Integer);
+
+      dimensionPermission = builder
+          .comment("Set whether the dimension list is a blacklist or whitelist")
+          .translation(CONFIG_PREFIX + "dimensionPermission")
+          .defineEnum("dimensionPermission", Permission.BLACKLIST);
+
+      builder.pop();
+
       builder.push("growth");
 
       healthGrowth = builder
@@ -349,6 +384,12 @@ public class ChampionsConfig {
     ranks = RANKS.ranks.ranks;
   }
 
+  public static int beaconProtectionRange;
+  public static boolean championSpawners;
+  public static int deathMessageTier;
+  public static List<? extends Integer> dimensionList;
+  public static Permission dimensionPermission;
+
   public static double healthGrowth;
   public static double attackGrowth;
   public static double armorGrowth;
@@ -404,6 +445,12 @@ public class ChampionsConfig {
   public static double woundingChance;
 
   public static void bake() {
+    beaconProtectionRange = SERVER.beaconProtectionRange.get();
+    championSpawners = SERVER.championSpawners.get();
+    deathMessageTier = SERVER.deathMessageTier.get();
+    dimensionList = SERVER.dimensionList.get();
+    dimensionPermission = SERVER.dimensionPermission.get();
+
     healthGrowth = SERVER.healthGrowth.get();
     attackGrowth = SERVER.attackGrowth.get();
     armorGrowth = SERVER.armorGrowth.get();

@@ -1,6 +1,5 @@
 package top.theillusivec4.champions.common.capability;
 
-import java.util.List;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -11,10 +10,11 @@ import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
-import top.theillusivec4.champions.api.IAffix;
+import top.theillusivec4.champions.common.config.ChampionsConfig;
 import top.theillusivec4.champions.common.network.NetworkHandler;
 import top.theillusivec4.champions.common.network.SPacketSyncChampion;
 import top.theillusivec4.champions.common.rank.Rank;
+import top.theillusivec4.champions.common.rank.RankManager;
 import top.theillusivec4.champions.common.registry.ChampionsRegistry;
 import top.theillusivec4.champions.common.util.ChampionBuilder;
 import top.theillusivec4.champions.common.util.ChampionHelper;
@@ -26,30 +26,8 @@ public class CapabilityEventHandler {
     Entity entity = evt.getObject();
 
     if (ChampionHelper.isValidEntity(entity)) {
-      evt.addCapability(ChampionCapability.ID, ChampionCapability.createProvider((LivingEntity) entity));
-    }
-  }
-
-  @SubscribeEvent
-  public void onLivingUpdate(LivingUpdateEvent evt) {
-    LivingEntity entity = evt.getEntityLiving();
-
-    if (entity.getEntityWorld().isRemote()) {
-      ChampionCapability.getCapability(entity)
-          .ifPresent(champion -> champion.getRank().ifPresent(rank -> {
-
-            if (rank.getTier() > 0) {
-              int color = rank.getDefaultColor();
-              float r = (float) ((color >> 16) & 0xFF) / 255f;
-              float g = (float) ((color >> 8) & 0xFF) / 255f;
-              float b = (float) ((color) & 0xFF) / 255f;
-              entity.getEntityWorld().addParticle(ChampionsRegistry.RANK,
-                  entity.posX + (entity.getRNG().nextDouble() - 0.5D) * (double) entity.getWidth(),
-                  entity.posY + entity.getRNG().nextDouble() * entity.getHeight(),
-                  entity.posZ + (entity.getRNG().nextDouble() - 0.5D) * (double) entity.getWidth(),
-                  r, g, b);
-            }
-          }));
+      evt.addCapability(ChampionCapability.ID,
+          ChampionCapability.createProvider((LivingEntity) entity));
     }
   }
 
@@ -60,7 +38,12 @@ public class CapabilityEventHandler {
     if (!entity.getEntityWorld().isRemote()) {
       ChampionCapability.getCapability(entity).ifPresent(champion -> {
         if (!champion.getRank().isPresent()) {
-          ChampionBuilder.spawn(champion);
+
+          if (!ChampionsConfig.championSpawners && evt.getSpawner() != null) {
+            champion.setRank(RankManager.getEmptyRank());
+          } else {
+            ChampionBuilder.spawn(champion);
+          }
         }
       });
     }

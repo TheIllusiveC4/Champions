@@ -93,6 +93,11 @@ public class ChampionBuilder {
   }
 
   public static Rank createRank(final LivingEntity livingEntity) {
+
+    if (!ChampionHelper.checkPotential(livingEntity)) {
+      return RankManager.getEmptyRank();
+    }
+
     ImmutableSortedMap<Integer, Rank> ranks = RankManager.getRanks();
     Iterator<Integer> iter = ranks.navigableKeySet().tailSet(ranks.firstKey(), false).iterator();
     Rank result = ranks.firstEntry().getValue();

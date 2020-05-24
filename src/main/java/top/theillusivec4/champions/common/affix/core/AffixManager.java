@@ -22,7 +22,6 @@ import top.theillusivec4.champions.common.affix.WoundingAffix;
 public class AffixManager {
 
   public static void register() {
-    MinecraftForge.EVENT_BUS.register(new AffixEventsHandler());
     Champions.API.registerAffixes(new MoltenAffix(), new HastyAffix(), new ReflectiveAffix(),
         new LivelyAffix(), new MagneticAffix(), new DampeningAffix(), new AdaptableAffix(),
         new KnockingAffix(), new DesecratingAffix(), new PlaguedAffix(), new InfestedAffix(),

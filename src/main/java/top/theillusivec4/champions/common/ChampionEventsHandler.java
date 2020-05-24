@@ -1,11 +1,13 @@
-package top.theillusivec4.champions.common.affix.core;
+package top.theillusivec4.champions.common;
 
 import java.util.List;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Tuple;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
@@ -16,8 +18,10 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import top.theillusivec4.champions.common.capability.ChampionCapability;
+import top.theillusivec4.champions.common.config.ChampionsConfig;
+import top.theillusivec4.champions.common.registry.ChampionsRegistry;
 
-public class AffixEventsHandler {
+public class ChampionEventsHandler {
 
   @SubscribeEvent
   public void onLivingJoinWorld(EntityJoinWorldEvent evt) {
@@ -45,11 +49,24 @@ public class AffixEventsHandler {
       ChampionCapability.getCapability(livingEntity).ifPresent(champion -> {
         champion.getAffixes().forEach(affix -> affix.onUpdate(champion));
 
-        if (entity.ticksExisted % 40 == 0) {
+        if (livingEntity.ticksExisted % 40 == 0) {
           champion.getRank().ifPresent(rank -> {
             List<Tuple<Effect, Integer>> effects = rank.getEffects();
             effects.forEach(effectPair -> livingEntity
                 .addPotionEffect(new EffectInstance(effectPair.getA(), 100, effectPair.getB())));
+
+            if (rank.getTier() > 0) {
+              int color = rank.getDefaultColor();
+              float r = (float) ((color >> 16) & 0xFF) / 255f;
+              float g = (float) ((color >> 8) & 0xFF) / 255f;
+              float b = (float) ((color) & 0xFF) / 255f;
+              livingEntity.getEntityWorld().addParticle(ChampionsRegistry.RANK, livingEntity.posX
+                      + (livingEntity.getRNG().nextDouble() - 0.5D) * (double) livingEntity.getWidth(),
+                  livingEntity.posY + livingEntity.getRNG().nextDouble() * livingEntity.getHeight(),
+                  livingEntity.posZ
+                      + (livingEntity.getRNG().nextDouble() - 0.5D) * (double) livingEntity
+                      .getWidth(), r, g, b);
+            }
           });
         }
       });
@@ -134,13 +151,30 @@ public class AffixEventsHandler {
   @SubscribeEvent
   public void onLivingDeath(LivingDeathEvent evt) {
     LivingEntity livingEntity = evt.getEntityLiving();
-    ChampionCapability.getCapability(livingEntity)
-        .ifPresent(champion -> champion.getAffixes().forEach(affix -> {
+    ChampionCapability.getCapability(livingEntity).ifPresent(champion -> {
+      champion.getAffixes().forEach(affix -> {
 
-          if (!affix.onDeath(champion, evt.getSource())) {
-            evt.setCanceled(true);
+        if (!affix.onDeath(champion, evt.getSource())) {
+          evt.setCanceled(true);
+        }
+      });
+      champion.getRank().ifPresent(rank -> {
+        if (!evt.isCanceled()) {
+          int messageTier = ChampionsConfig.deathMessageTier;
+
+          if (messageTier > 0 && rank.getTier() >= messageTier) {
+            MinecraftServer server = livingEntity.getServer();
+
+            if (server != null) {
+              server.getPlayerList().sendMessage(
+                  new TranslationTextComponent("rank.champions.title." + rank.getTier())
+                      .appendText(" ")
+                      .appendSibling(livingEntity.getCombatTracker().getDeathMessage()));
+            }
           }
-        }));
+        }
+      });
+    });
   }
 
   @SubscribeEvent

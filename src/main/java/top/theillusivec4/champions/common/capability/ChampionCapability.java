@@ -27,6 +27,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import top.theillusivec4.champions.Champions;
 import top.theillusivec4.champions.api.IAffix;
 import top.theillusivec4.champions.api.IChampion;
+import top.theillusivec4.champions.common.ChampionEventsHandler;
 import top.theillusivec4.champions.common.rank.Rank;
 import top.theillusivec4.champions.common.rank.RankManager;
 
@@ -96,6 +97,7 @@ public class ChampionCapability {
       }
     }, Champion::new);
     MinecraftForge.EVENT_BUS.register(new CapabilityEventHandler());
+    MinecraftForge.EVENT_BUS.register(new ChampionEventsHandler());
   }
 
   public static Provider createProvider(final LivingEntity livingEntity) {
