@@ -9,6 +9,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import top.theillusivec4.champions.client.config.ClientChampionsConfig;
 import top.theillusivec4.champions.common.capability.ChampionCapability;
 
 public class MouseHelper {
@@ -20,7 +21,7 @@ public class MouseHelper {
 
       if (mc.world != null) {
         mc.getProfiler().startSection("mouse_champion");
-        double d0 = 10;
+        double d0 = ClientChampionsConfig.hudRange;
         RayTraceResult rayTraceResult = entity.pick(d0, partialTicks, false);
         Vec3d vec3d = entity.getEyePosition(partialTicks);
         double d1 = rayTraceResult.getHitVec().squareDistanceTo(vec3d);

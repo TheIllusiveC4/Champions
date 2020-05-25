@@ -10,6 +10,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import top.theillusivec4.champions.Champions;
 import top.theillusivec4.champions.api.IChampion;
+import top.theillusivec4.champions.client.config.ClientChampionsConfig;
 import top.theillusivec4.champions.common.capability.ChampionCapability;
 
 public class HUDHelper {
@@ -31,6 +32,8 @@ public class HUDHelper {
           int i = client.mainWindow.getScaledWidth();
           int k = i / 2 - 91;
           int j = 21;
+          int xOffset = ClientChampionsConfig.hudXOffset;
+          int yOffset = ClientChampionsConfig.hudYOffset;
           int color = rank.getB();
           float r = (float) ((color >> 16) & 0xFF) / 255f;
           float g = (float) ((color >> 8) & 0xFF) / 255f;
@@ -41,24 +44,26 @@ public class HUDHelper {
           GlStateManager.enableBlend();
           GlStateManager.color4f(r, g, b, 1.0F);
           client.getTextureManager().bindTexture(GUI_BAR_TEXTURES);
-          renderHealthBar(k, j, livingEntity.getHealth() / livingEntity.getMaxHealth());
+          renderHealthBar(xOffset + k, yOffset + j,
+              livingEntity.getHealth() / livingEntity.getMaxHealth());
           client.getTextureManager().bindTexture(GUI_STAR);
 
           if (num <= 18) {
-            int startStarsX = i / 2 - 5 - 5 * (num - 1);
+            int startStarsX = xOffset + i / 2 - 5 - 5 * (num - 1);
 
             for (int tier = 0; tier < num; tier++) {
-              AbstractGui.blit(startStarsX, 1, 0, 0, 9, 9, 9, 9);
+              AbstractGui.blit(startStarsX, yOffset + 1, 0, 0, 9, 9, 9, 9);
               startStarsX += 10;
             }
           } else {
-            int startStarsX = i / 2 - 5;
+            int startStarsX = xOffset + i / 2 - 5;
             String count = "x" + num;
             AbstractGui
-                .blit(startStarsX - client.fontRenderer.getStringWidth(count) / 2, 1, 0, 0, 9, 9, 9,
-                    9);
+                .blit(startStarsX - client.fontRenderer.getStringWidth(count) / 2, yOffset + 1, 0,
+                    0, 9, 9, 9, 9);
             client.fontRenderer.drawStringWithShadow(count,
-                startStarsX + 10 - client.fontRenderer.getStringWidth(count) / 2.0F, 2, 16777215);
+                startStarsX + 10 - client.fontRenderer.getStringWidth(count) / 2.0F, yOffset + 2,
+                16777215);
           }
           ITextComponent customName = livingEntity.getCustomName();
           String name;
@@ -70,8 +75,8 @@ public class HUDHelper {
             name = customName.getString();
           }
           client.fontRenderer.drawStringWithShadow(name,
-              (float) (i / 2 - client.fontRenderer.getStringWidth(name) / 2), (float) (j - 9),
-              color);
+              xOffset + (float) (i / 2 - client.fontRenderer.getStringWidth(name) / 2),
+              yOffset + (float) (j - 9), color);
           GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
           StringBuilder builder = new StringBuilder();
 
@@ -82,8 +87,8 @@ public class HUDHelper {
           }
           String affixes = builder.toString().trim();
           client.fontRenderer.drawStringWithShadow(affixes,
-              (float) (i / 2 - client.fontRenderer.getStringWidth(affixes) / 2), (float) (j + 6),
-              16777215);
+              xOffset + (float) (i / 2 - client.fontRenderer.getStringWidth(affixes) / 2),
+              yOffset + (float) (j + 6), 16777215);
           GlStateManager.disableBlend();
           return true;
         }

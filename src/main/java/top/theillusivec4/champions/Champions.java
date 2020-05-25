@@ -53,6 +53,7 @@ import top.theillusivec4.champions.api.IChampionsApi;
 import top.theillusivec4.champions.api.impl.ChampionsApiImpl;
 import top.theillusivec4.champions.client.ClientEventHandler;
 import top.theillusivec4.champions.client.affix.ClientAffixEventsHandler;
+import top.theillusivec4.champions.client.config.ClientChampionsConfig;
 import top.theillusivec4.champions.client.renderer.ChampionsRenderer;
 import top.theillusivec4.champions.common.affix.core.AffixManager;
 import top.theillusivec4.champions.common.capability.ChampionCapability;
@@ -71,6 +72,7 @@ public class Champions {
   public static final IChampionsApi API = ChampionsApiImpl.getInstance();
 
   public Champions() {
+    ModLoadingContext.get().registerConfig(Type.CLIENT, ClientChampionsConfig.CLIENT_SPEC);
     ModLoadingContext.get().registerConfig(Type.SERVER, ChampionsConfig.SERVER_SPEC);
     ModLoadingContext.get()
         .registerConfig(Type.SERVER, ChampionsConfig.RANKS_SPEC, "champions-ranks.toml");
@@ -139,11 +141,16 @@ public class Champions {
   private void config(final ModConfigEvent evt) {
 
     if (evt.getConfig().getModId().equals(MODID)) {
-      ChampionsConfig.bake();
 
-      if (evt.getConfig().getSpec() == ChampionsConfig.RANKS_SPEC) {
-        ChampionsConfig.transform(evt.getConfig().getConfigData());
-        RankManager.buildRanks();
+      if (evt.getConfig().getType() == Type.SERVER) {
+        ChampionsConfig.bake();
+
+        if (evt.getConfig().getSpec() == ChampionsConfig.RANKS_SPEC) {
+          ChampionsConfig.transform(evt.getConfig().getConfigData());
+          RankManager.buildRanks();
+        }
+      } else if (evt.getConfig().getType() == Type.CLIENT) {
+        ClientChampionsConfig.bake();
       }
     }
   }
