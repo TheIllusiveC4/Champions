@@ -16,6 +16,7 @@ import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Tuple;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
@@ -53,14 +54,15 @@ public class ChampionCapability {
       @Override
       public INBT writeNBT(Capability<IChampion> capability, IChampion instance, Direction side) {
         CompoundNBT compoundNBT = new CompoundNBT();
-        instance.getRank().ifPresent(rank -> compoundNBT.putInt(TIER_TAG, rank.getTier()));
-        List<IAffix> affixes = instance.getAffixes();
+        IChampion.Server champion = instance.getServer();
+        champion.getRank().ifPresent(rank -> compoundNBT.putInt(TIER_TAG, rank.getTier()));
+        List<IAffix> affixes = champion.getAffixes();
         ListNBT list = new ListNBT();
         affixes.forEach(affix -> {
           CompoundNBT tag = new CompoundNBT();
           String id = affix.getIdentifier();
           tag.putString(ID_TAG, id);
-          tag.put(DATA_TAG, instance.getData(id));
+          tag.put(DATA_TAG, champion.getData(id));
           list.add(tag);
         });
         compoundNBT.put(AFFIX_TAG, list);
@@ -71,10 +73,11 @@ public class ChampionCapability {
       public void readNBT(Capability<IChampion> capability, IChampion instance, Direction side,
           INBT nbt) {
         CompoundNBT compoundNBT = (CompoundNBT) nbt;
+        IChampion.Server champion = instance.getServer();
 
         if (compoundNBT.contains(TIER_TAG)) {
           int tier = compoundNBT.getInt(TIER_TAG);
-          instance.setRank(RankManager.getRank(tier));
+          champion.setRank(RankManager.getRank(tier));
         }
 
         if (compoundNBT.contains(AFFIX_TAG)) {
@@ -88,11 +91,11 @@ public class ChampionCapability {
               affixes.add(affix);
 
               if (tag.hasUniqueId(DATA_TAG)) {
-                instance.setData(id, tag.getCompound(DATA_TAG));
+                champion.setData(id, tag.getCompound(DATA_TAG));
               }
             });
           }
-          instance.setAffixes(affixes);
+          champion.setAffixes(affixes);
         }
       }
     }, Champion::new);
@@ -110,16 +113,28 @@ public class ChampionCapability {
 
   public static class Champion implements IChampion {
 
-    private LivingEntity champion = null;
-    private Rank rank = null;
-    private List<IAffix> affixes = new ArrayList<>();
-    private Set<String> affixIds = new HashSet<>();
-    private Map<String, CompoundNBT> data = new HashMap<>();
+    private final LivingEntity champion;
+    private final Client client;
+    private final Server server;
 
-    private Champion() {}
+    private Champion() {
+      this(null);
+    }
 
     private Champion(final LivingEntity livingEntity) {
       this.champion = livingEntity;
+      this.client = new Client();
+      this.server = new Server();
+    }
+
+    @Override
+    public Client getClient() {
+      return this.client;
+    }
+
+    @Override
+    public Server getServer() {
+      return this.server;
     }
 
     @Override
@@ -127,46 +142,67 @@ public class ChampionCapability {
       return this.champion;
     }
 
-    @Override
-    public Optional<Rank> getRank() {
-      return Optional.ofNullable(rank);
+    public static class Server implements IChampion.Server {
+
+      private Rank rank = null;
+      private List<IAffix> affixes = new ArrayList<>();
+      private Map<String, CompoundNBT> data = new HashMap<>();
+
+      @Override
+      public Optional<Rank> getRank() {
+        return Optional.ofNullable(rank);
+      }
+
+      @Override
+      public void setRank(Rank rank) {
+        this.rank = rank;
+      }
+
+      @Override
+      public List<IAffix> getAffixes() {
+        return Collections.unmodifiableList(affixes);
+      }
+
+      @Override
+      public void setAffixes(List<IAffix> affixes) {
+        this.affixes = affixes;
+      }
+
+      @Override
+      public void setData(String identifier, CompoundNBT data) {
+        this.data.put(identifier, data);
+      }
+
+      @Override
+      public CompoundNBT getData(String identifier) {
+        return this.data.getOrDefault(identifier, new CompoundNBT());
+      }
     }
 
-    @Override
-    public void setRank(Rank rank) {
-      this.rank = rank;
-    }
+    public static class Client implements IChampion.Client {
 
-    @Override
-    public List<IAffix> getAffixes() {
-      return Collections.unmodifiableList(affixes);
-    }
+      private Tuple<Integer, Integer> rank = null;
+      private Set<String> affixes = new HashSet<>();
 
-    @Override
-    public void setAffixes(List<IAffix> affixes) {
-      this.affixes = affixes;
-      this.affixIds.clear();
-      affixes.forEach(affix -> this.affixIds.add(affix.getIdentifier()));
-    }
+      @Override
+      public Optional<Tuple<Integer, Integer>> getRank() {
+        return Optional.ofNullable(rank);
+      }
 
-    @Override
-    public Set<String> getAffixIds() {
-      return Collections.unmodifiableSet(affixIds);
-    }
+      @Override
+      public void setRank(Tuple<Integer, Integer> rank) {
+        this.rank = rank;
+      }
 
-    @Override
-    public void setAffixIds(Set<String> affixIds) {
-      this.affixIds = affixIds;
-    }
+      @Override
+      public Set<String> getAffixes() {
+        return this.affixes;
+      }
 
-    @Override
-    public void setData(String identifier, CompoundNBT data) {
-      this.data.put(identifier, data);
-    }
-
-    @Override
-    public CompoundNBT getData(String identifier) {
-      return this.data.getOrDefault(identifier, new CompoundNBT());
+      @Override
+      public void setAffixes(Set<String> affixes) {
+        this.affixes = affixes;
+      }
     }
   }
 

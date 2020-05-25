@@ -14,7 +14,7 @@ public abstract class AffixData {
   public void readData(IChampion champion, String identifier) {
     this.champion = champion;
     this.identifier = identifier;
-    readFromNBT(champion.getData(identifier));
+    readFromNBT(champion.getServer().getData(identifier));
   }
 
   public abstract void readFromNBT(CompoundNBT tag);
@@ -22,7 +22,7 @@ public abstract class AffixData {
   public abstract CompoundNBT writeToNBT();
 
   public void saveData() {
-    champion.setData(identifier, writeToNBT());
+    champion.getServer().setData(identifier, writeToNBT());
   }
 
   public static <T extends AffixData> T getData(IChampion champion, String id, Class<T> clazz) {
@@ -50,23 +50,6 @@ public abstract class AffixData {
     public CompoundNBT writeToNBT() {
       CompoundNBT compound = new CompoundNBT();
       compound.putBoolean("mode", mode);
-      return compound;
-    }
-  }
-
-  public static class StringData extends AffixData {
-
-    public String text;
-
-    @Override
-    public void readFromNBT(CompoundNBT tag) {
-      text = tag.getString("text");
-    }
-
-    @Override
-    public CompoundNBT writeToNBT() {
-      CompoundNBT compound = new CompoundNBT();
-      compound.putString("text", text);
       return compound;
     }
   }

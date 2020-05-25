@@ -29,20 +29,20 @@ public class ChampionBuilder {
   public static void spawn(final IChampion champion) {
     LivingEntity entity = champion.getLivingEntity();
     Rank newRank = ChampionBuilder.createRank(entity);
-    champion.setRank(newRank);
+    champion.getServer().setRank(newRank);
     ChampionBuilder.applyGrowth(entity, newRank.getGrowthFactor());
     List<IAffix> newAffixes = ChampionBuilder.createAffixes(newRank, champion);
-    champion.setAffixes(newAffixes);
+    champion.getServer().setAffixes(newAffixes);
     newAffixes.forEach(affix -> affix.onInitialSpawn(champion));
   }
 
   public static void spawnPreset(final IChampion champion, int tier, List<IAffix> affixes) {
     LivingEntity entity = champion.getLivingEntity();
     Rank newRank = RankManager.getRank(tier);
-    champion.setRank(newRank);
+    champion.getServer().setRank(newRank);
     ChampionBuilder.applyGrowth(entity, newRank.getGrowthFactor());
-    champion
-        .setAffixes(affixes.isEmpty() ? ChampionBuilder.createAffixes(newRank, champion) : affixes);
+    affixes = affixes.isEmpty() ? ChampionBuilder.createAffixes(newRank, champion) : affixes;
+    champion.getServer().setAffixes(affixes);
     affixes.forEach(affix -> affix.onInitialSpawn(champion));
   }
 

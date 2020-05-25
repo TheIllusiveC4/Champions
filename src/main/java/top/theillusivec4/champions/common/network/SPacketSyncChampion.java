@@ -7,28 +7,32 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.Tuple;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
+import top.theillusivec4.champions.api.IChampion;
 import top.theillusivec4.champions.common.capability.ChampionCapability;
-import top.theillusivec4.champions.common.rank.RankManager;
 
 public class SPacketSyncChampion {
 
   private int entityId;
   private int tier;
+  private int defaultColor;
   private Set<String> affixes;
   private int affixSize;
 
-  public SPacketSyncChampion(int entityId, int tier, Set<String> affixes) {
+  public SPacketSyncChampion(int entityId, int tier, int defaultColor, Set<String> affixes) {
     this.entityId = entityId;
     this.tier = tier;
     this.affixSize = affixes.size();
     this.affixes = affixes;
+    this.defaultColor = defaultColor;
   }
 
   public static void encode(SPacketSyncChampion msg, PacketBuffer buf) {
     buf.writeInt(msg.entityId);
     buf.writeInt(msg.tier);
     buf.writeInt(msg.affixSize);
+    buf.writeInt(msg.defaultColor);
     msg.affixes.forEach(buf::writeString);
   }
 
@@ -37,11 +41,12 @@ public class SPacketSyncChampion {
     int tier = buf.readInt();
     Set<String> affixes = new HashSet<>();
     int affixSize = buf.readInt();
+    int defaultColor = buf.readInt();
 
     for (int i = 0; i < affixSize; i++) {
       affixes.add(buf.readString());
     }
-    return new SPacketSyncChampion(entityId, tier, affixes);
+    return new SPacketSyncChampion(entityId, tier, defaultColor, affixes);
   }
 
   public static void handle(SPacketSyncChampion msg, Supplier<Context> ctx) {
@@ -50,8 +55,9 @@ public class SPacketSyncChampion {
 
       if (entity instanceof LivingEntity) {
         ChampionCapability.getCapability((LivingEntity) entity).ifPresent(champion -> {
-          champion.setRank(RankManager.getRank(msg.tier));
-          champion.setAffixIds(msg.affixes);
+          IChampion.Client clientChampion = champion.getClient();
+          clientChampion.setRank(new Tuple<>(msg.tier, msg.defaultColor));
+          clientChampion.setAffixes(msg.affixes);
         });
       }
     });

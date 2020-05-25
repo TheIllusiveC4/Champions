@@ -93,7 +93,7 @@ public class InfestedAffix extends GoalAffix {
 
       if (entity instanceof LivingEntity) {
         ChampionCapability.getCapability((LivingEntity) entity)
-            .ifPresent(champion -> champion.setRank(RankManager.getEmptyRank()));
+            .ifPresent(champion -> champion.getServer().setRank(RankManager.getEmptyRank()));
         livingEntity.getEntityWorld().addEntity(entity);
 
         if (entity instanceof MobEntity) {
