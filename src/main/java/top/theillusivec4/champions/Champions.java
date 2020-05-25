@@ -22,7 +22,18 @@ package top.theillusivec4.champions;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.Optional;
+import javax.annotation.Nonnull;
+import net.minecraft.block.DispenserBlock;
 import net.minecraft.client.Minecraft;
+import net.minecraft.dispenser.DefaultDispenseItemBehavior;
+import net.minecraft.dispenser.IBlockSource;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SpawnReason;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -31,6 +42,7 @@ import net.minecraftforge.fml.config.ModConfig.ModConfigEvent;
 import net.minecraftforge.fml.config.ModConfig.Type;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
@@ -77,6 +89,7 @@ public class Champions {
     eventBus.addListener(this::config);
     eventBus.addListener(this::setup);
     eventBus.addListener(this::clientSetup);
+    eventBus.addListener(this::postSetup);
     MinecraftForge.EVENT_BUS.addListener(this::serverStarting);
   }
 
@@ -92,6 +105,31 @@ public class Champions {
     Minecraft.getInstance().getItemColors()
         .register(ChampionEggItem::getColor, ChampionsRegistry.EGG);
     ChampionsRenderer.register();
+  }
+
+  private void postSetup(final FMLLoadCompleteEvent evt) {
+    DefaultDispenseItemBehavior dispenseBehavior = new DefaultDispenseItemBehavior() {
+      @Nonnull
+      @Override
+      public ItemStack dispenseStack(IBlockSource source, ItemStack stack) {
+        Direction direction = source.getBlockState().get(DispenserBlock.FACING);
+        Optional<EntityType<?>> entitytype = ChampionEggItem.getType(stack);
+        entitytype.ifPresent(type -> {
+          Entity entity = type.create(source.getWorld(), stack.getTag(), null, null,
+              source.getBlockPos().offset(direction), SpawnReason.DISPENSER, true,
+              direction != Direction.UP);
+
+          if (entity instanceof LivingEntity) {
+            ChampionCapability.getCapability((LivingEntity) entity)
+                .ifPresent(champion -> ChampionEggItem.read(champion, stack));
+            source.getWorld().addEntity(entity);
+            stack.shrink(1);
+          }
+        });
+        return stack;
+      }
+    };
+    DispenserBlock.registerDispenseBehavior(ChampionsRegistry.EGG, dispenseBehavior);
   }
 
   private void serverStarting(final FMLServerStartingEvent evt) {

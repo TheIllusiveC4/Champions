@@ -8,6 +8,7 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
@@ -51,27 +52,28 @@ public class ChampionEventsHandler {
       ChampionCapability.getCapability(livingEntity).ifPresent(champion -> {
         IChampion.Server serverChampion = champion.getServer();
         serverChampion.getAffixes().forEach(affix -> affix.onUpdate(champion));
+        serverChampion.getRank().ifPresent(rank -> {
+          if (ChampionsConfig.showParticles && rank.getTier() > 0) {
+            int color = rank.getDefaultColor();
+            float r = (float) ((color >> 16) & 0xFF) / 255f;
+            float g = (float) ((color >> 8) & 0xFF) / 255f;
+            float b = (float) ((color) & 0xFF) / 255f;
+            ((ServerWorld) livingEntity.getEntityWorld()).spawnParticle(ChampionsRegistry.RANK,
+                livingEntity.posX
+                    + (livingEntity.getRNG().nextDouble() - 0.5D) * (double) livingEntity
+                    .getWidth(),
+                livingEntity.posY + livingEntity.getRNG().nextDouble() * livingEntity.getHeight(),
+                livingEntity.posZ
+                    + (livingEntity.getRNG().nextDouble() - 0.5D) * (double) livingEntity
+                    .getWidth(), 0, r, g, b, 1);
+          }
 
-        if (livingEntity.ticksExisted % 40 == 0) {
-          serverChampion.getRank().ifPresent(rank -> {
+          if (livingEntity.ticksExisted % 40 == 0) {
             List<Tuple<Effect, Integer>> effects = rank.getEffects();
             effects.forEach(effectPair -> livingEntity
                 .addPotionEffect(new EffectInstance(effectPair.getA(), 100, effectPair.getB())));
-
-            if (rank.getTier() > 0) {
-              int color = rank.getDefaultColor();
-              float r = (float) ((color >> 16) & 0xFF) / 255f;
-              float g = (float) ((color >> 8) & 0xFF) / 255f;
-              float b = (float) ((color) & 0xFF) / 255f;
-              livingEntity.getEntityWorld().addParticle(ChampionsRegistry.RANK, livingEntity.posX
-                      + (livingEntity.getRNG().nextDouble() - 0.5D) * (double) livingEntity.getWidth(),
-                  livingEntity.posY + livingEntity.getRNG().nextDouble() * livingEntity.getHeight(),
-                  livingEntity.posZ
-                      + (livingEntity.getRNG().nextDouble() - 0.5D) * (double) livingEntity
-                      .getWidth(), r, g, b);
-            }
-          });
-        }
+          }
+        });
       });
     }
   }

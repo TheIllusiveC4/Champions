@@ -42,6 +42,8 @@ public class ChampionsConfig {
     public final IntValue deathMessageTier;
     public final ConfigValue<List<? extends Integer>> dimensionList;
     public final EnumValue<ConfigEnums.Permission> dimensionPermission;
+    public final BooleanValue showHud;
+    public final BooleanValue showParticles;
 
     public final DoubleValue healthGrowth;
     public final DoubleValue attackGrowth;
@@ -122,6 +124,14 @@ public class ChampionsConfig {
           .comment("Set whether the dimension list is a blacklist or whitelist")
           .translation(CONFIG_PREFIX + "dimensionPermission")
           .defineEnum("dimensionPermission", Permission.BLACKLIST);
+
+      showHud = builder.comment(
+          "Set to true to show HUD display for champions, including health, affixes, and tier")
+          .translation(CONFIG_PREFIX + "showHud").define("showHud", true);
+
+      showParticles = builder.comment(
+          "Set to true to have champions generate a colored particle effect indicating their rank")
+          .translation(CONFIG_PREFIX + "showParticles").define("showParticles", true);
 
       builder.pop();
 
@@ -389,6 +399,8 @@ public class ChampionsConfig {
   public static int deathMessageTier;
   public static List<? extends Integer> dimensionList;
   public static Permission dimensionPermission;
+  public static boolean showHud;
+  public static boolean showParticles;
 
   public static double healthGrowth;
   public static double attackGrowth;
@@ -450,6 +462,8 @@ public class ChampionsConfig {
     deathMessageTier = SERVER.deathMessageTier.get();
     dimensionList = SERVER.dimensionList.get();
     dimensionPermission = SERVER.dimensionPermission.get();
+    showHud = SERVER.showHud.get();
+    showParticles = SERVER.showParticles.get();
 
     healthGrowth = SERVER.healthGrowth.get();
     attackGrowth = SERVER.attackGrowth.get();
