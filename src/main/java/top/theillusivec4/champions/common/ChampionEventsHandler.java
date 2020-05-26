@@ -1,5 +1,6 @@
 package top.theillusivec4.champions.common;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -14,6 +15,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.loot.LootContext;
@@ -31,7 +33,10 @@ import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
 import net.minecraftforge.event.entity.living.LivingHealEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
+import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import top.theillusivec4.champions.Champions;
 import top.theillusivec4.champions.api.IChampion;
 import top.theillusivec4.champions.common.capability.ChampionCapability;
 import top.theillusivec4.champions.common.config.ChampionsConfig;
@@ -42,6 +47,9 @@ import top.theillusivec4.champions.common.registry.ChampionsRegistry;
 import top.theillusivec4.champions.common.registry.RegistryReference;
 
 public class ChampionEventsHandler {
+
+  private static final Field EXPLOSION_SIZE = ObfuscationReflectionHelper
+      .findField(Explosion.class, "field_77280_f");
 
   @SubscribeEvent
   public void onLivingDrops(LivingDropsEvent evt) {
@@ -103,9 +111,36 @@ public class ChampionEventsHandler {
     LivingEntity livingEntity = evt.getEntityLiving();
     ChampionCapability.getCapability(livingEntity)
         .ifPresent(champion -> champion.getServer().getRank().ifPresent(rank -> {
-          evt.setDroppedExperience(rank.getGrowthFactor() * ChampionsConfig.experienceGrowth * evt
-              .getOriginalExperience());
+          int growth = rank.getGrowthFactor();
+
+          if (growth > 0) {
+            evt.setDroppedExperience(
+                growth * ChampionsConfig.experienceGrowth * evt.getOriginalExperience() + evt
+                    .getOriginalExperience());
+          }
         }));
+  }
+
+  @SubscribeEvent
+  public void onExplosion(ExplosionEvent.Start evt) {
+    Explosion explosion = evt.getExplosion();
+    LivingEntity livingEntity = explosion.getExplosivePlacedBy();
+
+    if (livingEntity != null && !livingEntity.getEntityWorld().isRemote()) {
+      ChampionCapability.getCapability(livingEntity)
+          .ifPresent(champion -> champion.getServer().getRank().ifPresent(rank -> {
+            int growth = rank.getGrowthFactor();
+
+            if (growth > 0) {
+              try {
+                float size = EXPLOSION_SIZE.getFloat(explosion);
+                EXPLOSION_SIZE.setFloat(explosion, size + ChampionsConfig.explosionGrowth * growth);
+              } catch (IllegalAccessException e) {
+                Champions.LOGGER.error("Cannot increase explosion size!");
+              }
+            }
+          }));
+    }
   }
 
   @SubscribeEvent

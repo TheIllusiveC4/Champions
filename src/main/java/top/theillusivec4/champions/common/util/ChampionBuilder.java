@@ -116,7 +116,7 @@ public class ChampionBuilder {
 
   public static void applyGrowth(final LivingEntity livingEntity, int growthFactor) {
 
-    if (growthFactor <= 1) {
+    if (growthFactor < 1) {
       return;
     }
     grow(livingEntity, SharedMonsterAttributes.MAX_HEALTH,

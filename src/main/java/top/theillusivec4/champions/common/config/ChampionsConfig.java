@@ -57,6 +57,7 @@ public class ChampionsConfig {
     public final DoubleValue toughnessGrowth;
     public final DoubleValue knockbackResistanceGrowth;
     public final IntValue experienceGrowth;
+    public final IntValue explosionGrowth;
 
     public final DoubleValue affixTargetRange;
 
@@ -191,6 +192,11 @@ public class ChampionsConfig {
           .comment("The increase in experience multiplied by the growth factor")
           .translation(CONFIG_PREFIX + "experienceGrowth")
           .defineInRange("experienceGrowth", 1, 0, Integer.MAX_VALUE);
+
+      explosionGrowth = builder
+          .comment("The increase in explosive range multiplied by the growth factor")
+          .translation(CONFIG_PREFIX + "explosionGrowth")
+          .defineInRange("explosionGrowth", 2, 0, 100);
 
       builder.pop();
 
@@ -438,6 +444,7 @@ public class ChampionsConfig {
   public static double toughnessGrowth;
   public static double knockbackResistanceGrowth;
   public static int experienceGrowth;
+  public static int explosionGrowth;
 
   public static double affixTargetRange;
 
@@ -506,6 +513,7 @@ public class ChampionsConfig {
     toughnessGrowth = SERVER.toughnessGrowth.get();
     knockbackResistanceGrowth = SERVER.knockbackResistanceGrowth.get();
     experienceGrowth = SERVER.experienceGrowth.get();
+    explosionGrowth = SERVER.explosionGrowth.get();
 
     affixTargetRange = SERVER.affixTargetRange.get();
 
