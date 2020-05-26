@@ -27,6 +27,7 @@ import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
 import net.minecraftforge.event.entity.living.LivingHealEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
@@ -95,6 +96,16 @@ public class ChampionEventsHandler {
         }
       }
     });
+  }
+
+  @SubscribeEvent
+  public void onLivingXpDrop(LivingExperienceDropEvent evt) {
+    LivingEntity livingEntity = evt.getEntityLiving();
+    ChampionCapability.getCapability(livingEntity)
+        .ifPresent(champion -> champion.getServer().getRank().ifPresent(rank -> {
+          evt.setDroppedExperience(rank.getGrowthFactor() * ChampionsConfig.experienceGrowth * evt
+              .getOriginalExperience());
+        }));
   }
 
   @SubscribeEvent
