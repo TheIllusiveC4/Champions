@@ -3,16 +3,29 @@ package top.theillusivec4.champions.common;
 import java.util.List;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.storage.loot.LootContext;
+import net.minecraft.world.storage.loot.LootParameterSets;
+import net.minecraft.world.storage.loot.LootParameters;
+import net.minecraft.world.storage.loot.LootTable;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingHealEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -21,9 +34,68 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import top.theillusivec4.champions.api.IChampion;
 import top.theillusivec4.champions.common.capability.ChampionCapability;
 import top.theillusivec4.champions.common.config.ChampionsConfig;
+import top.theillusivec4.champions.common.config.ConfigEnums.LootSource;
+import top.theillusivec4.champions.common.config.ConfigLoot;
+import top.theillusivec4.champions.common.rank.Rank;
 import top.theillusivec4.champions.common.registry.ChampionsRegistry;
+import top.theillusivec4.champions.common.registry.RegistryReference;
 
 public class ChampionEventsHandler {
+
+  @SubscribeEvent
+  public void onLivingDrops(LivingDropsEvent evt) {
+    LivingEntity livingEntity = evt.getEntityLiving();
+
+    if (!livingEntity.getEntityWorld().getGameRules().getBoolean(GameRules.DO_MOB_LOOT) || (
+        !ChampionsConfig.fakeLoot && evt.getSource().getTrueSource() instanceof FakePlayer)) {
+      return;
+    }
+    ChampionCapability.getCapability(livingEntity).ifPresent(champion -> {
+      IChampion.Server serverChampion = champion.getServer();
+      ServerWorld serverWorld = (ServerWorld) livingEntity.getEntityWorld();
+
+      if (ChampionsConfig.lootSource != LootSource.CONFIG) {
+        LootTable lootTable = serverWorld.getServer().getLootTableManager()
+            .getLootTableFromLocation(new ResourceLocation(RegistryReference.CHAMPION_LOOT));
+        DamageSource source = evt.getSource();
+        LootContext.Builder lootcontext$builder = (new LootContext.Builder(serverWorld)
+            .withRandom(livingEntity.getRNG())
+            .withParameter(LootParameters.THIS_ENTITY, livingEntity)
+            .withParameter(LootParameters.POSITION, new BlockPos(livingEntity))
+            .withParameter(LootParameters.DAMAGE_SOURCE, source)
+            .withNullableParameter(LootParameters.KILLER_ENTITY, source.getTrueSource())
+            .withNullableParameter(LootParameters.DIRECT_KILLER_ENTITY,
+                source.getImmediateSource()));
+        LivingEntity attackingEntity = livingEntity.getAttackingEntity();
+
+        if (attackingEntity instanceof PlayerEntity) {
+          lootcontext$builder = lootcontext$builder
+              .withParameter(LootParameters.LAST_DAMAGE_PLAYER, (PlayerEntity) attackingEntity)
+              .withLuck(((PlayerEntity) attackingEntity).getLuck());
+        }
+        lootTable.generate(lootcontext$builder.build(LootParameterSets.ENTITY), stack -> {
+          ItemEntity itemEntity = new ItemEntity(serverWorld, livingEntity.posX, livingEntity.posY,
+              livingEntity.posZ, stack);
+          itemEntity.setDefaultPickupDelay();
+          evt.getDrops().add(itemEntity);
+        });
+      }
+
+      if (ChampionsConfig.lootSource != LootSource.LOOT_TABLE) {
+        List<ItemStack> loot = ConfigLoot
+            .getLootDrops(serverChampion.getRank().map(Rank::getTier).orElse(0));
+
+        if (!loot.isEmpty()) {
+          loot.forEach(stack -> {
+            ItemEntity itemEntity = new ItemEntity(serverWorld, livingEntity.posX,
+                livingEntity.posY, livingEntity.posZ, stack);
+            itemEntity.setDefaultPickupDelay();
+            evt.getDrops().add(itemEntity);
+          });
+        }
+      }
+    });
+  }
 
   @SubscribeEvent
   public void onLivingJoinWorld(EntityJoinWorldEvent evt) {

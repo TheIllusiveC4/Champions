@@ -18,6 +18,7 @@ import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
 import top.theillusivec4.champions.Champions;
+import top.theillusivec4.champions.common.config.ConfigEnums.LootSource;
 import top.theillusivec4.champions.common.config.ConfigEnums.Permission;
 import top.theillusivec4.champions.common.config.RanksConfig.RankConfig;
 
@@ -44,6 +45,11 @@ public class ChampionsConfig {
     public final EnumValue<ConfigEnums.Permission> dimensionPermission;
     public final BooleanValue showHud;
     public final BooleanValue showParticles;
+
+    public final BooleanValue fakeLoot;
+    public final EnumValue<ConfigEnums.LootSource> lootSource;
+    public final ConfigValue<List<? extends String>> lootDrops;
+    public final BooleanValue lootScaling;
 
     public final DoubleValue healthGrowth;
     public final DoubleValue attackGrowth;
@@ -132,6 +138,26 @@ public class ChampionsConfig {
       showParticles = builder.comment(
           "Set to true to have champions generate a colored particle effect indicating their rank")
           .translation(CONFIG_PREFIX + "showParticles").define("showParticles", true);
+
+      builder.pop();
+
+      builder.push("loot");
+
+      fakeLoot = builder.comment("Set to true to allow fake players to generate champion loot")
+          .translation(CONFIG_PREFIX + "fakeLoot").define("fakeLoot", false);
+
+      lootSource = builder.comment("Set the source of champion mob drops")
+          .translation(CONFIG_PREFIX + "lootSource")
+          .defineEnum("lootSource", LootSource.LOOT_TABLE);
+
+      lootDrops = builder.comment(
+          "List of loot drops from champions if sourced from config\nFormat: [tier];[modid:name];[amount];[enchant(true/false)];[weight]")
+          .translation(CONFIG_PREFIX + "lootDrops")
+          .defineList("lootDrops", new ArrayList<>(), s -> s instanceof String);
+
+      lootScaling = builder.comment(
+          "Set to true to scale amount of loot drops from champions to tier if sourced from config")
+          .translation(CONFIG_PREFIX + "lootScaling").define("lootScaling", false);
 
       builder.pop();
 
@@ -402,6 +428,10 @@ public class ChampionsConfig {
   public static boolean showHud;
   public static boolean showParticles;
 
+  public static boolean fakeLoot;
+  public static LootSource lootSource;
+  public static boolean lootScaling;
+
   public static double healthGrowth;
   public static double attackGrowth;
   public static double armorGrowth;
@@ -464,6 +494,11 @@ public class ChampionsConfig {
     dimensionPermission = SERVER.dimensionPermission.get();
     showHud = SERVER.showHud.get();
     showParticles = SERVER.showParticles.get();
+
+    fakeLoot = SERVER.fakeLoot.get();
+    lootSource = SERVER.lootSource.get();
+    lootScaling = SERVER.lootScaling.get();
+    ConfigLoot.parse(SERVER.lootDrops.get());
 
     healthGrowth = SERVER.healthGrowth.get();
     attackGrowth = SERVER.attackGrowth.get();

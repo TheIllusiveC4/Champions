@@ -34,6 +34,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
+import net.minecraft.world.storage.loot.conditions.LootConditionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -59,6 +60,7 @@ import top.theillusivec4.champions.common.affix.core.AffixManager;
 import top.theillusivec4.champions.common.capability.ChampionCapability;
 import top.theillusivec4.champions.common.config.ChampionsConfig;
 import top.theillusivec4.champions.common.item.ChampionEggItem;
+import top.theillusivec4.champions.common.loot.EntityIsChampion;
 import top.theillusivec4.champions.common.network.NetworkHandler;
 import top.theillusivec4.champions.common.rank.RankManager;
 import top.theillusivec4.champions.common.registry.ChampionsRegistry;
@@ -132,6 +134,7 @@ public class Champions {
       }
     };
     DispenserBlock.registerDispenseBehavior(ChampionsRegistry.EGG, dispenseBehavior);
+    LootConditionManager.registerCondition(new EntityIsChampion.Serializer());
   }
 
   private void serverStarting(final FMLServerStartingEvent evt) {

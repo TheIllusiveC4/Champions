@@ -6,4 +6,10 @@ public class ConfigEnums {
     BLACKLIST,
     WHITELIST
   }
+
+  public enum LootSource {
+    CONFIG,
+    LOOT_TABLE,
+    CONFIG_AND_LOOT_TABLE
+  }
 }
