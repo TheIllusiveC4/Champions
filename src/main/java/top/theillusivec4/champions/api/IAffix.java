@@ -59,8 +59,4 @@ public interface IAffix {
   default boolean isCompatible(IAffix affix) {
     return affix != this;
   }
-
-  default int getTier() {
-    return 1;
-  }
 }

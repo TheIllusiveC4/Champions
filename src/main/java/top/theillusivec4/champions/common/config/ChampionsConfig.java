@@ -18,6 +18,7 @@ import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
 import top.theillusivec4.champions.Champions;
+import top.theillusivec4.champions.common.config.AffixesConfig.AffixConfig;
 import top.theillusivec4.champions.common.config.ConfigEnums.LootSource;
 import top.theillusivec4.champions.common.config.ConfigEnums.Permission;
 import top.theillusivec4.champions.common.config.RanksConfig.RankConfig;
@@ -419,11 +420,37 @@ public class ChampionsConfig {
     }
   }
 
-  public static List<RankConfig> ranks;
+  public static final ForgeConfigSpec AFFIXES_SPEC;
+  public static final Affixes AFFIXES;
 
-  public static void transform(CommentedConfig configData) {
+  static {
+    final Pair<Affixes, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder()
+        .configure(Affixes::new);
+    AFFIXES_SPEC = specPair.getRight();
+    AFFIXES = specPair.getLeft();
+  }
+
+  public static class Affixes {
+
+    public AffixesConfig affixes;
+
+    public Affixes(ForgeConfigSpec.Builder builder) {
+      builder.comment("List of affix configurations").define("affixes", new ArrayList<>());
+      builder.build();
+    }
+  }
+
+  public static List<RankConfig> ranks;
+  public static List<AffixConfig> affixes;
+
+  public static void transformRanks(CommentedConfig configData) {
     RANKS.ranks = new ObjectConverter().toObject(configData, RanksConfig::new);
     ranks = RANKS.ranks.ranks;
+  }
+
+  public static void transformAffixes(CommentedConfig configData) {
+    AFFIXES.affixes = new ObjectConverter().toObject(configData, AffixesConfig::new);
+    affixes = AFFIXES.affixes.affixes;
   }
 
   public static int beaconProtectionRange;

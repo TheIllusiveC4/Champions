@@ -2,11 +2,11 @@ package top.theillusivec4.champions.common.util;
 
 import com.google.common.collect.ImmutableSortedMap;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 import net.minecraft.entity.LivingEntity;
@@ -18,6 +18,8 @@ import top.theillusivec4.champions.Champions;
 import top.theillusivec4.champions.api.AffixCategory;
 import top.theillusivec4.champions.api.IAffix;
 import top.theillusivec4.champions.api.IChampion;
+import top.theillusivec4.champions.common.affix.core.AffixManager;
+import top.theillusivec4.champions.common.affix.core.AffixManager.AffixSettings;
 import top.theillusivec4.champions.common.config.ChampionsConfig;
 import top.theillusivec4.champions.common.rank.Rank;
 import top.theillusivec4.champions.common.rank.RankManager;
@@ -48,7 +50,6 @@ public class ChampionBuilder {
 
   public static List<IAffix> createAffixes(final Rank rank, final IChampion champion) {
     int size = rank.getNumAffixes();
-    int tier = rank.getTier();
     List<IAffix> affixesToAdd = new ArrayList<>();
     Map<AffixCategory, List<IAffix>> allAffixes = Champions.API.getCategoryMap();
     Map<AffixCategory, List<IAffix>> validAffixes = new HashMap<>();
@@ -56,38 +57,24 @@ public class ChampionBuilder {
     for (AffixCategory category : Champions.API.getCategories()) {
       validAffixes.put(category, new ArrayList<>());
     }
-    allAffixes.forEach((k, v) -> validAffixes.get(k).addAll(
-        v.stream().filter(affix -> affix.getTier() <= tier && affix.canApply(champion))
-            .collect(Collectors.toList())));
-    double chance = 0.33D;
+    allAffixes.forEach((k, v) -> validAffixes.get(k).addAll(v.stream().filter(affix -> {
+      Optional<AffixSettings> settings = AffixManager.getSettings(affix.getIdentifier());
+      return settings.map(affixSettings -> affixSettings.canApply(champion)).orElse(true) && affix
+          .canApply(champion);
+    }).collect(Collectors.toList())));
+    List<IAffix> randomList = new ArrayList<>();
+    validAffixes.forEach((k, v) -> randomList.addAll(v));
 
-    if (affixesToAdd.size() < size) {
-      List<IAffix> cc = validAffixes.get(AffixCategory.CC);
+    while (randomList.size() > 0 && affixesToAdd.size() < size) {
+      int randomIndex = RAND.nextInt(randomList.size());
+      IAffix randomAffix = randomList.get(randomIndex);
 
-      if (!cc.isEmpty() && RAND.nextDouble() < chance) {
-        Collections.shuffle(cc);
-        affixesToAdd.add(cc.get(0));
+      if (affixesToAdd.stream().allMatch(affix -> affix.isCompatible(randomAffix) && (
+          randomAffix.getCategory() == AffixCategory.OFFENSE || (affix.getCategory() != randomAffix
+              .getCategory())))) {
+        affixesToAdd.add(randomAffix);
       }
-    }
-
-    if (affixesToAdd.size() < size) {
-      List<IAffix> defense = validAffixes.get(AffixCategory.DEFENSE);
-
-      if (!defense.isEmpty() && RAND.nextDouble() < chance) {
-        Collections.shuffle(defense);
-        affixesToAdd.add(defense.get(0));
-      }
-    }
-
-    if (affixesToAdd.size() < size) {
-      List<IAffix> offense = validAffixes.get(AffixCategory.OFFENSE);
-      Collections.shuffle(offense);
-      int index = 0;
-
-      while (index < offense.size() && affixesToAdd.size() < size) {
-        affixesToAdd.add(offense.get(index));
-        index++;
-      }
+      randomList.remove(randomIndex);
     }
     return affixesToAdd;
   }

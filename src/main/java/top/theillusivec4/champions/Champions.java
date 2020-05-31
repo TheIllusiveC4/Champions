@@ -89,6 +89,20 @@ public class Champions {
         LOGGER.error("Error creating default ranks config!");
       }
     }
+    ModLoadingContext.get()
+        .registerConfig(Type.SERVER, ChampionsConfig.AFFIXES_SPEC, "champions-affixes.toml");
+    File defaultAffixes = new File(
+        FMLPaths.GAMEDIR.get() + "/defaultconfigs/champions-affixes.toml");
+
+    if (!defaultAffixes.exists()) {
+      try {
+        FileUtils.copyInputStreamToFile(Objects.requireNonNull(
+            Champions.class.getClassLoader().getResourceAsStream("champions-affixes.toml")),
+            defaultAffixes);
+      } catch (IOException e) {
+        LOGGER.error("Error creating default affixes config!");
+      }
+    }
     IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
     eventBus.addListener(this::config);
     eventBus.addListener(this::setup);
@@ -149,8 +163,11 @@ public class Champions {
         ChampionsConfig.bake();
 
         if (evt.getConfig().getSpec() == ChampionsConfig.RANKS_SPEC) {
-          ChampionsConfig.transform(evt.getConfig().getConfigData());
+          ChampionsConfig.transformRanks(evt.getConfig().getConfigData());
           RankManager.buildRanks();
+        } else if (evt.getConfig().getSpec() == ChampionsConfig.AFFIXES_SPEC) {
+          ChampionsConfig.transformAffixes(evt.getConfig().getConfigData());
+          AffixManager.buildAffixSettings();
         }
       } else if (evt.getConfig().getType() == Type.CLIENT) {
         ClientChampionsConfig.bake();
