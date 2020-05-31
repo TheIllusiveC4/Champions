@@ -54,12 +54,21 @@ public class ChampionBuilder {
     List<IAffix> affixesToAdd = new ArrayList<>();
     Optional<EntitySettings> entitySettings = EntityManager
         .getSettings(champion.getLivingEntity().getType());
-    entitySettings.ifPresent(settings -> {
 
-      if (settings.presetAffixes != null) {
-        affixesToAdd.addAll(settings.presetAffixes);
-      }
-    });
+    if (size > 0) {
+      entitySettings.ifPresent(settings -> {
+
+        if (settings.presetAffixes != null) {
+          affixesToAdd.addAll(settings.presetAffixes);
+        }
+      });
+      rank.getPresetAffixes().forEach(affix -> {
+
+        if (!affixesToAdd.contains(affix)) {
+          affixesToAdd.add(affix);
+        }
+      });
+    }
     Map<AffixCategory, List<IAffix>> allAffixes = Champions.API.getCategoryMap();
     Map<AffixCategory, List<IAffix>> validAffixes = new HashMap<>();
 

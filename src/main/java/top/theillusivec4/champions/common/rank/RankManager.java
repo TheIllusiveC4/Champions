@@ -10,6 +10,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraftforge.registries.ForgeRegistries;
 import top.theillusivec4.champions.Champions;
+import top.theillusivec4.champions.api.IAffix;
 import top.theillusivec4.champions.common.config.ChampionsConfig;
 import top.theillusivec4.champions.common.config.RanksConfig.RankConfig;
 
@@ -37,11 +38,11 @@ public class RankManager {
   }
 
   public static Rank getLowestRank() {
-    return RANKS.firstEntry().getValue();
+    return RANKS.isEmpty() ? EMPTY_RANK : RANKS.firstEntry().getValue();
   }
 
   public static Rank getHighestRank() {
-    return RANKS.lastEntry().getValue();
+    return RANKS.isEmpty() ? EMPTY_RANK : RANKS.lastEntry().getValue();
   }
 
   public static void buildRanks() {
@@ -62,7 +63,8 @@ public class RankManager {
 
   private static Rank getRankFromConfig(RankConfig rank) throws IllegalArgumentException {
     if (rank.tier == null || rank.numAffixes == null || rank.chance == null
-        || rank.defaultColor == null || rank.growthFactor == null || rank.effects == null) {
+        || rank.defaultColor == null || rank.growthFactor == null || rank.effects == null
+        || rank.presetAffixes == null) {
       throw new IllegalArgumentException("Missing rank attribute");
     }
     int tier;
@@ -115,6 +117,11 @@ public class RankManager {
         effects.add(new Tuple<>(found, amplifier));
       }
     });
-    return new Rank(tier, numAffixes, growthFactor, (float) chance, defaultColor, effects);
+
+    List<IAffix> presetAffixes = new ArrayList<>();
+    rank.presetAffixes
+        .forEach(affix -> Champions.API.getAffix(affix).ifPresent(presetAffixes::add));
+    return new Rank(tier, numAffixes, growthFactor, (float) chance, defaultColor, effects,
+        presetAffixes);
   }
 }
