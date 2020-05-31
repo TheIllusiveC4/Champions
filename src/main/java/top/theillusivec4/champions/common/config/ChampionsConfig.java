@@ -21,6 +21,7 @@ import top.theillusivec4.champions.Champions;
 import top.theillusivec4.champions.common.config.AffixesConfig.AffixConfig;
 import top.theillusivec4.champions.common.config.ConfigEnums.LootSource;
 import top.theillusivec4.champions.common.config.ConfigEnums.Permission;
+import top.theillusivec4.champions.common.config.EntitiesConfig.EntityConfig;
 import top.theillusivec4.champions.common.config.RanksConfig.RankConfig;
 
 public class ChampionsConfig {
@@ -440,8 +441,29 @@ public class ChampionsConfig {
     }
   }
 
+  public static final ForgeConfigSpec ENTITIES_SPEC;
+  public static final Entities ENTITIES;
+
+  static {
+    final Pair<Entities, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder()
+        .configure(Entities::new);
+    ENTITIES_SPEC = specPair.getRight();
+    ENTITIES = specPair.getLeft();
+  }
+
+  public static class Entities {
+
+    public EntitiesConfig entities;
+
+    public Entities(ForgeConfigSpec.Builder builder) {
+      builder.comment("List of entity configurations").define("entities", new ArrayList<>());
+      builder.build();
+    }
+  }
+
   public static List<RankConfig> ranks;
   public static List<AffixConfig> affixes;
+  public static List<EntityConfig> entities;
 
   public static void transformRanks(CommentedConfig configData) {
     RANKS.ranks = new ObjectConverter().toObject(configData, RanksConfig::new);
@@ -451,6 +473,11 @@ public class ChampionsConfig {
   public static void transformAffixes(CommentedConfig configData) {
     AFFIXES.affixes = new ObjectConverter().toObject(configData, AffixesConfig::new);
     affixes = AFFIXES.affixes.affixes;
+  }
+
+  public static void transformEntities(CommentedConfig configData) {
+    ENTITIES.entities = new ObjectConverter().toObject(configData, EntitiesConfig::new);
+    entities = ENTITIES.entities.entities;
   }
 
   public static int beaconProtectionRange;

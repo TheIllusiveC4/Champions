@@ -59,7 +59,8 @@ public class ChampionsCommand {
     championsCommand.then(Commands.literal("egg").then(
         Commands.argument("entity", EntitySummonArgument.entitySummon()).suggests(MONSTER_ENTITIES)
             .then(Commands.argument("tier", IntegerArgumentType
-                .integer(RankManager.getLowestTier(), RankManager.getHighestTier())).executes(
+                .integer(RankManager.getLowestRank().getTier(),
+                    RankManager.getHighestRank().getTier())).executes(
                 context -> createEgg(context.getSource(),
                     EntitySummonArgument.getEntityId(context, "entity"),
                     IntegerArgumentType.getInteger(context, "tier"), new ArrayList<>())).then(
@@ -72,7 +73,8 @@ public class ChampionsCommand {
     championsCommand.then(Commands.literal("summon").then(
         Commands.argument("entity", EntitySummonArgument.entitySummon()).suggests(MONSTER_ENTITIES)
             .then(Commands.argument("tier", IntegerArgumentType
-                .integer(RankManager.getLowestTier(), RankManager.getHighestTier())).executes(
+                .integer(RankManager.getLowestRank().getTier(),
+                    RankManager.getHighestRank().getTier())).executes(
                 context -> summon(context.getSource(),
                     EntitySummonArgument.getEntityId(context, "entity"),
                     IntegerArgumentType.getInteger(context, "tier"), new ArrayList<>())).then(
@@ -86,7 +88,8 @@ public class ChampionsCommand {
         Commands.argument("pos", BlockPosArgument.blockPos()).then(
             Commands.argument("entity", EntitySummonArgument.entitySummon())
                 .suggests(MONSTER_ENTITIES).then(Commands.argument("tier", IntegerArgumentType
-                .integer(RankManager.getLowestTier(), RankManager.getHighestTier())).executes(
+                .integer(RankManager.getLowestRank().getTier(),
+                    RankManager.getHighestRank().getTier())).executes(
                 context -> summon(context.getSource(), BlockPosArgument.getBlockPos(context, "pos"),
                     EntitySummonArgument.getEntityId(context, "entity"),
                     IntegerArgumentType.getInteger(context, "tier"), new ArrayList<>())).then(

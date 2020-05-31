@@ -19,6 +19,7 @@
 
 package top.theillusivec4.champions;
 
+import com.electronwill.nightconfig.core.CommentedConfig;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
@@ -35,6 +36,7 @@ import net.minecraft.entity.SpawnReason;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.world.storage.loot.conditions.LootConditionManager;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -64,6 +66,7 @@ import top.theillusivec4.champions.common.loot.EntityIsChampion;
 import top.theillusivec4.champions.common.network.NetworkHandler;
 import top.theillusivec4.champions.common.rank.RankManager;
 import top.theillusivec4.champions.common.registry.ChampionsRegistry;
+import top.theillusivec4.champions.common.util.EntityManager;
 import top.theillusivec4.champions.server.command.ChampionsCommand;
 
 @Mod(Champions.MODID)
@@ -76,33 +79,9 @@ public class Champions {
   public Champions() {
     ModLoadingContext.get().registerConfig(Type.CLIENT, ClientChampionsConfig.CLIENT_SPEC);
     ModLoadingContext.get().registerConfig(Type.SERVER, ChampionsConfig.SERVER_SPEC);
-    ModLoadingContext.get()
-        .registerConfig(Type.SERVER, ChampionsConfig.RANKS_SPEC, "champions-ranks.toml");
-    File defaultRanks = new File(FMLPaths.GAMEDIR.get() + "/defaultconfigs/champions-ranks.toml");
-
-    if (!defaultRanks.exists()) {
-      try {
-        FileUtils.copyInputStreamToFile(Objects.requireNonNull(
-            Champions.class.getClassLoader().getResourceAsStream("champions-ranks.toml")),
-            defaultRanks);
-      } catch (IOException e) {
-        LOGGER.error("Error creating default ranks config!");
-      }
-    }
-    ModLoadingContext.get()
-        .registerConfig(Type.SERVER, ChampionsConfig.AFFIXES_SPEC, "champions-affixes.toml");
-    File defaultAffixes = new File(
-        FMLPaths.GAMEDIR.get() + "/defaultconfigs/champions-affixes.toml");
-
-    if (!defaultAffixes.exists()) {
-      try {
-        FileUtils.copyInputStreamToFile(Objects.requireNonNull(
-            Champions.class.getClassLoader().getResourceAsStream("champions-affixes.toml")),
-            defaultAffixes);
-      } catch (IOException e) {
-        LOGGER.error("Error creating default affixes config!");
-      }
-    }
+    createServerConfig(ChampionsConfig.RANKS_SPEC, "ranks");
+    createServerConfig(ChampionsConfig.AFFIXES_SPEC, "affixes");
+    createServerConfig(ChampionsConfig.ENTITIES_SPEC, "entities");
     IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
     eventBus.addListener(this::config);
     eventBus.addListener(this::setup);
@@ -161,16 +140,37 @@ public class Champions {
 
       if (evt.getConfig().getType() == Type.SERVER) {
         ChampionsConfig.bake();
+        ForgeConfigSpec spec = evt.getConfig().getSpec();
+        CommentedConfig commentedConfig = evt.getConfig().getConfigData();
 
-        if (evt.getConfig().getSpec() == ChampionsConfig.RANKS_SPEC) {
-          ChampionsConfig.transformRanks(evt.getConfig().getConfigData());
+        if (spec == ChampionsConfig.RANKS_SPEC) {
+          ChampionsConfig.transformRanks(commentedConfig);
           RankManager.buildRanks();
-        } else if (evt.getConfig().getSpec() == ChampionsConfig.AFFIXES_SPEC) {
-          ChampionsConfig.transformAffixes(evt.getConfig().getConfigData());
+        } else if (spec == ChampionsConfig.AFFIXES_SPEC) {
+          ChampionsConfig.transformAffixes(commentedConfig);
           AffixManager.buildAffixSettings();
+        } else if (spec == ChampionsConfig.ENTITIES_SPEC) {
+          ChampionsConfig.transformEntities(commentedConfig);
+          EntityManager.buildEntitySettings();
         }
       } else if (evt.getConfig().getType() == Type.CLIENT) {
         ClientChampionsConfig.bake();
+      }
+    }
+  }
+
+  private static void createServerConfig(ForgeConfigSpec spec, String suffix) {
+    String fileName = "champions-" + suffix + ".toml";
+    ModLoadingContext.get().registerConfig(Type.SERVER, spec, fileName);
+    File defaults = new File(FMLPaths.GAMEDIR.get() + "/defaultconfigs/" + fileName);
+
+    if (!defaults.exists()) {
+      try {
+        FileUtils.copyInputStreamToFile(
+            Objects.requireNonNull(Champions.class.getClassLoader().getResourceAsStream(fileName)),
+            defaults);
+      } catch (IOException e) {
+        LOGGER.error("Error creating default config for " + fileName);
       }
     }
   }

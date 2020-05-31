@@ -90,11 +90,14 @@ public class AffixManager {
       this.maxTier = maxTier;
       this.mobList = new ArrayList<>();
 
-      for (String s : mobList) {
-        EntityType<?> type = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(s));
+      if (mobList != null) {
 
-        if (type != null) {
-          this.mobList.add(type);
+        for (String s : mobList) {
+          EntityType<?> type = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(s));
+
+          if (type != null) {
+            this.mobList.add(type);
+          }
         }
       }
       Permission permission = Permission.BLACKLIST;

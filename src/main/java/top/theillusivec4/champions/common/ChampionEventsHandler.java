@@ -301,7 +301,7 @@ public class ChampionEventsHandler {
         }
       });
       serverChampion.getRank().ifPresent(rank -> {
-        if (!evt.isCanceled()) {
+        if (!evt.isCanceled() && evt.getSource().getTrueSource() instanceof PlayerEntity) {
           int messageTier = ChampionsConfig.deathMessageTier;
 
           if (messageTier > 0 && rank.getTier() >= messageTier) {

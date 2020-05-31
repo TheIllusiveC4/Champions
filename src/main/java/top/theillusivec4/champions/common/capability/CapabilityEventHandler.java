@@ -43,7 +43,7 @@ public class CapabilityEventHandler {
         if (!serverChampion.getRank().isPresent()) {
 
           if (!ChampionsConfig.championSpawners && evt.getSpawner() != null) {
-            serverChampion.setRank(RankManager.getEmptyRank());
+            serverChampion.setRank(RankManager.getLowestRank());
           } else {
             ChampionBuilder.spawn(champion);
           }

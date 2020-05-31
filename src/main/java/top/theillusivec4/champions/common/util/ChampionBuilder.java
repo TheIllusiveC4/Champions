@@ -23,6 +23,7 @@ import top.theillusivec4.champions.common.affix.core.AffixManager.AffixSettings;
 import top.theillusivec4.champions.common.config.ChampionsConfig;
 import top.theillusivec4.champions.common.rank.Rank;
 import top.theillusivec4.champions.common.rank.RankManager;
+import top.theillusivec4.champions.common.util.EntityManager.EntitySettings;
 
 public class ChampionBuilder {
 
@@ -51,6 +52,14 @@ public class ChampionBuilder {
   public static List<IAffix> createAffixes(final Rank rank, final IChampion champion) {
     int size = rank.getNumAffixes();
     List<IAffix> affixesToAdd = new ArrayList<>();
+    Optional<EntitySettings> entitySettings = EntityManager
+        .getSettings(champion.getLivingEntity().getType());
+    entitySettings.ifPresent(settings -> {
+
+      if (settings.presetAffixes != null) {
+        affixesToAdd.addAll(settings.presetAffixes);
+      }
+    });
     Map<AffixCategory, List<IAffix>> allAffixes = Champions.API.getCategoryMap();
     Map<AffixCategory, List<IAffix>> validAffixes = new HashMap<>();
 
@@ -59,7 +68,9 @@ public class ChampionBuilder {
     }
     allAffixes.forEach((k, v) -> validAffixes.get(k).addAll(v.stream().filter(affix -> {
       Optional<AffixSettings> settings = AffixManager.getSettings(affix.getIdentifier());
-      return settings.map(affixSettings -> affixSettings.canApply(champion)).orElse(true) && affix
+      return !affixesToAdd.contains(affix) && entitySettings
+          .map(entitySettings1 -> entitySettings1.canApply(affix)).orElse(true) && settings
+          .map(affixSettings -> affixSettings.canApply(champion)).orElse(true) && affix
           .canApply(champion);
     }).collect(Collectors.toList())));
     List<IAffix> randomList = new ArrayList<>();
@@ -82,23 +93,32 @@ public class ChampionBuilder {
   public static Rank createRank(final LivingEntity livingEntity) {
 
     if (!ChampionHelper.checkPotential(livingEntity)) {
-      return RankManager.getEmptyRank();
+      return RankManager.getLowestRank();
     }
-
+    Integer[] tierRange = new Integer[]{null, null};
+    EntityManager.getSettings(livingEntity.getType()).ifPresent(entitySettings -> {
+      tierRange[0] = entitySettings.minTier;
+      tierRange[1] = entitySettings.maxTier;
+    });
     ImmutableSortedMap<Integer, Rank> ranks = RankManager.getRanks();
-    Iterator<Integer> iter = ranks.navigableKeySet().tailSet(ranks.firstKey(), false).iterator();
-    Rank result = ranks.firstEntry().getValue();
+    Integer firstTier = tierRange[0] != null ? tierRange[0] : ranks.firstKey();
+    Iterator<Integer> iter = ranks.navigableKeySet().tailSet(firstTier, false).iterator();
+    Rank result = ranks.get(firstTier);
 
     while (iter.hasNext()) {
       Rank rank = ranks.get(iter.next());
 
       if (RAND.nextFloat() < rank.getChance()) {
         result = rank;
+
+        if (tierRange[1] != null && rank.getTier() >= tierRange[1]) {
+          return result;
+        }
       } else {
         return result;
       }
     }
-    return result;
+    return result != null ? result : RankManager.getLowestRank();
   }
 
   public static void applyGrowth(final LivingEntity livingEntity, int growthFactor) {

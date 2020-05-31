@@ -2,12 +2,9 @@ package top.theillusivec4.champions.common.rank;
 
 import com.google.common.collect.ImmutableSortedMap;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 import java.util.TreeMap;
 import javax.annotation.Nonnull;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.potion.Effect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
@@ -20,7 +17,7 @@ public class RankManager {
 
   private static final TreeMap<Integer, Rank> RANKS = new TreeMap<>();
 
-  private static Rank emptyRank = new Rank();
+  private static final Rank EMPTY_RANK = new Rank();
 
   public static ImmutableSortedMap<Integer, Rank> getRanks() {
     return ImmutableSortedMap.copyOf(RANKS);
@@ -28,16 +25,24 @@ public class RankManager {
 
   @Nonnull
   public static Rank getRank(int tier) {
-    return RANKS.getOrDefault(tier, getEmptyRank());
+    Rank rank = RANKS.get(tier);
+
+    if (rank != null) {
+      return rank;
+    } else if (RANKS.isEmpty()) {
+      return EMPTY_RANK;
+    } else {
+      return RANKS.firstEntry().getValue();
+    }
   }
 
-  public static Rank getEmptyRank() {
-    return emptyRank;
+  public static Rank getLowestRank() {
+    return RANKS.firstEntry().getValue();
   }
 
-  public static Integer getLowestTier() { return RANKS.firstKey(); }
-
-  public static Integer getHighestTier() { return RANKS.lastKey(); }
+  public static Rank getHighestRank() {
+    return RANKS.lastEntry().getValue();
+  }
 
   public static void buildRanks() {
     List<RankConfig> ranks = ChampionsConfig.ranks;
