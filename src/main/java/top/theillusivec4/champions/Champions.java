@@ -79,6 +79,7 @@ public class Champions {
   public static final IChampionsApi API = ChampionsApiImpl.getInstance();
 
   public static boolean scalingHealthLoaded = false;
+  public static boolean gameStagesLoaded = false;
 
   public Champions() {
     ModLoadingContext.get().registerConfig(Type.CLIENT, ClientChampionsConfig.CLIENT_SPEC);
@@ -94,6 +95,7 @@ public class Champions {
     MinecraftForge.EVENT_BUS.addListener(this::serverStarting);
 
     scalingHealthLoaded = ModList.get().isLoaded("scalinghealth");
+    gameStagesLoaded = ModList.get().isLoaded("gamestages");
   }
 
   private void setup(final FMLCommonSetupEvent evt) {

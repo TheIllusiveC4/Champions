@@ -53,10 +53,26 @@ minecraft {
     }
 }
 
+repositories {
+
+    maven {
+        url 'https://maven.blamejared.com/'
+    }
+
+    maven {
+        url 'https://maven.mcmoddev.com/'
+    }
+}
+
 dependencies {
     minecraft "net.minecraftforge:forge:${version_forge}"
+
+    compile fg.deobf("com.blamejared.crafttweaker:CraftTweaker-${version_mc}:${version_crafttweaker}")
+    compile fg.deobf("net.darkhax.gamestages:GameStages-${version_mc}:${version_gamestages}")
     compile fg.deobf("curse.maven:scaling-health:2957518")
+
     runtimeOnly fg.deobf("curse.maven:silent-lib:2783899")
+    runtimeOnly fg.deobf("net.darkhax.bookshelf:Bookshelf-${version_mc}:${version_bookshelf}")
 }
 
 sourceSets {
