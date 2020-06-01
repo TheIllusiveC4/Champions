@@ -86,7 +86,7 @@ public class ChampionsConfig {
     public final DoubleValue infestedPerHealth;
     public final IntValue infestedTotal;
 
-    public final DoubleValue jailingChance;
+    public final DoubleValue paralyzingChance;
 
     public final DoubleValue knockingMultiplier;
 
@@ -309,11 +309,11 @@ public class ChampionsConfig {
 
       builder.pop();
 
-      builder.push("jailing");
+      builder.push("paralyzing");
 
-      jailingChance = builder.comment("The percent chance that an attack will jail targets")
-          .translation(CONFIG_PREFIX + "jailingChance")
-          .defineInRange("jailingChance", 0.2D, 0.0D, 1.0D);
+      paralyzingChance = builder.comment("The percent chance that an attack will paralyze targets")
+          .translation(CONFIG_PREFIX + "paralyzingChance")
+          .defineInRange("paralyzingChance", 0.2D, 0.0D, 1.0D);
 
       builder.pop();
 
@@ -536,7 +536,7 @@ public class ChampionsConfig {
   public static EntityType<?> infestedParasite;
   public static EntityType<?> infestedEnderParasite;
 
-  public static double jailingChance;
+  public static double paralyzingChance;
 
   public static double knockingMultiplier;
 
@@ -613,7 +613,7 @@ public class ChampionsConfig {
         .getValue(new ResourceLocation(SERVER.infestedEnderParasite.get()));
     infestedEnderParasite = type != null ? type : EntityType.ENDERMITE;
 
-    jailingChance = SERVER.jailingChance.get();
+    paralyzingChance = SERVER.paralyzingChance.get();
 
     knockingMultiplier = SERVER.knockingMultiplier.get();
 

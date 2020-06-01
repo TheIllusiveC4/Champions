@@ -19,7 +19,7 @@ public class ParalyzingAffix extends BasicAffix {
   public boolean onAttack(IChampion champion, LivingEntity target, DamageSource source,
       float amount) {
 
-    if (target.getRNG().nextFloat() < ChampionsConfig.jailingChance && !target.isPotionActive(
+    if (target.getRNG().nextFloat() < ChampionsConfig.paralyzingChance && !target.isPotionActive(
         ChampionsRegistry.PARALYSIS)) {
       target.addPotionEffect(new EffectInstance(ChampionsRegistry.PARALYSIS, 60, 0));
     }
