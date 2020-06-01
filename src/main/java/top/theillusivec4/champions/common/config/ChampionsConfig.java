@@ -108,6 +108,8 @@ public class ChampionsConfig {
 
     public final DoubleValue woundingChance;
 
+    public final ConfigValue<List<? extends String>> scalingHealthSpawnModifiers;
+
     public Server(ForgeConfigSpec.Builder builder) {
       builder.push("general");
 
@@ -398,6 +400,15 @@ public class ChampionsConfig {
       builder.pop();
 
       builder.pop();
+
+      builder.push("integrations");
+
+      scalingHealthSpawnModifiers = builder.comment(
+          "Scaling Health\nList of tiers with numbers to multiply spawn rates by difficulty\nFormat: [tier];[percent increase]")
+          .translation(CONFIG_PREFIX + "scalingHealthSpawnModifiers")
+          .defineList("scalingHealthSpawnModifiers", new ArrayList<>(), s -> s instanceof String);
+
+      builder.pop();
     }
   }
 
@@ -547,6 +558,8 @@ public class ChampionsConfig {
 
   public static double woundingChance;
 
+  public static List<? extends String> scalingHealthSpawnModifiers;
+
   public static void bake() {
     beaconProtectionRange = SERVER.beaconProtectionRange.get();
     championSpawners = SERVER.championSpawners.get();
@@ -645,6 +658,8 @@ public class ChampionsConfig {
     reflectiveMinPercent = SERVER.reflectiveMinPercent.get();
 
     woundingChance = SERVER.woundingChance.get();
+
+    scalingHealthSpawnModifiers = SERVER.scalingHealthSpawnModifiers.get();
   }
 }
 

@@ -39,6 +39,7 @@ import net.minecraft.world.storage.loot.conditions.LootConditionManager;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig.ModConfigEvent;
@@ -61,6 +62,7 @@ import top.theillusivec4.champions.client.renderer.ChampionsRenderer;
 import top.theillusivec4.champions.common.affix.core.AffixManager;
 import top.theillusivec4.champions.common.capability.ChampionCapability;
 import top.theillusivec4.champions.common.config.ChampionsConfig;
+import top.theillusivec4.champions.common.integration.scalinghealth.ScalingHealthManager;
 import top.theillusivec4.champions.common.item.ChampionEggItem;
 import top.theillusivec4.champions.common.loot.EntityIsChampion;
 import top.theillusivec4.champions.common.network.NetworkHandler;
@@ -76,6 +78,8 @@ public class Champions {
   public static final Logger LOGGER = LogManager.getLogger();
   public static final IChampionsApi API = ChampionsApiImpl.getInstance();
 
+  public static boolean scalingHealthLoaded = false;
+
   public Champions() {
     ModLoadingContext.get().registerConfig(Type.CLIENT, ClientChampionsConfig.CLIENT_SPEC);
     ModLoadingContext.get().registerConfig(Type.SERVER, ChampionsConfig.SERVER_SPEC);
@@ -88,6 +92,8 @@ public class Champions {
     eventBus.addListener(this::clientSetup);
     eventBus.addListener(this::postSetup);
     MinecraftForge.EVENT_BUS.addListener(this::serverStarting);
+
+    scalingHealthLoaded = ModList.get().isLoaded("scalinghealth");
   }
 
   private void setup(final FMLCommonSetupEvent evt) {
@@ -142,6 +148,10 @@ public class Champions {
         ChampionsConfig.bake();
         ForgeConfigSpec spec = evt.getConfig().getSpec();
         CommentedConfig commentedConfig = evt.getConfig().getConfigData();
+
+        if (scalingHealthLoaded) {
+          ScalingHealthManager.buildModifiers();
+        }
 
         if (spec == ChampionsConfig.RANKS_SPEC) {
           ChampionsConfig.transformRanks(commentedConfig);

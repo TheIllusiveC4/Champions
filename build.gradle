@@ -8,12 +8,14 @@ buildscript {
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
         classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.4.0'
+        classpath 'com.wynprice.cursemaven:CurseMaven:2.1.1'
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'com.matthewprenger.cursegradle'
+apply plugin: 'com.wynprice.cursemaven'
 
-version = "${version_minecraft}-${mod_version}"
+version = "${version_loader}-${mod_version}"
 group = "${mod_group}"
 archivesBaseName = "${mod_id}"
 
@@ -53,6 +55,8 @@ minecraft {
 
 dependencies {
     minecraft "net.minecraftforge:forge:${version_forge}"
+    compile fg.deobf("curse.maven:scaling-health:2957518")
+    runtimeOnly fg.deobf("curse.maven:silent-lib:2783899")
 }
 
 sourceSets {

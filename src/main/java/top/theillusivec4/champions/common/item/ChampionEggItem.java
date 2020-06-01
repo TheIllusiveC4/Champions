@@ -28,6 +28,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -57,6 +58,11 @@ public class ChampionEggItem extends Item {
   public ChampionEggItem() {
     super(new Item.Properties().group(ItemGroup.MISC));
     this.setRegistryName(RegistryReference.EGG);
+  }
+
+  @Override
+  public void fillItemGroup(@Nonnull ItemGroup group, @Nonnull NonNullList<ItemStack> items) {
+    // NO-OP
   }
 
   @Nonnull

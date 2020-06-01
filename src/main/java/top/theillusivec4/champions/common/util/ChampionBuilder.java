@@ -21,6 +21,7 @@ import top.theillusivec4.champions.api.IChampion;
 import top.theillusivec4.champions.common.affix.core.AffixManager;
 import top.theillusivec4.champions.common.affix.core.AffixManager.AffixSettings;
 import top.theillusivec4.champions.common.config.ChampionsConfig;
+import top.theillusivec4.champions.common.integration.scalinghealth.ScalingHealthManager;
 import top.theillusivec4.champions.common.rank.Rank;
 import top.theillusivec4.champions.common.rank.RankManager;
 import top.theillusivec4.champions.common.util.EntityManager.EntitySettings;
@@ -116,8 +117,13 @@ public class ChampionBuilder {
 
     while (iter.hasNext()) {
       Rank rank = ranks.get(iter.next());
+      float chance = rank.getChance();
 
-      if (RAND.nextFloat() < rank.getChance()) {
+      if (Champions.scalingHealthLoaded) {
+        chance += ScalingHealthManager.getSpawnIncrease(rank.getTier(), livingEntity);
+      }
+
+      if (RAND.nextFloat() < chance) {
         result = rank;
 
         if (tierRange[1] != null && rank.getTier() >= tierRange[1]) {
