@@ -22,7 +22,7 @@ archivesBaseName = "${mod_id}"
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 minecraft {
-    mappings channel: 'stable', version: "${version_mcp}".toString()
+    mappings channel: 'snapshot', version: "${version_mcp}".toString()
 
     runs {
         client {
@@ -69,9 +69,9 @@ dependencies {
 
     compile fg.deobf("com.blamejared.crafttweaker:CraftTweaker-${version_mc}:${version_crafttweaker}")
     compile fg.deobf("net.darkhax.gamestages:GameStages-${version_mc}:${version_gamestages}")
-    compile fg.deobf("curse.maven:scaling-health:2957518")
+    compile fg.deobf("curse.maven:scaling-health:2974745")
 
-    runtimeOnly fg.deobf("curse.maven:silent-lib:2783899")
+    runtimeOnly fg.deobf("curse.maven:silent-lib:2979648")
     runtimeOnly fg.deobf("net.darkhax.bookshelf:Bookshelf-${version_mc}:${version_bookshelf}")
 }
 

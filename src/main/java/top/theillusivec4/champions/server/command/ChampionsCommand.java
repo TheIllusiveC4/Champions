@@ -116,13 +116,13 @@ public class ChampionsCommand {
     if (entityType == null) {
       throw UNKNOWN_ENTITY.create(resourceLocation);
     } else {
-      Entity entity = entityType.create(source.func_197023_e(), null, null, null,
+      Entity entity = entityType.create(source.getWorld(), null, null, null,
           pos != null ? pos : new BlockPos(source.getPos()), SpawnReason.COMMAND, false, false);
 
       if (entity instanceof LivingEntity) {
         ChampionCapability.getCapability((LivingEntity) entity).ifPresent(
             champion -> ChampionBuilder.spawnPreset(champion, tier, new ArrayList<>(affixes)));
-        source.func_197023_e().addEntity(entity);
+        source.getWorld().addEntity(entity);
         source.sendFeedback(new TranslationTextComponent("commands.champions.summon.success",
             new TranslationTextComponent("rank.champions.title." + tier).getString() + " " + entity
                 .getDisplayName().getString()), true);

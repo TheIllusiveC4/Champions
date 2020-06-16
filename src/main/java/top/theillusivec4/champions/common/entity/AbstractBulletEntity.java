@@ -13,7 +13,6 @@ import net.minecraft.entity.projectile.ProjectileHelper;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.IPacket;
-import net.minecraft.network.play.server.SSpawnObjectPacket;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
@@ -157,7 +156,8 @@ public abstract class AbstractBulletEntity extends Entity {
       blockpos = (new BlockPos(this)).down();
     } else {
       d0 = (double) this.target.getHeight() * 0.5D;
-      blockpos = new BlockPos(this.target.posX, this.target.posY + d0, this.target.posZ);
+      blockpos = new BlockPos(this.target.getPosX(), this.target.getPosY() + d0,
+          this.target.getPosZ());
     }
     double d1 = (double) blockpos.getX() + 0.5D;
     double d2 = (double) blockpos.getY() + d0;
@@ -204,14 +204,14 @@ public abstract class AbstractBulletEntity extends Entity {
         direction = list.get(this.rand.nextInt(list.size()));
       }
 
-      d1 = this.posX + (double) direction.getXOffset();
-      d2 = this.posY + (double) direction.getYOffset();
-      d3 = this.posZ + (double) direction.getZOffset();
+      d1 = this.getPosX() + (double) direction.getXOffset();
+      d2 = this.getPosY() + (double) direction.getYOffset();
+      d3 = this.getPosZ() + (double) direction.getZOffset();
     }
     this.setDirection(direction);
-    double d6 = d1 - this.posX;
-    double d7 = d2 - this.posY;
-    double d4 = d3 - this.posZ;
+    double d6 = d1 - this.getPosX();
+    double d7 = d2 - this.getPosY();
+    double d4 = d3 - this.getPosZ();
     double d5 = MathHelper.sqrt(d6 * d6 + d7 * d7 + d4 * d4);
 
     if (d5 == 0.0D) {
@@ -289,13 +289,13 @@ public abstract class AbstractBulletEntity extends Entity {
         }
       }
       Vec3d vec3d1 = this.getMotion();
-      this.setPosition(this.posX + vec3d1.x, this.posY + vec3d1.y, this.posZ + vec3d1.z);
+      this.setPosition(this.getPosX() + vec3d1.x, this.getPosY() + vec3d1.y,
+          this.getPosZ() + vec3d1.z);
       ProjectileHelper.rotateTowardsMovement(this, 0.5F);
 
       if (this.world.isRemote) {
-        this.world
-            .addParticle(this.getParticle(), this.posX - vec3d1.x, this.posY - vec3d1.y + 0.15D,
-                this.posZ - vec3d1.z, 0.0D, 0.0D, 0.0D);
+        this.world.addParticle(this.getParticle(), this.getPosX() - vec3d1.x,
+            this.getPosY() - vec3d1.y + 0.15D, this.getPosZ() - vec3d1.z, 0.0D, 0.0D, 0.0D);
       } else if (this.target != null && this.target.isAlive()) {
 
         if (this.steps > 0) {
@@ -343,20 +343,14 @@ public abstract class AbstractBulletEntity extends Entity {
     return 1.0F;
   }
 
-  @Override
-  @OnlyIn(Dist.CLIENT)
-  public int getBrightnessForRender() {
-    return 15728880;
-  }
-
   protected void bulletHit(RayTraceResult result) {
     if (result.getType() == RayTraceResult.Type.ENTITY) {
       Entity entity = ((EntityRayTraceResult) result).getEntity();
       this.bulletEffect(entity);
     } else {
       ((ServerWorld) this.world)
-          .spawnParticle(ParticleTypes.EXPLOSION, this.posX, this.posY, this.posZ, 2, 0.2D, 0.2D,
-              0.2D, 0.0D);
+          .spawnParticle(ParticleTypes.EXPLOSION, this.getPosX(), this.getPosY(), this.getPosZ(), 2,
+              0.2D, 0.2D, 0.2D, 0.0D);
       this.playSound(SoundEvents.ENTITY_SHULKER_BULLET_HIT, 1.0F, 1.0F);
     }
 
@@ -378,8 +372,8 @@ public abstract class AbstractBulletEntity extends Entity {
     if (!this.world.isRemote) {
       this.playSound(SoundEvents.ENTITY_SHULKER_BULLET_HURT, 1.0F, 1.0F);
       ((ServerWorld) this.world)
-          .spawnParticle(ParticleTypes.CRIT, this.posX, this.posY, this.posZ, 15, 0.2D, 0.2D, 0.2D,
-              0.0D);
+          .spawnParticle(ParticleTypes.CRIT, this.getPosX(), this.getPosY(), this.getPosZ(), 15,
+              0.2D, 0.2D, 0.2D, 0.0D);
       this.remove();
     }
     return true;

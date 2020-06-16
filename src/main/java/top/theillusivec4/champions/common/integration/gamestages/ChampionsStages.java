@@ -9,7 +9,7 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 import net.darkhax.gamestages.GameStageHelper;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.server.ServerWorld;
 
@@ -83,7 +83,7 @@ public class ChampionsStages {
     } else if (living.world instanceof ServerWorld) {
       ServerWorld serverWorld = (ServerWorld) living.world;
 
-      for (final PlayerEntity player : serverWorld.getPlayers()) {
+      for (final ServerPlayerEntity player : serverWorld.getPlayers()) {
 
         if (GameStageHelper.hasAllOf(player, stages) && player.getDistance(living) <= 256) {
           return true;

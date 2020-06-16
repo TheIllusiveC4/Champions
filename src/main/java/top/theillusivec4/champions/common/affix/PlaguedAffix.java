@@ -51,9 +51,9 @@ public class PlaguedAffix extends BasicAffix {
       int j2 = l1 >> 8 & 255;
       int j1 = l1 & 255;
       ((ServerWorld) livingEntity.getEntityWorld())
-          .spawnParticle(ParticleTypes.ENTITY_EFFECT, livingEntity.posX + (double) f8,
-              livingEntity.posY, livingEntity.posZ + (double) f9, 0, ((float) i2 / 255.0F),
-              ((float) j2 / 255.0F), ((float) j1 / 255.0F), 1.0F);
+          .spawnParticle(ParticleTypes.ENTITY_EFFECT, livingEntity.getPosX() + (double) f8,
+              livingEntity.getPosY(), livingEntity.getPosZ() + (double) f9, 0,
+              ((float) i2 / 255.0F), ((float) j2 / 255.0F), ((float) j1 / 255.0F), 1.0F);
     }
     livingEntity.removeActivePotionEffect(ChampionsConfig.plaguedEffect.getPotion());
   }

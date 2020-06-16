@@ -1,6 +1,6 @@
 package top.theillusivec4.champions.client.util;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import java.util.Set;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
@@ -29,7 +29,7 @@ public class HUDHelper {
 
         if (num > 0 || affixSet.size() > 0) {
           Minecraft client = Minecraft.getInstance();
-          int i = client.mainWindow.getScaledWidth();
+          int i = client.getMainWindow().getScaledWidth();
           int k = i / 2 - 91;
           int j = 21;
           int xOffset = ClientChampionsConfig.hudXOffset;
@@ -38,11 +38,9 @@ public class HUDHelper {
           float r = (float) ((color >> 16) & 0xFF) / 255f;
           float g = (float) ((color >> 8) & 0xFF) / 255f;
           float b = (float) ((color) & 0xFF) / 255f;
-          GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA,
-              GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE,
-              GlStateManager.DestFactor.ZERO);
-          GlStateManager.enableBlend();
-          GlStateManager.color4f(r, g, b, 1.0F);
+          RenderSystem.defaultBlendFunc();
+          RenderSystem.color4f(r, g, b, 1.0F);
+          RenderSystem.enableBlend();
           client.getTextureManager().bindTexture(GUI_BAR_TEXTURES);
           renderHealthBar(xOffset + k, yOffset + j,
               livingEntity.getHealth() / livingEntity.getMaxHealth());
@@ -77,7 +75,7 @@ public class HUDHelper {
           client.fontRenderer.drawStringWithShadow(name,
               xOffset + (float) (i / 2 - client.fontRenderer.getStringWidth(name) / 2),
               yOffset + (float) (j - 9), color);
-          GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+          RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
           StringBuilder builder = new StringBuilder();
 
           for (String affix : affixSet) {
@@ -89,7 +87,7 @@ public class HUDHelper {
           client.fontRenderer.drawStringWithShadow(affixes,
               xOffset + (float) (i / 2 - client.fontRenderer.getStringWidth(affixes) / 2),
               yOffset + (float) (j + 6), 16777215);
-          GlStateManager.disableBlend();
+          RenderSystem.disableBlend();
           return true;
         }
         return false;

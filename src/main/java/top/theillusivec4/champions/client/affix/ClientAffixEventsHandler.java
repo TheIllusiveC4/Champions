@@ -12,7 +12,7 @@ public class ClientAffixEventsHandler {
 
     if (evt.getPlayer().isPotionActive(ChampionsRegistry.PARALYSIS)) {
       MovementInput input = evt.getMovementInput();
-      input.sneak = false;
+      input.sneaking = false;
       input.jump = false;
       input.moveForward = 0;
       input.moveStrafe = 0;

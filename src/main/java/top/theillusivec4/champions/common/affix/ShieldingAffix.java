@@ -1,5 +1,6 @@
 package top.theillusivec4.champions.common.affix;
 
+import java.util.Random;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
@@ -26,13 +27,14 @@ public class ShieldingAffix extends BasicAffix {
       shielding.mode = !shielding.mode;
       shielding.saveData();
     }
+    Random random = livingEntity.getRNG();
 
     if (shielding.mode) {
       ((ServerWorld) livingEntity.getEntityWorld()).spawnParticle(ParticleTypes.ENTITY_EFFECT,
-          livingEntity.posX + (livingEntity.getRNG().nextFloat() - 0.5D) * livingEntity.getWidth(),
-          livingEntity.posY + livingEntity.getRNG().nextFloat() * livingEntity.getHeight(),
-          livingEntity.posZ + (livingEntity.getRNG().nextFloat() - 0.5D) * livingEntity.getWidth(),
-          0, 1.0F, 1.0F, 1.0F, 1.0F);
+          livingEntity.getPosX() + (random.nextFloat() - 0.5D) * livingEntity.getWidth(),
+          livingEntity.getPosY() + random.nextFloat() * livingEntity.getHeight(),
+          livingEntity.getPosZ() + (random.nextFloat() - 0.5D) * livingEntity.getWidth(), 0, 1.0F,
+          1.0F, 1.0F, 1.0F);
     }
   }
 

@@ -2,7 +2,6 @@ package top.theillusivec4.champions.common.affix;
 
 import java.util.Collections;
 import java.util.List;
-import javax.vecmath.Vector3d;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.Goal;
@@ -62,12 +61,12 @@ public class MagneticAffix extends GoalAffix {
 
     @Override
     public void tick() {
-      double x = mobEntity.posX;
-      double y = mobEntity.posY;
-      double z = mobEntity.posZ;
+      double x = mobEntity.getPosX();
+      double y = mobEntity.getPosY();
+      double z = mobEntity.getPosZ();
       double strength = ChampionsConfig.magneticStrength;
-      Vector3d vec = new Vector3d(x, y, z);
-      vec.sub(new Vector3d(target.posX, target.posY, target.posZ));
+      Vec3d vec = new Vec3d(x, y, z);
+      vec.subtract(new Vec3d(target.getPosX(), target.getPosY(), target.getPosZ()));
       vec.normalize();
       vec.scale(strength);
       target.setMotion(new Vec3d(vec.x, vec.y, vec.z));

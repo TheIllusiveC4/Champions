@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Supplier;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.network.PacketBuffer;
@@ -51,14 +52,18 @@ public class SPacketSyncChampion {
 
   public static void handle(SPacketSyncChampion msg, Supplier<Context> ctx) {
     ctx.get().enqueueWork(() -> {
-      Entity entity = Minecraft.getInstance().world.getEntityByID(msg.entityId);
+      ClientWorld world = Minecraft.getInstance().world;
 
-      if (entity instanceof LivingEntity) {
-        ChampionCapability.getCapability((LivingEntity) entity).ifPresent(champion -> {
-          IChampion.Client clientChampion = champion.getClient();
-          clientChampion.setRank(new Tuple<>(msg.tier, msg.defaultColor));
-          clientChampion.setAffixes(msg.affixes);
-        });
+      if (world != null) {
+        Entity entity = world.getEntityByID(msg.entityId);
+
+        if (entity instanceof LivingEntity) {
+          ChampionCapability.getCapability((LivingEntity) entity).ifPresent(champion -> {
+            IChampion.Client clientChampion = champion.getClient();
+            clientChampion.setRank(new Tuple<>(msg.tier, msg.defaultColor));
+            clientChampion.setAffixes(msg.affixes);
+          });
+        }
       }
     });
     ctx.get().setPacketHandled(true);

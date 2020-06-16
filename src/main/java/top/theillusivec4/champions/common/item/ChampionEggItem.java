@@ -196,7 +196,8 @@ public class ChampionEggItem extends Item {
   }
 
   public static int getColor(ItemStack stack, int tintIndex) {
-    return SpawnEggItem.getEgg(getType(stack).orElse(EntityType.ZOMBIE)).getColor(tintIndex);
+    SpawnEggItem eggItem = SpawnEggItem.getEgg(getType(stack).orElse(EntityType.ZOMBIE));
+    return eggItem != null ? eggItem.getColor(tintIndex) : 0;
   }
 
   public static Optional<EntityType<?>> getType(ItemStack stack) {
@@ -246,7 +247,7 @@ public class ChampionEggItem extends Item {
     CompoundNBT compoundNBT1 = new CompoundNBT();
     compoundNBT1.putInt(TIER_TAG, tier);
     ListNBT listNBT = new ListNBT();
-    affixes.forEach(affix -> listNBT.add(new StringNBT(affix.getIdentifier())));
+    affixes.forEach(affix -> listNBT.add(StringNBT.valueOf(affix.getIdentifier())));
     compoundNBT1.put(AFFIX_TAG, listNBT);
     tag.put(CHAMPION_TAG, compoundNBT1);
     stack.setTag(tag);

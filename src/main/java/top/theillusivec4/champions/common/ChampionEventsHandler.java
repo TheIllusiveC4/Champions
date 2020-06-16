@@ -82,9 +82,11 @@ public class ChampionEventsHandler {
               .withParameter(LootParameters.LAST_DAMAGE_PLAYER, (PlayerEntity) attackingEntity)
               .withLuck(((PlayerEntity) attackingEntity).getLuck());
         }
-        lootTable.generate(lootcontext$builder.build(LootParameterSets.ENTITY), stack -> {
-          ItemEntity itemEntity = new ItemEntity(serverWorld, livingEntity.posX, livingEntity.posY,
-              livingEntity.posZ, stack);
+        List<ItemStack> stacks = lootTable
+            .generate(lootcontext$builder.build(LootParameterSets.ENTITY));
+        stacks.forEach(stack -> {
+          ItemEntity itemEntity = new ItemEntity(serverWorld, livingEntity.getPosX(),
+              livingEntity.getPosY(), livingEntity.getPosZ(), stack);
           itemEntity.setDefaultPickupDelay();
           evt.getDrops().add(itemEntity);
         });
@@ -96,8 +98,8 @@ public class ChampionEventsHandler {
 
         if (!loot.isEmpty()) {
           loot.forEach(stack -> {
-            ItemEntity itemEntity = new ItemEntity(serverWorld, livingEntity.posX,
-                livingEntity.posY, livingEntity.posZ, stack);
+            ItemEntity itemEntity = new ItemEntity(serverWorld, livingEntity.getPosX(),
+                livingEntity.getPosY(), livingEntity.getPosZ(), stack);
             itemEntity.setDefaultPickupDelay();
             evt.getDrops().add(itemEntity);
           });
@@ -177,11 +179,11 @@ public class ChampionEventsHandler {
             float g = (float) ((color >> 8) & 0xFF) / 255f;
             float b = (float) ((color) & 0xFF) / 255f;
             ((ServerWorld) livingEntity.getEntityWorld()).spawnParticle(ChampionsRegistry.RANK,
-                livingEntity.posX
+                livingEntity.getPosX()
                     + (livingEntity.getRNG().nextDouble() - 0.5D) * (double) livingEntity
                     .getWidth(),
-                livingEntity.posY + livingEntity.getRNG().nextDouble() * livingEntity.getHeight(),
-                livingEntity.posZ
+                livingEntity.getPosY() + livingEntity.getRNG().nextDouble() * livingEntity
+                    .getHeight(), livingEntity.getPosZ()
                     + (livingEntity.getRNG().nextDouble() - 0.5D) * (double) livingEntity
                     .getWidth(), 0, r, g, b, 1);
           }

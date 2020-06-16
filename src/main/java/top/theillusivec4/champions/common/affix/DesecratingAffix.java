@@ -57,7 +57,7 @@ public class DesecratingAffix extends GoalAffix {
         this.attackTime =
             ChampionsConfig.desecratingCloudInterval * 20 + this.mobEntity.getRNG().nextInt(5) * 10;
         AreaEffectCloudEntity cloud = new AreaEffectCloudEntity(target.getEntityWorld(),
-            target.posX, target.posY, target.posZ);
+            target.getPosX(), target.getPosY(), target.getPosZ());
         cloud.setOwner(this.mobEntity);
         cloud.setRadius((float) ChampionsConfig.desecratingCloudRadius);
         cloud.setDuration(ChampionsConfig.desecratingCloudDuration * 20);
