@@ -124,5 +124,10 @@ curseforge {
         changelogType = 'markdown'
         changelog = file('docs/CHANGELOG.md')
         addArtifact(sourcesJar)
+        relations {
+            optionalDependency 'game-stages'
+            optionalDependency 'scaling-health'
+            optionalDependency 'crafttweaker'
+        }
     }
 }
