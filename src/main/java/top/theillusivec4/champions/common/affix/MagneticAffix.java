@@ -65,11 +65,10 @@ public class MagneticAffix extends GoalAffix {
       double y = mobEntity.getPosY();
       double z = mobEntity.getPosZ();
       double strength = ChampionsConfig.magneticStrength;
-      Vec3d vec = new Vec3d(x, y, z);
-      vec.subtract(new Vec3d(target.getPosX(), target.getPosY(), target.getPosZ()));
-      vec.normalize();
-      vec.scale(strength);
-      target.setMotion(new Vec3d(vec.x, vec.y, vec.z));
+      Vec3d vec = new Vec3d(x, y, z)
+          .subtract(new Vec3d(target.getPosX(), target.getPosY(), target.getPosZ())).normalize()
+          .scale(strength);
+      target.setMotion(vec);
 
       if (target instanceof PlayerEntity) {
         ((PlayerEntity) target).velocityChanged = true;
