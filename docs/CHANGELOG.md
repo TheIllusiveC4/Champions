@@ -7,6 +7,7 @@ This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 ## [1.0.11.9] - 2020.07.20
 ### Added
 - Added client config option for name renders [#53](https://github.com/TheIllusiveC4/Champions/issues/53)
+- Chinese localization (thanks Minecraft-Prayer!)
 
 ## [1.0.11.8] - 2020.05.08
 ### Changed
