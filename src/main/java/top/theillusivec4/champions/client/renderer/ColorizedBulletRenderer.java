@@ -1,7 +1,6 @@
 package top.theillusivec4.champions.client.renderer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import javax.annotation.Nonnull;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -54,18 +53,15 @@ public class ColorizedBulletRenderer extends EntityRenderer<AbstractBulletEntity
     float r = (float) ((this.color >> 16) & 0xFF) / 255F;
     float g = (float) ((this.color >> 8) & 0xFF) / 255F;
     float b = (float) ((this.color) & 0xFF) / 255F;
-    RenderSystem.color4f(r, g, b, 0.5F);
     matrixStack.scale(-0.5F, -0.5F, 0.5F);
     this.model.setRotationAngles(entity, 0.0F, 0.0F, 0.0F, lvt_7_1_, lvt_8_1_);
     IVertexBuilder lvt_10_1_ = buffer.getBuffer(this.model.getRenderType(GENERIC_SPARK_TEXTURE));
     this.model
-        .render(matrixStack, lvt_10_1_, packedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F,
-            1.0F);
+        .render(matrixStack, lvt_10_1_, packedLight, OverlayTexture.NO_OVERLAY, r, g, b, 0.5F);
     matrixStack.scale(1.5F, 1.5F, 1.5F);
     IVertexBuilder lvt_11_1_ = buffer.getBuffer(renderType);
     this.model
-        .render(matrixStack, lvt_11_1_, packedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F,
-            0.15F);
+        .render(matrixStack, lvt_11_1_, packedLight, OverlayTexture.NO_OVERLAY, r, g, b, 0.15F);
     matrixStack.pop();
     super.render(entity, entityYaw, partialTicks, matrixStack, buffer, packedLight);
   }
