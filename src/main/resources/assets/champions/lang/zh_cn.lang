@@ -1,0 +1,283 @@
+champions.identifier=强敌
+
+#################
+#    Affixes    #
+#################
+champions.affix.shielding=防护
+champions.affix.molten=熔融
+champions.affix.reflecting=反射
+champions.affix.vortex=漩涡
+champions.affix.dampening=抑制
+champions.affix.infested=感染
+champions.affix.jailer=狱卒
+champions.affix.arctic=极寒
+champions.affix.cinder=灰烬
+champions.affix.desecrator=亵渎者
+champions.affix.hasty=急速
+champions.affix.lively=活力
+champions.affix.plagued=瘟疫
+champions.affix.adaptable=适应
+champions.affix.scrapper=重击
+champions.affix.knockback=泰坦
+
+#################
+#    Effects    #
+#################
+champions.jailed=囚禁
+champions.plague=瘟疫
+champions.injured=易伤
+champions.immune=免伤
+
+death.attack.reflecting=%1$s遭报应了
+
+#################
+#     Items     #
+#################
+item.champions.champion_egg.name=生成强敌
+champions.champion_egg.tooltip.tier=%d级
+
+#################
+#    Config     #
+#################
+champions.general.hideeffects=隐藏强敌效果
+champions.general.hideeffects.tooltip=设置是否隐藏强敌粒子和 HUD 效果
+champions.general.championspawners=强敌生物从刷怪笼中生成
+champions.general.championspawners.tooltip=设置强敌生物是否可以从刷怪笼中生成
+champions.general.dimensionpermission=维度设置模式
+champions.general.dimensionpermission.tooltip=设置维度配置是黑名单还是白名单
+champions.general.dimensionlist=维度列表
+champions.general.dimensionlist.tooltip=设置哪些维度（列出维度ID）作为强敌生物的黑名单或白名单，留空以禁用此选项
+champions.general.mobpermission=生物设置模式
+champions.general.mobpermission.tooltip=设置生物配置是黑名单或白名单
+champions.general.moblist=生物列表
+champions.general.moblist.tooltip=设置哪些生物作为强敌生物 的黑名单或白名单，留空以禁用此选项
+champions.general.championslist=强敌生物列表
+champions.general.championslist.tooltip=列表中的生物将总是作为强敌生成
+champions.general.lootsource=战利品来源
+champions.general.lootsource.tooltip=设置强敌生物 掉落战利品是从战利品表还是 CONFIG 中选择，或两者一起
+champions.general.lootdrops=战利品掉落
+champions.general.lootdrops.tooltip=如果战利品表来源被设为 CONFIG，将使用这里列出的内容作为战利品来源。格式是：级别;modid:物品名;元数据;掉落数;附魔(true/false);权重
+champions.general.lootscaling=根据等级掉落战利品
+champions.general.lootscaling.tooltip=设置如果 战利品来源处于 CONFIG 状态下，战利品掉落数是否与等级挂钩
+champions.general.lootfake=虚拟玩家掉落战利品
+champions.general.lootfake.tooltip=如果虚拟玩家能使强敌掉落战利品，则为 True，否则为 False
+champions.general.championnames=附加的强敌名称
+champions.general.championnames.tooltip=额外添加的名称将会被添加至池内，用来命名强敌
+champions.general.championnamesuffixes=附加的强敌后缀名称
+champions.general.championnamesuffixes.tooltip=额外添加的后缀名称将会被添加至池内，用来命名强敌
+champions.general.beaconrange=信标保护范围
+champions.general.beaconrange.tooltip=一个激活的信标将会在一定范围内阻止强敌生成，如为 0 则禁用该功能
+champions.general.deathmessagetier=死亡信息等级
+champions.general.deathmessagetier.tooltip=这个级别（及以上）的强敌在死亡后会发出死亡信息，如为 0 则禁用该功能
+
+champions.general.affix=词缀设置
+champions.general.affix.tooltip=设置每个词缀的效果
+champions.general.affix.abilityrange=最大能力范围
+champions.general.affix.abilityrange.tooltip=设置怪物可以对目标使用技能的最大距离，如为 0 则禁用该功能
+
+champions.general.affix.adaptable=适应
+champions.general.affix.adaptable.tooltip=设置“适应”词缀
+champions.general.affix.adaptable.damagereductionincrement=伤害减免增量
+champions.general.affix.adaptable.damagereductionincrement.tooltip=每次受到相同伤害类型的连击时增加的伤害抗性
+champions.general.affix.adaptable.maxdamagereduction=最大伤害减免
+champions.general.affix.adaptable.maxdamagereduction.tooltip=伤害减免的上限值
+
+champions.general.affix.arctic=极寒
+champions.general.affix.arctic.tooltip=设置“极寒”词缀
+champions.general.affix.arctic.attackinterval=攻击间隔
+champions.general.affix.arctic.attackinterval.tooltip=强敌将会多久发射一次射弹（以 tick 为单位）
+
+champions.general.affix.cinder=灰烬
+champions.general.affix.cinder.tooltip=设置“灰烬词缀”
+champions.general.affix.cinder.attackinterval=攻击间隔
+champions.general.affix.cinder.attackinterval.tooltip=强敌将会多久发射一次射弹（以 tick 为单位）
+
+champions.general.affix.dampening=抑制
+champions.general.affix.dampening.tooltip=设置“抑制”词缀
+champions.general.affix.dampening.damagereduction=伤害减免
+champions.general.affix.dampening.damagereduction.tooltip=对间接攻击的伤害减免量
+
+champions.general.affix.desecrator=亵渎
+champions.general.affix.desecrator.tooltip=设置“亵渎”词缀
+champions.general.affix.desecrator.attackinterval=攻击间隔
+champions.general.affix.desecrator.attackinterval.tooltip=强敌将会多久制造一次伤害云（以 tick 为单位）
+champions.general.affix.desecrator.activationticks=伤害云激活时间
+champions.general.affix.desecrator.activationticks.tooltip=伤害云放置后需要多少 tick 来激活
+champions.general.affix.desecrator.cloudradius=伤害云半径
+champions.general.affix.desecrator.cloudradius.tooltip=伤害云的半径
+champions.general.affix.desecrator.cloudduration=伤害云持续时间
+champions.general.affix.desecrator.cloudduration.tooltip=伤害云会持续多少 tick 
+
+champions.general.affix.hasty=急速
+champions.general.affix.hasty.tooltip=设置“急速”词缀
+champions.general.affix.hasty.movementbonus=移速奖励
+champions.general.affix.hasty.movementbonus.tooltip=在原基础上增加多少移动速度
+
+champions.general.affix.infested=感染
+champions.general.affix.infested.tooltip=设置“感染”词缀
+champions.general.affix.infested.silverfishamount=蠹虫生成量
+champions.general.affix.infested.silverfishamount.tooltip=每隔一段时间生成多少蠹虫
+champions.general.affix.infested.silverfishinterval=蠹虫生成间隔
+champions.general.affix.infested.silverfishinterval.tooltip=每多少 tick 生成一群蠹虫
+champions.general.affix.infested.silverfishperhealth=每点生命有多少蠹虫
+champions.general.affix.infested.silverfishperhealth.tooltip=强敌每点生命能够感染多少蠹虫
+champions.general.affix.infested.silverfishtotal=蠹虫总数
+champions.general.affix.infested.silverfishtotal.tooltip=一个强敌最多能够容纳多少蠹虫
+
+champions.general.affix.jailer=狱卒
+champions.general.affix.jailer.tooltip=设置“狱卒”词缀
+champions.general.affix.jailer.chance=触发几率
+champions.general.affix.jailer.chance.tooltip=每次攻击将目标造成“囚禁”效果的几率
+
+champions.general.affix.knockback=泰坦
+champions.general.affix.knockback.tooltip=设置“泰坦”词缀
+champions.general.affix.knockback.multiplier=击退倍数
+champions.general.affix.knockback.multiplier.tooltip=这个倍数会用于乘以击退强度
+
+champions.general.affix.lively=活力
+champions.general.affix.lively.tooltip=设置“活力”前缀
+champions.general.affix.lively.healamount=治疗量
+champions.general.affix.lively.healamount.tooltip=每秒钟恢复的生命值
+champions.general.affix.lively.passivemultiplier=脱战治疗倍数
+champions.general.affix.lively.passivemultiplier.tooltip=没有攻击目标时生命恢复的倍数
+champions.general.affix.lively.cooldown=受击后冷却时间
+champions.general.affix.lively.cooldown.tooltip=受到攻击后多久后才开始恢复生命（以秒为单位）
+
+champions.general.affix.molten=熔融
+champions.general.affix.molten.tooltip=设置“熔融”词缀
+champions.general.affix.molten.waterresistant=防水
+champions.general.affix.molten.waterresistant=强敌是否会被水伤害
+
+champions.general.affix.plagued=瘟疫
+champions.general.affix.plagued.tooltip=设置“瘟疫”词缀
+champions.general.affix.plagued.duration=瘟疫持续时间
+champions.general.affix.plagued.duration.tooltip=瘟疫状态效果的持续时间（以 tick 为单位）
+champions.general.affix.plagued.infectpotion=状态效果
+champions.general.affix.plagued.infectpotion.tooltip=由瘟疫带来的药水效果
+champions.general.affix.plagued.infectduration=状态时间
+champions.general.affix.plagued.infectduration.tooltip=由瘟疫带来药水效果的持续时间（以 tick 为单位）
+champions.general.affix.plagued.infectpower=状态等级
+champions.general.affix.plagued.infectpower.tooltip=由瘟疫带来的药水效果的等级（基础：1）
+champions.general.affix.plagued.infectrange=传播范围
+champions.general.affix.plagued.infectrange.tooltip=瘟疫能够传播的半径范围
+
+champions.general.affix.reflecting=反射
+champions.general.affix.reflecting.tooltip=设置“反射”词缀
+champions.general.affix.reflecting.minimumperc=最小伤害百分比
+champions.general.affix.reflecting.minimumperc.tooltip=反弹伤害最小的百分比
+champions.general.affix.reflecting.maximumperc=最大伤害百分比
+champions.general.affix.reflecting.maximumperc.tooltip=反弹伤害的最大百分比
+champions.general.affix.reflecting.maxdamage=最大伤害
+champions.general.affix.reflecting.maxdamage.tooltip=最大的反弹伤害
+champions.general.affix.reflecting.killingblow=启用致命一击
+champions.general.affix.reflecting.killingblow.tooltip=设置反弹伤害是否致命
+
+champions.general.affix.scrapper=重击
+champions.general.affix.scrapper.tooltip=设置“重击”词缀
+champions.general.affix.scrapper.chance=触发几率
+champions.general.affix.scrapper.chance.tooltip=每次攻击将目标造成“易伤”效果的概率
+
+champions.general.affix.vortex=旋涡
+champions.general.affix.vortex.tooltip=设置“旋涡”词缀
+champions.general.affix.vortex.strength=涡流强度
+champions.general.affix.vortex.strength.tooltip=涡流拉动效果的力量
+
+champions.general.client=客户端设置
+champions.general.client.tooltip=仅为客户端的设置
+champions.general.client.colors=等级颜色
+champions.general.client.colors.tooltip=颜色列表，每个等级对应一个颜色
+champions.general.client.xoffset=生命条水平偏移量
+champions.general.client.xoffset.tooltip=强敌的血条在X轴的偏移量
+champions.general.client.yoffset=生命条垂直偏移量
+champions.general.client.yoffset.tooltip=强敌的血条在Y轴的偏移量
+champions.general.client.healthvisibility=生命条的可视范围
+champions.general.client.healthvisibility.tooltip=可以看见血条的距离，以方块为单位
+
+champions.general.growth=成长设置
+champions.general.growth.tooltip=影响强敌生物 成长速度的设置
+champions.general.growth.health=生命
+champions.general.growth.health.tooltip=这个成长系数影响了生命值的增长速度
+champions.general.growth.attackdamage=攻击伤害
+champions.general.growth.attackdamage.tooltip=这个成长系数影响了攻击伤害的增长速度
+champions.general.growth.armor=护甲值
+champions.general.growth.armor.tooltip=这个成长系数影响了护甲值的增长速度
+champions.general.growth.armortoughness=盔甲韧性
+champions.general.growth.armortoughness.tooltip=这个成长系数影响了盔甲韧性的增长速度
+champions.general.growth.knockbackresist=击退抗性
+champions.general.growth.knockbackresist.tooltip=这个成长系数影响了击退抗性的增长速度
+champions.general.growth.exp=经验值
+champions.general.growth.exp.tooltip=这个成长系数影响了经验值的增长速度
+champions.general.growth.creeperstrength=爬行者爆炸强度
+champions.general.growth.creeperstrength.tooltip=爬行者的爆炸强度将是该数字乘以其等级，而不是成长系数
+
+champions.general.scalinghealth=Scaling Health 联动
+champions.general.scalinghealth.tooltip=与 Scaling Health 模组联动的相关设置
+champions.general.scalinghealth.spawnmodifiers=修改等级生成率
+champions.general.scalinghealth.spawnmodifiers.tooltip=难度修改生成率的等级列表（即“1;0.02”意为每一级难度为等级 1 增加 2% 的生成率）。注意，等级的生成几率是累计的，因此增加低等级的生成率也会增加高等级的生成率。
+
+#################
+#     Names     #
+#################
+champions.prefix.0=尼鲁斯
+champions.prefix.1=萨伦
+champions.prefix.2=因费特思
+champions.prefix.3=吉尔伽美什
+champions.prefix.4=斯歌达奇
+champions.prefix.5=格鲁特
+champions.prefix.6=迪卢木多
+champions.prefix.7=兰斯洛特
+champions.prefix.8=马布
+champions.prefix.9=雷吉恩
+champions.prefix.10=墨丘利
+champions.prefix.11=埃力格
+champions.prefix.12=纳西索斯
+champions.prefix.13=莫洛克
+champions.prefix.14=纳什纳
+champions.prefix.15=宾迫特
+champions.prefix.16=君主
+champions.prefix.17=先驱
+champions.prefix.18=德拉卡
+champions.prefix.19=加拉克
+champions.prefix.20=艾耶尔
+champions.prefix.21=肖敏
+champions.prefix.22=阿卡蒙
+champions.prefix.23=格里塞尔
+
+champions.suffix.0=被遗忘之人
+champions.suffix.1=上帝
+champions.suffix.2=，行走绞肉机
+champions.suffix.3=蒙羞者
+champions.suffix.4=毁灭者
+champions.suffix.5=受难者
+champions.suffix.6=，摧梦者
+champions.suffix.7=，饮血者
+champions.suffix.8=，夜行者
+champions.suffix.9=悲哀商人
+champions.suffix.10=捕梦者
+champions.suffix.11=碎颅者
+champions.suffix.12=，胆怯的吞噬者
+champions.suffix.13=忧虑歌手
+champions.suffix.14=通过血液散播之人
+champions.suffix.15=，终末使者
+champions.suffix.16=无情之人
+champions.suffix.17=游荡的梦魇
+champions.suffix.18=拆骨者
+champions.suffix.19=，灵魂吞噬者
+champions.suffix.20=虚伪者
+champions.suffix.21=引人生恨者
+champions.suffix.22=杀戮之影
+champions.suffix.23=血液抽取者
+
+#################
+#    Command    #
+#################
+champions.commands.spawnchampion.usage=/spawnchampion <实体> <等级> [词缀]...
+champions.commands.spawnchampion.entityError=%s不是一个有效的生物
+champions.commands.spawnchampion.tierError=%s不是一个有效的等级
+champions.commands.spawnchampion.affixError=%s不是一个有效的词缀名称
+champions.commands.spawnchampion.success=已经在%s生成战士
+
+champions.commands.spawnchampionat.usage=/spawnchampionat <x> <y> <z> <实体> <等级> [词缀]……
+
+champions.commands.championegg.usage=/championegg <entity> <tier> [affixes]...
+champions.commands.championegg.success=已将给予%s强敌刷怪蛋
