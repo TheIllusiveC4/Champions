@@ -402,6 +402,10 @@ public class ConfigHandler {
         @Name("Health Bar Visibility Range")
         @Comment("The distance, in blocks, from which the health bar can be seen")
         public int healthVisibility = 50;
+
+        @Name("Name Visibility")
+        @Comment("Set to true to render the names of the champions")
+        public boolean nameVisibility = true;
     }
 
     public static class ScalingHealth {
