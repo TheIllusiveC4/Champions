@@ -25,7 +25,7 @@ public class ChampionsStages {
     });
   }
 
-  public static void addStage(String entity, String stage, int dimension) {
+  public static void addStage(String entity, String stage, String dimension) {
     ENTITY_STAGE_INFO.merge(entity, new Info(stage, dimension), (k, v) -> {
       v.addStage(stage, dimension);
       return v;
@@ -39,7 +39,7 @@ public class ChampionsStages {
     });
   }
 
-  public static void addTierStage(int tier, String stage, int dimension) {
+  public static void addTierStage(int tier, String stage, String dimension) {
     TIER_STAGE_INFO.merge(tier, new Info(stage, dimension), (k, v) -> {
       v.addStage(stage);
       return v;
@@ -69,7 +69,7 @@ public class ChampionsStages {
   }
 
   private static boolean hasRequiredStages(@Nonnull Info info, @Nonnull LivingEntity living) {
-    int dimension = living.dimension.getId();
+    String dimension = living.getEntityWorld().func_234922_V_().getRegistryName().toString();
     Set<String> stages;
 
     if (info.dimensionalStages.containsKey(dimension)) {
@@ -95,14 +95,14 @@ public class ChampionsStages {
 
   public static class Info {
 
-    Map<Integer, Set<String>> dimensionalStages = new HashMap<>();
+    Map<String, Set<String>> dimensionalStages = new HashMap<>();
     Set<String> globalStages = new HashSet<>();
 
     Info(String stage) {
       addStage(stage);
     }
 
-    Info(String stage, int dimension) {
+    Info(String stage, String dimension) {
       addStage(stage, dimension);
     }
 
@@ -110,7 +110,7 @@ public class ChampionsStages {
       this.globalStages.add(stage);
     }
 
-    void addStage(String stage, int dimension) {
+    void addStage(String stage, String dimension) {
       this.dimensionalStages
           .merge(dimension, new HashSet<>(Collections.singleton(stage)), (k, v) -> {
             v.add(stage);

@@ -35,9 +35,11 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
-import net.minecraft.world.storage.loot.conditions.LootConditionManager;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -47,7 +49,6 @@ import net.minecraftforge.fml.config.ModConfig.Type;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.commons.io.FileUtils;
@@ -62,7 +63,6 @@ import top.theillusivec4.champions.client.renderer.ChampionsRenderer;
 import top.theillusivec4.champions.common.affix.core.AffixManager;
 import top.theillusivec4.champions.common.capability.ChampionCapability;
 import top.theillusivec4.champions.common.config.ChampionsConfig;
-import top.theillusivec4.champions.common.integration.scalinghealth.ScalingHealthManager;
 import top.theillusivec4.champions.common.item.ChampionEggItem;
 import top.theillusivec4.champions.common.loot.EntityIsChampion;
 import top.theillusivec4.champions.common.network.NetworkHandler;
@@ -78,7 +78,6 @@ public class Champions {
   public static final Logger LOGGER = LogManager.getLogger();
   public static final IChampionsApi API = ChampionsApiImpl.getInstance();
 
-  public static boolean scalingHealthLoaded = false;
   public static boolean gameStagesLoaded = false;
 
   public Champions() {
@@ -92,16 +91,19 @@ public class Champions {
     eventBus.addListener(this::setup);
     eventBus.addListener(this::clientSetup);
     eventBus.addListener(this::postSetup);
-    MinecraftForge.EVENT_BUS.addListener(this::serverStarting);
+    MinecraftForge.EVENT_BUS.addListener(this::registerCommands);
 
-    scalingHealthLoaded = ModList.get().isLoaded("scalinghealth");
     gameStagesLoaded = ModList.get().isLoaded("gamestages");
   }
 
+  @SuppressWarnings("deprecation")
   private void setup(final FMLCommonSetupEvent evt) {
     ChampionCapability.register();
     NetworkHandler.register();
     AffixManager.register();
+    net.minecraftforge.fml.DeferredWorkQueue.runLater(() -> Registry
+        .register(Registry.field_239704_ba_,
+            new ResourceLocation(Champions.MODID, "entity_champion"), EntityIsChampion.type));
   }
 
   private void clientSetup(final FMLClientSetupEvent evt) {
@@ -135,11 +137,10 @@ public class Champions {
       }
     };
     DispenserBlock.registerDispenseBehavior(ChampionsRegistry.EGG, dispenseBehavior);
-    LootConditionManager.registerCondition(new EntityIsChampion.Serializer());
   }
 
-  private void serverStarting(final FMLServerStartingEvent evt) {
-    ChampionsCommand.register(evt.getCommandDispatcher());
+  private void registerCommands(final RegisterCommandsEvent evt) {
+    ChampionsCommand.register(evt.getDispatcher());
   }
 
   private void config(final ModConfigEvent evt) {
@@ -150,10 +151,6 @@ public class Champions {
         ChampionsConfig.bake();
         ForgeConfigSpec spec = evt.getConfig().getSpec();
         CommentedConfig commentedConfig = evt.getConfig().getConfigData();
-
-        if (scalingHealthLoaded) {
-          ScalingHealthManager.buildModifiers();
-        }
 
         if (spec == ChampionsConfig.RANKS_SPEC) {
           ChampionsConfig.transformRanks(commentedConfig);

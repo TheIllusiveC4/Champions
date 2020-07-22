@@ -27,14 +27,12 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import top.theillusivec4.champions.Champions;
 import top.theillusivec4.champions.api.IAffix;
 import top.theillusivec4.champions.common.capability.ChampionCapability;
 import top.theillusivec4.champions.common.item.ChampionEggItem;
-import top.theillusivec4.champions.common.rank.RankManager;
 import top.theillusivec4.champions.common.registry.ChampionsRegistry;
 import top.theillusivec4.champions.common.util.ChampionBuilder;
 
@@ -52,15 +50,13 @@ public class ChampionsCommand {
       type -> new TranslationTextComponent("command.champions.egg.unknown_entity", type));
 
   public static void register(CommandDispatcher<CommandSource> dispatcher) {
-    final int opPermissionLevel = ServerLifecycleHooks.getCurrentServer().getOpPermissionLevel();
+    final int opPermissionLevel = 2;
     LiteralArgumentBuilder<CommandSource> championsCommand = Commands.literal("champions")
         .requires(player -> player.hasPermissionLevel(opPermissionLevel));
 
     championsCommand.then(Commands.literal("egg").then(
         Commands.argument("entity", EntitySummonArgument.entitySummon()).suggests(MONSTER_ENTITIES)
-            .then(Commands.argument("tier", IntegerArgumentType
-                .integer(RankManager.getLowestRank().getTier(),
-                    RankManager.getHighestRank().getTier())).executes(
+            .then(Commands.argument("tier", IntegerArgumentType.integer()).executes(
                 context -> createEgg(context.getSource(),
                     EntitySummonArgument.getEntityId(context, "entity"),
                     IntegerArgumentType.getInteger(context, "tier"), new ArrayList<>())).then(
@@ -72,9 +68,7 @@ public class ChampionsCommand {
 
     championsCommand.then(Commands.literal("summon").then(
         Commands.argument("entity", EntitySummonArgument.entitySummon()).suggests(MONSTER_ENTITIES)
-            .then(Commands.argument("tier", IntegerArgumentType
-                .integer(RankManager.getLowestRank().getTier(),
-                    RankManager.getHighestRank().getTier())).executes(
+            .then(Commands.argument("tier", IntegerArgumentType.integer()).executes(
                 context -> summon(context.getSource(),
                     EntitySummonArgument.getEntityId(context, "entity"),
                     IntegerArgumentType.getInteger(context, "tier"), new ArrayList<>())).then(
@@ -87,18 +81,18 @@ public class ChampionsCommand {
     championsCommand.then(Commands.literal("summonpos").then(
         Commands.argument("pos", BlockPosArgument.blockPos()).then(
             Commands.argument("entity", EntitySummonArgument.entitySummon())
-                .suggests(MONSTER_ENTITIES).then(Commands.argument("tier", IntegerArgumentType
-                .integer(RankManager.getLowestRank().getTier(),
-                    RankManager.getHighestRank().getTier())).executes(
-                context -> summon(context.getSource(), BlockPosArgument.getBlockPos(context, "pos"),
-                    EntitySummonArgument.getEntityId(context, "entity"),
-                    IntegerArgumentType.getInteger(context, "tier"), new ArrayList<>())).then(
-                Commands.argument("affixes", AffixArgument.affix()).executes(
+                .suggests(MONSTER_ENTITIES).then(
+                Commands.argument("tier", IntegerArgumentType.integer()).executes(
                     context -> summon(context.getSource(),
                         BlockPosArgument.getBlockPos(context, "pos"),
                         EntitySummonArgument.getEntityId(context, "entity"),
-                        IntegerArgumentType.getInteger(context, "tier"),
-                        AffixArgument.getAffixes(context, "affixes"))))))));
+                        IntegerArgumentType.getInteger(context, "tier"), new ArrayList<>())).then(
+                    Commands.argument("affixes", AffixArgument.affix()).executes(
+                        context -> summon(context.getSource(),
+                            BlockPosArgument.getBlockPos(context, "pos"),
+                            EntitySummonArgument.getEntityId(context, "entity"),
+                            IntegerArgumentType.getInteger(context, "tier"),
+                            AffixArgument.getAffixes(context, "affixes"))))))));
 
     dispatcher.register(championsCommand);
   }

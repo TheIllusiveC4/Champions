@@ -15,7 +15,6 @@ import net.minecraft.entity.monster.EndermiteEntity;
 import net.minecraft.entity.monster.ShulkerEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Tuple;
-import net.minecraft.util.math.BlockPos;
 import top.theillusivec4.champions.api.AffixCategory;
 import top.theillusivec4.champions.api.IChampion;
 import top.theillusivec4.champions.common.affix.core.AffixData;
@@ -88,8 +87,9 @@ public class InfestedAffix extends GoalAffix {
         isEnder ? ChampionsConfig.infestedEnderParasite : ChampionsConfig.infestedParasite;
 
     for (int i = 0; i < amount; i++) {
-      Entity entity = type.create(livingEntity.getEntityWorld(), null, null, null,
-          new BlockPos(livingEntity.getPosition()), SpawnReason.MOB_SUMMONED, false, false);
+      Entity entity = type
+          .create(livingEntity.getEntityWorld(), null, null, null, livingEntity.func_233580_cy_(),
+              SpawnReason.MOB_SUMMONED, false, false);
 
       if (entity instanceof LivingEntity) {
         ChampionCapability.getCapability((LivingEntity) entity)

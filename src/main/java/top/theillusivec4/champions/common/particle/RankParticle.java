@@ -7,15 +7,15 @@ import net.minecraft.client.particle.IParticleFactory;
 import net.minecraft.client.particle.IParticleRenderType;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SpriteTexturedParticle;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particles.BasicParticleType;
-import net.minecraft.world.World;
 
 public class RankParticle extends SpriteTexturedParticle {
 
   private static final Random RANDOM = new Random();
   private final IAnimatedSprite spriteSet;
 
-  private RankParticle(World p_i51008_1_, double p_i51008_2_, double p_i51008_4_,
+  private RankParticle(ClientWorld p_i51008_1_, double p_i51008_2_, double p_i51008_4_,
       double p_i51008_6_, double p_i51008_8_, double p_i51008_10_, double p_i51008_12_,
       IAnimatedSprite p_i51008_14_) {
     super(p_i51008_1_, p_i51008_2_, p_i51008_4_, p_i51008_6_, 0.5D - RANDOM.nextDouble(),
@@ -76,7 +76,7 @@ public class RankParticle extends SpriteTexturedParticle {
     }
 
     @Override
-    public Particle makeParticle(@Nonnull BasicParticleType typeIn, @Nonnull World worldIn,
+    public Particle makeParticle(@Nonnull BasicParticleType typeIn, @Nonnull ClientWorld worldIn,
         double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
       RankParticle rankParticle = new RankParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed,
           this.spriteSet);

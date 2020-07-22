@@ -5,6 +5,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.tileentity.BeaconTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import top.theillusivec4.champions.Champions;
 import top.theillusivec4.champions.common.config.ChampionsConfig;
@@ -19,11 +20,12 @@ public class ChampionHelper {
 
   public static boolean checkPotential(final LivingEntity livingEntity) {
     return !nearActiveBeacon(livingEntity) && isValidDimension(
-        livingEntity.getEntityWorld().getDimension().getType().getId()) && (
+        livingEntity.getEntityWorld().func_234922_V_().getRegistryName()) && (
         !Champions.gameStagesLoaded || ChampionsStages.hasChampionStage(livingEntity));
   }
 
-  private static boolean isValidDimension(final int dimension) {
+  private static boolean isValidDimension(final ResourceLocation resourceLocation) {
+    String dimension = resourceLocation.toString();
 
     if (ChampionsConfig.dimensionPermission == Permission.BLACKLIST) {
       return !ChampionsConfig.dimensionList.contains(dimension);

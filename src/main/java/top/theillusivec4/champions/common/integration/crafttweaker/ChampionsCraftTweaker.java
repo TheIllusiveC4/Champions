@@ -18,7 +18,7 @@ public class ChampionsCraftTweaker {
   }
 
   @Method
-  public static void addStage(String stage, String entity, int dimension) {
+  public static void addStage(String stage, String entity, String dimension) {
     CraftTweakerAPI.apply(new AddEntityStageAction(stage, entity, dimension));
   }
 
@@ -28,7 +28,7 @@ public class ChampionsCraftTweaker {
   }
 
   @Method
-  public static void addTierStage(String stage, int tier, int dimension) {
+  public static void addTierStage(String stage, int tier, String dimension) {
     CraftTweakerAPI.apply(new AddTierStageAction(stage, tier, dimension));
   }
 }

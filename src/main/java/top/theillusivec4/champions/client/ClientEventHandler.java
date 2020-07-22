@@ -19,7 +19,7 @@ public class ClientEventHandler {
       Optional<LivingEntity> livingEntity = MouseHelper
           .getMouseOverChampion(Minecraft.getInstance(), evt.getPartialTicks());
       livingEntity.ifPresent(entity -> {
-        if (HUDHelper.renderHealthBar(entity)) {
+        if (HUDHelper.renderHealthBar(evt.getMatrixStack(), entity)) {
           evt.setCanceled(true);
         }
       });

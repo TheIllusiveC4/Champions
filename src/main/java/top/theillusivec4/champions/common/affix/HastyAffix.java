@@ -1,10 +1,10 @@
 package top.theillusivec4.champions.common.affix;
 
 import java.util.UUID;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.AttributeModifier.Operation;
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import top.theillusivec4.champions.api.AffixCategory;
 import top.theillusivec4.champions.api.IChampion;
 import top.theillusivec4.champions.common.affix.core.BasicAffix;
@@ -18,15 +18,18 @@ public class HastyAffix extends BasicAffix {
 
   @Override
   public void onInitialSpawn(IChampion champion) {
-    IAttributeInstance speed = champion.getLivingEntity().getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
-    speed.applyModifier(
-        new AttributeModifier(UUID.fromString("28c606d8-9fdf-40b4-9a02-dca3ec1adb5a"),
-            "Hasty affix", ChampionsConfig.hastyMovementBonus, Operation.ADDITION));
+    ModifiableAttributeInstance speed = champion.getLivingEntity()
+        .getAttribute(Attributes.MOVEMENT_SPEED);
+
+    if (speed != null) {
+      speed.func_233767_b_(
+          new AttributeModifier(UUID.fromString("28c606d8-9fdf-40b4-9a02-dca3ec1adb5a"),
+              "Hasty affix", ChampionsConfig.hastyMovementBonus, Operation.ADDITION));
+    }
   }
 
-  @SuppressWarnings("ConstantConditions")
   @Override
   public boolean canApply(IChampion champion) {
-    return champion.getLivingEntity().getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED) != null;
+    return champion.getLivingEntity().getAttribute(Attributes.MOVEMENT_SPEED) != null;
   }
 }

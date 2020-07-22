@@ -7,7 +7,7 @@ import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Tuple;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import top.theillusivec4.champions.api.AffixCategory;
 import top.theillusivec4.champions.api.IChampion;
 import top.theillusivec4.champions.common.affix.core.BasicAffix;
@@ -65,8 +65,8 @@ public class MagneticAffix extends GoalAffix {
       double y = mobEntity.getPosY();
       double z = mobEntity.getPosZ();
       double strength = ChampionsConfig.magneticStrength;
-      Vec3d vec = new Vec3d(x, y, z)
-          .subtract(new Vec3d(target.getPosX(), target.getPosY(), target.getPosZ())).normalize()
+      Vector3d vec = new Vector3d(x, y, z)
+          .subtract(new Vector3d(target.getPosX(), target.getPosY(), target.getPosZ())).normalize()
           .scale(strength);
       target.setMotion(vec);
 

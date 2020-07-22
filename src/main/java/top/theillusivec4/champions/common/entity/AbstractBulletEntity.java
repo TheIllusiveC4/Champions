@@ -19,14 +19,12 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.Difficulty;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
@@ -45,10 +43,9 @@ public abstract class AbstractBulletEntity extends Entity {
   private double targetDeltaZ;
   @Nullable
   private UUID ownerUniqueId;
-  private BlockPos ownerBlockPos;
+  private int ownerId;
   @Nullable
   private UUID targetUniqueId;
-  private BlockPos targetBlockPos;
 
   public AbstractBulletEntity(EntityType<? extends AbstractBulletEntity> type, World world) {
     super(type, world);
@@ -67,7 +64,7 @@ public abstract class AbstractBulletEntity extends Entity {
       LivingEntity ownerIn, Entity targetIn, Direction.Axis direction) {
     this(type, worldIn);
     this.owner = ownerIn;
-    BlockPos blockpos = new BlockPos(ownerIn);
+    BlockPos blockpos = owner.func_233580_cy_();
     double d0 = (double) blockpos.getX() + 0.5D;
     double d1 = (double) blockpos.getY() + 0.5D;
     double d2 = (double) blockpos.getZ() + 0.5D;
@@ -86,22 +83,12 @@ public abstract class AbstractBulletEntity extends Entity {
   @Override
   protected void writeAdditional(@Nonnull CompoundNBT compound) {
 
-    if (this.owner != null) {
-      BlockPos blockpos = new BlockPos(this.owner);
-      CompoundNBT compoundnbt = NBTUtil.writeUniqueId(this.owner.getUniqueID());
-      compoundnbt.putInt("X", blockpos.getX());
-      compoundnbt.putInt("Y", blockpos.getY());
-      compoundnbt.putInt("Z", blockpos.getZ());
-      compound.put("Owner", compoundnbt);
+    if (this.ownerUniqueId != null) {
+      compound.putUniqueId("Owner", this.ownerUniqueId);
     }
 
-    if (this.target != null) {
-      BlockPos blockpos1 = new BlockPos(this.target);
-      CompoundNBT compoundnbt1 = NBTUtil.writeUniqueId(this.target.getUniqueID());
-      compoundnbt1.putInt("X", blockpos1.getX());
-      compoundnbt1.putInt("Y", blockpos1.getY());
-      compoundnbt1.putInt("Z", blockpos1.getZ());
-      compound.put("Target", compoundnbt1);
+    if (this.targetUniqueId != null) {
+      compound.putUniqueId("Target", this.targetUniqueId);
     }
 
     if (this.direction != null) {
@@ -127,17 +114,12 @@ public abstract class AbstractBulletEntity extends Entity {
     if (compound.contains("Owner", 10)) {
       CompoundNBT compoundnbt = compound.getCompound("Owner");
       this.ownerUniqueId = NBTUtil.readUniqueId(compoundnbt);
-      this.ownerBlockPos = new BlockPos(compoundnbt.getInt("X"), compoundnbt.getInt("Y"),
-          compoundnbt.getInt("Z"));
     }
 
     if (compound.contains("Target", 10)) {
       CompoundNBT compoundnbt1 = compound.getCompound("Target");
       this.targetUniqueId = NBTUtil.readUniqueId(compoundnbt1);
-      this.targetBlockPos = new BlockPos(compoundnbt1.getInt("X"), compoundnbt1.getInt("Y"),
-          compoundnbt1.getInt("Z"));
     }
-
   }
 
   @Override
@@ -153,7 +135,7 @@ public abstract class AbstractBulletEntity extends Entity {
     BlockPos blockpos;
 
     if (this.target == null) {
-      blockpos = (new BlockPos(this)).down();
+      blockpos = this.func_233580_cy_().down();
     } else {
       d0 = (double) this.target.getHeight() * 0.5D;
       blockpos = new BlockPos(this.target.getPosX(), this.target.getPosY() + d0,
@@ -165,7 +147,7 @@ public abstract class AbstractBulletEntity extends Entity {
     Direction direction = null;
 
     if (!blockpos.withinDistance(this.getPositionVec(), 2.0D)) {
-      BlockPos blockpos1 = new BlockPos(this);
+      BlockPos blockpos1 = this.func_233580_cy_();
       List<Direction> list = Lists.newArrayList();
       if (axis != Direction.Axis.X) {
 
@@ -193,17 +175,16 @@ public abstract class AbstractBulletEntity extends Entity {
           list.add(Direction.NORTH);
         }
       }
+      direction = Direction.func_239631_a_(this.rand);
 
-      direction = Direction.random(this.rand);
       if (list.isEmpty()) {
 
         for (int i = 5; !this.world.isAirBlock(blockpos1.offset(direction)) && i > 0; --i) {
-          direction = Direction.random(this.rand);
+          direction = Direction.func_239631_a_(this.rand);
         }
       } else {
         direction = list.get(this.rand.nextInt(list.size()));
       }
-
       d1 = this.getPosX() + (double) direction.getXOffset();
       d2 = this.getPosY() + (double) direction.getYOffset();
       d3 = this.getPosZ() + (double) direction.getZOffset();
@@ -229,101 +210,95 @@ public abstract class AbstractBulletEntity extends Entity {
 
   @Override
   public void tick() {
+    super.tick();
 
-    if (!this.world.isRemote && this.world.getDifficulty() == Difficulty.PEACEFUL) {
-      this.remove();
-    } else {
-      super.tick();
+    if (!this.world.isRemote) {
 
-      if (!this.world.isRemote) {
-        if (this.target == null && this.targetUniqueId != null) {
+      if (this.target == null && this.targetUniqueId != null) {
+        this.target = ((ServerWorld) this.world).getEntityByUuid(this.targetUniqueId);
 
-          for (LivingEntity livingentity : this.world.getEntitiesWithinAABB(LivingEntity.class,
-              new AxisAlignedBB(this.targetBlockPos.add(-2, -2, -2),
-                  this.targetBlockPos.add(2, 2, 2)))) {
-
-            if (livingentity.getUniqueID().equals(this.targetUniqueId)) {
-              this.target = livingentity;
-              break;
-            }
-          }
+        if (this.target == null) {
           this.targetUniqueId = null;
         }
+      }
 
-        if (this.owner == null && this.ownerUniqueId != null) {
+      if (this.target == null || !this.target.isAlive()
+          || this.target instanceof PlayerEntity && this.target.isSpectator()) {
 
-          for (LivingEntity livingentity1 : this.world.getEntitiesWithinAABB(LivingEntity.class,
-              new AxisAlignedBB(this.ownerBlockPos.add(-2, -2, -2),
-                  this.ownerBlockPos.add(2, 2, 2)))) {
-
-            if (livingentity1.getUniqueID().equals(this.ownerUniqueId)) {
-              this.owner = livingentity1;
-              break;
-            }
-          }
-          this.ownerUniqueId = null;
+        if (!this.hasNoGravity()) {
+          this.setMotion(this.getMotion().add(0.0D, -0.04D, 0.0D));
         }
+      } else {
+        this.targetDeltaX = MathHelper.clamp(this.targetDeltaX * 1.025D, -1.0D, 1.0D);
+        this.targetDeltaY = MathHelper.clamp(this.targetDeltaY * 1.025D, -1.0D, 1.0D);
+        this.targetDeltaZ = MathHelper.clamp(this.targetDeltaZ * 1.025D, -1.0D, 1.0D);
+        Vector3d vector3d = this.getMotion();
+        this.setMotion(vector3d
+            .add((this.targetDeltaX - vector3d.x) * 0.2D, (this.targetDeltaY - vector3d.y) * 0.2D,
+                (this.targetDeltaZ - vector3d.z) * 0.2D));
+      }
+      RayTraceResult raytraceresult = ProjectileHelper
+          .func_234618_a_(this, this::func_230298_a_, RayTraceContext.BlockMode.COLLIDER);
 
-        if (this.target == null || !this.target.isAlive()
-            || this.target instanceof PlayerEntity && this.target.isSpectator()) {
+      if (raytraceresult.getType() != RayTraceResult.Type.MISS
+          && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, raytraceresult)) {
+        this.bulletHit(raytraceresult);
+      }
+    }
+    Vector3d vector3d1 = this.getMotion();
+    this.setPosition(this.getPosX() + vector3d1.x, this.getPosY() + vector3d1.y,
+        this.getPosZ() + vector3d1.z);
+    ProjectileHelper.rotateTowardsMovement(this, 0.5F);
 
-          if (!this.hasNoGravity()) {
-            this.setMotion(this.getMotion().add(0.0D, -0.04D, 0.0D));
-          }
+    if (this.world.isRemote) {
+      this.world.addParticle(this.getParticle(), this.getPosX() - vector3d1.x,
+          this.getPosY() - vector3d1.y + 0.15D, this.getPosZ() - vector3d1.z, 0.0D, 0.0D, 0.0D);
+    } else if (this.target != null && this.target.isAlive()) {
+
+      if (this.steps > 0) {
+        --this.steps;
+
+        if (this.steps == 0) {
+          this.selectNextMoveDirection(this.direction == null ? null : this.direction.getAxis());
+        }
+      }
+
+      if (this.direction != null) {
+        BlockPos blockpos = this.func_233580_cy_();
+        Direction.Axis direction$axis = this.direction.getAxis();
+
+        if (this.world.isTopSolid(blockpos.offset(this.direction), this)) {
+          this.selectNextMoveDirection(direction$axis);
         } else {
-          this.targetDeltaX = MathHelper.clamp(this.targetDeltaX * 1.025D, -1.0D, 1.0D);
-          this.targetDeltaY = MathHelper.clamp(this.targetDeltaY * 1.025D, -1.0D, 1.0D);
-          this.targetDeltaZ = MathHelper.clamp(this.targetDeltaZ * 1.025D, -1.0D, 1.0D);
-          Vec3d vec3d = this.getMotion();
-          this.setMotion(vec3d
-              .add((this.targetDeltaX - vec3d.x) * 0.2D, (this.targetDeltaY - vec3d.y) * 0.2D,
-                  (this.targetDeltaZ - vec3d.z) * 0.2D));
-        }
-        RayTraceResult raytraceresult = ProjectileHelper
-            .rayTrace(this, true, false, this.owner, RayTraceContext.BlockMode.COLLIDER);
+          BlockPos blockpos1 = this.target.func_233580_cy_();
 
-        if (raytraceresult.getType() != RayTraceResult.Type.MISS
-            && !net.minecraftforge.event.ForgeEventFactory
-            .onProjectileImpact(this, raytraceresult)) {
-          this.bulletHit(raytraceresult);
-        }
-      }
-      Vec3d vec3d1 = this.getMotion();
-      this.setPosition(this.getPosX() + vec3d1.x, this.getPosY() + vec3d1.y,
-          this.getPosZ() + vec3d1.z);
-      ProjectileHelper.rotateTowardsMovement(this, 0.5F);
-
-      if (this.world.isRemote) {
-        this.world.addParticle(this.getParticle(), this.getPosX() - vec3d1.x,
-            this.getPosY() - vec3d1.y + 0.15D, this.getPosZ() - vec3d1.z, 0.0D, 0.0D, 0.0D);
-      } else if (this.target != null && this.target.isAlive()) {
-
-        if (this.steps > 0) {
-          --this.steps;
-
-          if (this.steps == 0) {
-            this.selectNextMoveDirection(this.direction == null ? null : this.direction.getAxis());
-          }
-        }
-
-        if (this.direction != null) {
-          BlockPos blockpos1 = new BlockPos(this);
-          Direction.Axis direction$axis = this.direction.getAxis();
-
-          if (this.world.isTopSolid(blockpos1.offset(this.direction), this)) {
+          if (direction$axis == Direction.Axis.X && blockpos.getX() == blockpos1.getX()
+              || direction$axis == Direction.Axis.Z && blockpos.getZ() == blockpos1.getZ()
+              || direction$axis == Direction.Axis.Y && blockpos.getY() == blockpos1.getY()) {
             this.selectNextMoveDirection(direction$axis);
-          } else {
-            BlockPos blockpos = new BlockPos(this.target);
-
-            if (direction$axis == Direction.Axis.X && blockpos1.getX() == blockpos.getX()
-                || direction$axis == Direction.Axis.Z && blockpos1.getZ() == blockpos.getZ()
-                || direction$axis == Direction.Axis.Y && blockpos1.getY() == blockpos.getY()) {
-              this.selectNextMoveDirection(direction$axis);
-            }
           }
         }
       }
+    }
+  }
 
+  protected boolean func_230298_a_(Entity p_230298_1_) {
+
+    if (!p_230298_1_.isSpectator() && p_230298_1_.isAlive() && p_230298_1_.canBeCollidedWith()
+        && !this.noClip) {
+      Entity entity = this.func_234616_v_();
+      return entity == null || !entity.isRidingSameEntity(p_230298_1_);
+    } else {
+      return false;
+    }
+  }
+
+  public Entity func_234616_v_() {
+
+    if (this.ownerUniqueId != null && this.world instanceof ServerWorld) {
+      return ((ServerWorld) this.world).getEntityByUuid(this.ownerUniqueId);
+    } else {
+      return this.ownerId != 0 ? this.world.getEntityByID(this.ownerId) : null;
     }
   }
 
@@ -344,6 +319,7 @@ public abstract class AbstractBulletEntity extends Entity {
   }
 
   protected void bulletHit(RayTraceResult result) {
+
     if (result.getType() == RayTraceResult.Type.ENTITY) {
       Entity entity = ((EntityRayTraceResult) result).getEntity();
       this.bulletEffect(entity);
@@ -353,7 +329,6 @@ public abstract class AbstractBulletEntity extends Entity {
               0.2D, 0.2D, 0.2D, 0.0D);
       this.playSound(SoundEvents.ENTITY_SHULKER_BULLET_HIT, 1.0F, 1.0F);
     }
-
     this.remove();
   }
 

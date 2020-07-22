@@ -7,21 +7,22 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootParameterSets;
+import net.minecraft.loot.LootParameters;
+import net.minecraft.loot.LootTable;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.Util;
+import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.storage.loot.LootContext;
-import net.minecraft.world.storage.loot.LootParameterSets;
-import net.minecraft.world.storage.loot.LootParameters;
-import net.minecraft.world.storage.loot.LootTable;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -70,7 +71,7 @@ public class ChampionEventsHandler {
         LootContext.Builder lootcontext$builder = (new LootContext.Builder(serverWorld)
             .withRandom(livingEntity.getRNG())
             .withParameter(LootParameters.THIS_ENTITY, livingEntity)
-            .withParameter(LootParameters.POSITION, new BlockPos(livingEntity))
+            .withParameter(LootParameters.POSITION, livingEntity.func_233580_cy_())
             .withParameter(LootParameters.DAMAGE_SOURCE, source)
             .withNullableParameter(LootParameters.KILLER_ENTITY, source.getTrueSource())
             .withNullableParameter(LootParameters.DIRECT_KILLER_ENTITY,
@@ -271,22 +272,6 @@ public class ChampionEventsHandler {
   }
 
   @SubscribeEvent
-  public void onLivingKnockBack(LivingKnockBackEvent evt) {
-    Entity entity = evt.getOriginalAttacker();
-
-    if (!entity.getEntityWorld().isRemote() && entity instanceof LivingEntity) {
-      LivingEntity livingEntity = (LivingEntity) entity;
-      float[] amounts = new float[]{evt.getOriginalStrength(), evt.getOriginalStrength()};
-      ChampionCapability.getCapability(livingEntity).ifPresent(champion -> {
-        IChampion.Server serverChampion = champion.getServer();
-        serverChampion.getAffixes().forEach(affix -> amounts[1] = affix
-            .onKnockBack(champion, evt.getEntityLiving(), amounts[0], amounts[1]));
-      });
-      evt.setStrength(amounts[1]);
-    }
-  }
-
-  @SubscribeEvent
   public void onLivingDeath(LivingDeathEvent evt) {
     LivingEntity livingEntity = evt.getEntityLiving();
 
@@ -310,10 +295,11 @@ public class ChampionEventsHandler {
             MinecraftServer server = livingEntity.getServer();
 
             if (server != null) {
-              server.getPlayerList().sendMessage(
+              server.getPlayerList().func_232641_a_(
                   new TranslationTextComponent("rank.champions.title." + rank.getTier())
-                      .appendText(" ")
-                      .appendSibling(livingEntity.getCombatTracker().getDeathMessage()));
+                      .func_240702_b_(" ")
+                      .func_230529_a_(livingEntity.getCombatTracker().getDeathMessage()),
+                  ChatType.SYSTEM, Util.DUMMY_UUID);
             }
           }
         }

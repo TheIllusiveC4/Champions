@@ -1,8 +1,8 @@
 package top.theillusivec4.champions.common.affix.core;
 
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.item.ArmorStandEntity;
 import net.minecraftforge.common.MinecraftForge;
 import top.theillusivec4.champions.api.AffixCategory;
@@ -37,7 +37,6 @@ public abstract class BasicAffix implements IAffix {
     return this.category;
   }
 
-  @SuppressWarnings("ConstantConditions")
   public static boolean canTarget(LivingEntity livingEntity, LivingEntity target,
       boolean sightCheck) {
 
@@ -45,8 +44,8 @@ public abstract class BasicAffix implements IAffix {
         && !livingEntity.canEntityBeSeen(target))) {
       return false;
     }
-    IAttributeInstance attributeInstance = livingEntity
-        .getAttribute(SharedMonsterAttributes.FOLLOW_RANGE);
+    ModifiableAttributeInstance attributeInstance = livingEntity
+        .getAttribute(Attributes.FOLLOW_RANGE);
     double range = attributeInstance == null ? 16.0D : attributeInstance.getValue();
     range = ChampionsConfig.affixTargetRange == 0 ? range
         : Math.min(range, ChampionsConfig.affixTargetRange);

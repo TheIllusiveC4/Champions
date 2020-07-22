@@ -7,18 +7,18 @@ public class AddEntityStageAction implements IAction {
 
   private final String stage;
   private final String entity;
-  private final int dimension;
+  private final String dimension;
   private final boolean dimensional;
 
   public AddEntityStageAction(String stage, String entity) {
-    this(stage, entity, 0, false);
+    this(stage, entity, "", false);
   }
 
-  public AddEntityStageAction(String stage, String entity, int dimension) {
+  public AddEntityStageAction(String stage, String entity, String dimension) {
     this(stage, entity, dimension, true);
   }
 
-  public AddEntityStageAction(String stage, String entity, int dimension, boolean dimensional) {
+  public AddEntityStageAction(String stage, String entity, String dimension, boolean dimensional) {
     this.stage = stage;
     this.entity = entity;
     this.dimension = dimension;

@@ -7,18 +7,18 @@ public class AddTierStageAction implements IAction {
 
   private final String stage;
   private final int tier;
-  private final int dimension;
+  private final String dimension;
   private final boolean dimensional;
 
   public AddTierStageAction(String stage, int tier) {
-    this(stage, tier, 0, false);
+    this(stage, tier, "", false);
   }
 
-  public AddTierStageAction(String stage, int tier, int dimension) {
+  public AddTierStageAction(String stage, int tier, String dimension) {
     this(stage, tier, dimension, true);
   }
 
-  public AddTierStageAction(String stage, int tier, int dimension, boolean dimensional) {
+  public AddTierStageAction(String stage, int tier, String dimension, boolean dimensional) {
     this.stage = stage;
     this.tier = tier;
     this.dimension = dimension;

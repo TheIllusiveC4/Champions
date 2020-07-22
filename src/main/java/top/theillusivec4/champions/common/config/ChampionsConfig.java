@@ -43,7 +43,7 @@ public class ChampionsConfig {
     public final IntValue beaconProtectionRange;
     public final BooleanValue championSpawners;
     public final IntValue deathMessageTier;
-    public final ConfigValue<List<? extends Integer>> dimensionList;
+    public final ConfigValue<List<? extends String>> dimensionList;
     public final EnumValue<ConfigEnums.Permission> dimensionPermission;
     public final BooleanValue showHud;
     public final BooleanValue showParticles;
@@ -127,9 +127,9 @@ public class ChampionsConfig {
           .defineInRange("deathMessageTier", 0, 0, Integer.MAX_VALUE);
 
       dimensionList = builder
-          .comment("A list of dimension ids that are blacklisted/whitelisted for champions")
+          .comment("A list of dimension names that are blacklisted/whitelisted for champions")
           .translation(CONFIG_PREFIX + "dimensionList")
-          .defineList("dimensionList", new ArrayList<>(), i -> i instanceof Integer);
+          .defineList("dimensionList", new ArrayList<>(), s -> s instanceof String);
 
       dimensionPermission = builder
           .comment("Set whether the dimension list is a blacklist or whitelist")
@@ -494,7 +494,7 @@ public class ChampionsConfig {
   public static int beaconProtectionRange;
   public static boolean championSpawners;
   public static int deathMessageTier;
-  public static List<? extends Integer> dimensionList;
+  public static List<? extends String> dimensionList;
   public static Permission dimensionPermission;
   public static boolean showHud;
   public static boolean showParticles;

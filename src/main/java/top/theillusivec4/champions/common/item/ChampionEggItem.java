@@ -34,6 +34,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -78,11 +79,11 @@ public class ChampionEggItem extends Item {
         tier = tag.getInt(TIER_TAG);
       }
     }
-    ITextComponent root = new TranslationTextComponent("rank.champions.title." + tier);
-    root.appendText(" ");
-    root.appendSibling(type.map(EntityType::getName).orElse(EntityType.ZOMBIE.getName()));
-    root.appendText(" ");
-    root.appendSibling(new TranslationTextComponent(this.getTranslationKey(stack)));
+    IFormattableTextComponent root = new TranslationTextComponent("rank.champions.title." + tier);
+    root.func_240702_b_(" ");
+    root.func_230529_a_(type.map(EntityType::getName).orElse(EntityType.ZOMBIE.getName()));
+    root.func_240702_b_(" ");
+    root.func_230529_a_(new TranslationTextComponent(this.getTranslationKey(stack)));
     return root;
   }
 
@@ -103,13 +104,13 @@ public class ChampionEggItem extends Item {
         listNBT.forEach(affix -> Champions.API.getAffix(affix.getString()).ifPresent(
             affix1 -> tooltip.add(
                 new TranslationTextComponent("affix.champions." + affix1.getIdentifier())
-                    .applyTextStyle(TextFormatting.GRAY))));
+                    .func_240699_a_(TextFormatting.GRAY))));
       }
     }
 
     if (!hasAffix) {
       tooltip.add(new TranslationTextComponent("item.champions.egg.tooltip")
-          .applyTextStyle(TextFormatting.AQUA));
+          .func_240699_a_(TextFormatting.AQUA));
     }
   }
 
@@ -156,19 +157,18 @@ public class ChampionEggItem extends Item {
     if (worldIn.isRemote()) {
       return new ActionResult<>(ActionResultType.PASS, itemstack);
     } else {
-      RayTraceResult raytraceresult = rayTrace(worldIn, playerIn,
+      BlockRayTraceResult raytraceresult = rayTrace(worldIn, playerIn,
           RayTraceContext.FluidMode.SOURCE_ONLY);
 
       if (raytraceresult.getType() != RayTraceResult.Type.BLOCK) {
         return new ActionResult<>(ActionResultType.PASS, itemstack);
       } else {
-        BlockRayTraceResult blockraytraceresult = (BlockRayTraceResult) raytraceresult;
-        BlockPos blockpos = blockraytraceresult.getPos();
+        BlockPos blockpos = raytraceresult.getPos();
 
         if (!(worldIn.getBlockState(blockpos).getBlock() instanceof FlowingFluidBlock)) {
           return new ActionResult<>(ActionResultType.PASS, itemstack);
         } else if (worldIn.isBlockModifiable(playerIn, blockpos) && playerIn
-            .canPlayerEdit(blockpos, blockraytraceresult.getFace(), itemstack)) {
+            .canPlayerEdit(blockpos, raytraceresult.getFace(), itemstack)) {
           Optional<EntityType<?>> entityType = getType(itemstack);
           return entityType.map(type -> {
             Entity entity = type.create(worldIn, itemstack.getTag(), null, playerIn, blockpos,

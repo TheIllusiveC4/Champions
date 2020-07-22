@@ -10,10 +10,10 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier.Operation;
-import net.minecraft.entity.ai.attributes.IAttribute;
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import top.theillusivec4.champions.Champions;
 import top.theillusivec4.champions.api.AffixCategory;
 import top.theillusivec4.champions.api.IAffix;
@@ -22,7 +22,6 @@ import top.theillusivec4.champions.common.affix.core.AffixManager;
 import top.theillusivec4.champions.common.affix.core.AffixManager.AffixSettings;
 import top.theillusivec4.champions.common.config.ChampionsConfig;
 import top.theillusivec4.champions.common.integration.gamestages.ChampionsStages;
-import top.theillusivec4.champions.common.integration.scalinghealth.ScalingHealthManager;
 import top.theillusivec4.champions.common.rank.Rank;
 import top.theillusivec4.champions.common.rank.RankManager;
 import top.theillusivec4.champions.common.util.EntityManager.EntitySettings;
@@ -120,10 +119,6 @@ public class ChampionBuilder {
       Rank rank = ranks.get(iter.next());
       float chance = rank.getChance();
 
-      if (Champions.scalingHealthLoaded) {
-        chance += ScalingHealthManager.getSpawnIncrease(rank.getTier(), livingEntity);
-      }
-
       if (RAND.nextFloat() < chance && (!Champions.gameStagesLoaded || ChampionsStages
           .hasTierStage(rank.getTier(), livingEntity))) {
         result = rank;
@@ -143,23 +138,22 @@ public class ChampionBuilder {
     if (growthFactor < 1) {
       return;
     }
-    grow(livingEntity, SharedMonsterAttributes.MAX_HEALTH,
-        ChampionsConfig.healthGrowth * growthFactor, Operation.MULTIPLY_TOTAL);
+    grow(livingEntity, Attributes.MAX_HEALTH, ChampionsConfig.healthGrowth * growthFactor,
+        Operation.MULTIPLY_TOTAL);
     livingEntity.setHealth(livingEntity.getMaxHealth());
-    grow(livingEntity, SharedMonsterAttributes.ATTACK_DAMAGE,
-        ChampionsConfig.attackGrowth * growthFactor, Operation.MULTIPLY_TOTAL);
-    grow(livingEntity, SharedMonsterAttributes.ARMOR, ChampionsConfig.armorGrowth * growthFactor,
+    grow(livingEntity, Attributes.ATTACK_DAMAGE, ChampionsConfig.attackGrowth * growthFactor,
+        Operation.MULTIPLY_TOTAL);
+    grow(livingEntity, Attributes.ARMOR, ChampionsConfig.armorGrowth * growthFactor,
         Operation.ADDITION);
-    grow(livingEntity, SharedMonsterAttributes.ARMOR_TOUGHNESS,
-        ChampionsConfig.toughnessGrowth * growthFactor, Operation.ADDITION);
-    grow(livingEntity, SharedMonsterAttributes.KNOCKBACK_RESISTANCE,
+    grow(livingEntity, Attributes.ARMOR_TOUGHNESS, ChampionsConfig.toughnessGrowth * growthFactor,
+        Operation.ADDITION);
+    grow(livingEntity, Attributes.KNOCKBACK_RESISTANCE,
         ChampionsConfig.knockbackResistanceGrowth * growthFactor, Operation.ADDITION);
   }
 
-  @SuppressWarnings("ConstantConditions")
-  private static void grow(final LivingEntity livingEntity, IAttribute attribute, double amount,
+  private static void grow(final LivingEntity livingEntity, Attribute attribute, double amount,
       Operation operation) {
-    IAttributeInstance attributeInstance = livingEntity.getAttribute(attribute);
+    ModifiableAttributeInstance attributeInstance = livingEntity.getAttribute(attribute);
 
     if (attributeInstance != null) {
       double oldMax = attributeInstance.getBaseValue();

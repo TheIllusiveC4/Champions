@@ -9,16 +9,18 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.loot.ILootSerializer;
+import net.minecraft.loot.LootConditionType;
+import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootParameter;
+import net.minecraft.loot.conditions.ILootCondition;
 import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.storage.loot.LootContext;
-import net.minecraft.world.storage.loot.LootParameter;
-import net.minecraft.world.storage.loot.conditions.ILootCondition;
 import top.theillusivec4.champions.common.capability.ChampionCapability;
 import top.theillusivec4.champions.common.rank.Rank;
-import top.theillusivec4.champions.common.registry.RegistryReference;
 
 public class EntityIsChampion implements ILootCondition {
+
+  public static LootConditionType type = new LootConditionType(new EntityIsChampion.Serializer());
 
   @Nullable
   private final Integer minTier;
@@ -57,14 +59,16 @@ public class EntityIsChampion implements ILootCondition {
     return false;
   }
 
-  public static class Serializer extends ILootCondition.AbstractSerializer<EntityIsChampion> {
+  @Nonnull
+  @Override
+  public LootConditionType func_230419_b_() {
+    return type;
+  }
 
-    public Serializer() {
-      super(new ResourceLocation(RegistryReference.IS_CHAMPION), EntityIsChampion.class);
-    }
+  public static class Serializer implements ILootSerializer<EntityIsChampion> {
 
     @Override
-    public void serialize(JsonObject json, EntityIsChampion value,
+    public void func_230424_a_(JsonObject json, EntityIsChampion value,
         JsonSerializationContext context) {
       json.addProperty("maxTier", value.maxTier);
       json.addProperty("minTier", value.minTier);
@@ -73,7 +77,7 @@ public class EntityIsChampion implements ILootCondition {
 
     @Nonnull
     @Override
-    public EntityIsChampion deserialize(JsonObject json,
+    public EntityIsChampion func_230423_a_(JsonObject json,
         @Nonnull JsonDeserializationContext context) {
       Integer minTier = json.has("minTier") ? JSONUtils.getInt(json, "minTier") : null;
       Integer maxTier = json.has("maxTier") ? JSONUtils.getInt(json, "maxTier") : null;
