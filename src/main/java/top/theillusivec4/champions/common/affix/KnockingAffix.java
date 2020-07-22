@@ -4,6 +4,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.MathHelper;
 import top.theillusivec4.champions.api.AffixCategory;
 import top.theillusivec4.champions.api.IChampion;
 import top.theillusivec4.champions.common.affix.core.BasicAffix;
@@ -19,14 +20,10 @@ public class KnockingAffix extends BasicAffix {
   public boolean onAttack(IChampion champion, LivingEntity target, DamageSource source,
       float amount) {
     target.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 100, 2));
-    double d1 = target.getPosX() - champion.getLivingEntity().getPosX();
-
-    double d0;
-    for (d0 = target.getPosZ() - champion.getLivingEntity().getPosZ(); d1 * d1 + d0 * d0 < 1.0E-4D;
-        d0 = (Math.random() - Math.random()) * 0.01D) {
-      d1 = (Math.random() - Math.random()) * 0.01D;
-    }
-    target.applyKnockback(0.4F * (float) ChampionsConfig.knockingMultiplier, d1, d0);
+    LivingEntity livingEntity = champion.getLivingEntity();
+    target.applyKnockback(1.0F * (float) ChampionsConfig.knockingMultiplier,
+        MathHelper.sin(livingEntity.rotationYaw * ((float) Math.PI / 180F)),
+        (-MathHelper.cos(livingEntity.rotationYaw * ((float) Math.PI / 180F))));
     return true;
   }
 }

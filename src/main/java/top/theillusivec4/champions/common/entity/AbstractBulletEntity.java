@@ -63,8 +63,8 @@ public abstract class AbstractBulletEntity extends Entity {
   public AbstractBulletEntity(EntityType<? extends AbstractBulletEntity> type, World worldIn,
       LivingEntity ownerIn, Entity targetIn, Direction.Axis direction) {
     this(type, worldIn);
-    this.owner = ownerIn;
-    BlockPos blockpos = owner.func_233580_cy_();
+    this.setShooter(ownerIn);
+    BlockPos blockpos = ownerIn.func_233580_cy_();
     double d0 = (double) blockpos.getX() + 0.5D;
     double d1 = (double) blockpos.getY() + 0.5D;
     double d2 = (double) blockpos.getZ() + 0.5D;
@@ -72,6 +72,14 @@ public abstract class AbstractBulletEntity extends Entity {
     this.target = targetIn;
     this.direction = Direction.UP;
     this.selectNextMoveDirection(direction);
+  }
+
+  public void setShooter(@Nullable Entity entityIn) {
+
+    if (entityIn != null) {
+      this.ownerUniqueId = entityIn.getUniqueID();
+      this.ownerId = entityIn.getEntityId();
+    }
   }
 
   @Nonnull
@@ -149,6 +157,7 @@ public abstract class AbstractBulletEntity extends Entity {
     if (!blockpos.withinDistance(this.getPositionVec(), 2.0D)) {
       BlockPos blockpos1 = this.func_233580_cy_();
       List<Direction> list = Lists.newArrayList();
+
       if (axis != Direction.Axis.X) {
 
         if (blockpos1.getX() < blockpos.getX() && this.world.isAirBlock(blockpos1.east())) {
@@ -175,6 +184,7 @@ public abstract class AbstractBulletEntity extends Entity {
           list.add(Direction.NORTH);
         }
       }
+
       direction = Direction.func_239631_a_(this.rand);
 
       if (list.isEmpty()) {
@@ -285,7 +295,7 @@ public abstract class AbstractBulletEntity extends Entity {
   protected boolean func_230298_a_(Entity p_230298_1_) {
 
     if (!p_230298_1_.isSpectator() && p_230298_1_.isAlive() && p_230298_1_.canBeCollidedWith()
-        && !this.noClip) {
+        && !p_230298_1_.noClip) {
       Entity entity = this.func_234616_v_();
       return entity == null || !entity.isRidingSameEntity(p_230298_1_);
     } else {
