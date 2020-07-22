@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
+## [2.0-beta6] - 2020.07.21
+### Changed
+- Ported to 1.16.1 Forge
+### Removed
+- [API] Removed IAffix#onKnockBack since Minecraft removed the entity information in the callback
+
 ## [2.0-beta5] - 2020.07.20
 ### Fixed
 - Fixed bullet renderer colorizer for Arctic and Enkindling affixes
