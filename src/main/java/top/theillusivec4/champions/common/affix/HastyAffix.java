@@ -22,7 +22,7 @@ public class HastyAffix extends BasicAffix {
         .getAttribute(Attributes.MOVEMENT_SPEED);
 
     if (speed != null) {
-      speed.func_233767_b_(
+      speed.applyNonPersistentModifier(
           new AttributeModifier(UUID.fromString("28c606d8-9fdf-40b4-9a02-dca3ec1adb5a"),
               "Hasty affix", ChampionsConfig.hastyMovementBonus, Operation.ADDITION));
     }

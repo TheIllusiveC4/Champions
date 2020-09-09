@@ -64,7 +64,7 @@ public abstract class AbstractBulletEntity extends Entity {
       LivingEntity ownerIn, Entity targetIn, Direction.Axis direction) {
     this(type, worldIn);
     this.setShooter(ownerIn);
-    BlockPos blockpos = ownerIn.func_233580_cy_();
+    BlockPos blockpos = ownerIn.getPosition();
     double d0 = (double) blockpos.getX() + 0.5D;
     double d1 = (double) blockpos.getY() + 0.5D;
     double d2 = (double) blockpos.getZ() + 0.5D;
@@ -143,7 +143,7 @@ public abstract class AbstractBulletEntity extends Entity {
     BlockPos blockpos;
 
     if (this.target == null) {
-      blockpos = this.func_233580_cy_().down();
+      blockpos = this.getPosition().down();
     } else {
       d0 = (double) this.target.getHeight() * 0.5D;
       blockpos = new BlockPos(this.target.getPosX(), this.target.getPosY() + d0,
@@ -155,7 +155,7 @@ public abstract class AbstractBulletEntity extends Entity {
     Direction direction = null;
 
     if (!blockpos.withinDistance(this.getPositionVec(), 2.0D)) {
-      BlockPos blockpos1 = this.func_233580_cy_();
+      BlockPos blockpos1 = this.getPosition();
       List<Direction> list = Lists.newArrayList();
 
       if (axis != Direction.Axis.X) {
@@ -248,7 +248,7 @@ public abstract class AbstractBulletEntity extends Entity {
                 (this.targetDeltaZ - vector3d.z) * 0.2D));
       }
       RayTraceResult raytraceresult = ProjectileHelper
-          .func_234618_a_(this, this::func_230298_a_, RayTraceContext.BlockMode.COLLIDER);
+          .func_234618_a_(this, this::func_230298_a_);
 
       if (raytraceresult.getType() != RayTraceResult.Type.MISS
           && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, raytraceresult)) {
@@ -274,13 +274,13 @@ public abstract class AbstractBulletEntity extends Entity {
       }
 
       if (this.direction != null) {
-        BlockPos blockpos = this.func_233580_cy_();
+        BlockPos blockpos = this.getPosition();
         Direction.Axis direction$axis = this.direction.getAxis();
 
         if (this.world.isTopSolid(blockpos.offset(this.direction), this)) {
           this.selectNextMoveDirection(direction$axis);
         } else {
-          BlockPos blockpos1 = this.target.func_233580_cy_();
+          BlockPos blockpos1 = this.target.getPosition();
 
           if (direction$axis == Direction.Axis.X && blockpos.getX() == blockpos1.getX()
               || direction$axis == Direction.Axis.Z && blockpos.getZ() == blockpos1.getZ()

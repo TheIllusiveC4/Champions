@@ -71,7 +71,7 @@ public class ChampionEventsHandler {
         LootContext.Builder lootcontext$builder = (new LootContext.Builder(serverWorld)
             .withRandom(livingEntity.getRNG())
             .withParameter(LootParameters.THIS_ENTITY, livingEntity)
-            .withParameter(LootParameters.POSITION, livingEntity.func_233580_cy_())
+            .withParameter(LootParameters.field_237457_g_, livingEntity.getPositionVec())
             .withParameter(LootParameters.DAMAGE_SOURCE, source)
             .withNullableParameter(LootParameters.KILLER_ENTITY, source.getTrueSource())
             .withNullableParameter(LootParameters.DIRECT_KILLER_ENTITY,
@@ -297,8 +297,8 @@ public class ChampionEventsHandler {
             if (server != null) {
               server.getPlayerList().func_232641_a_(
                   new TranslationTextComponent("rank.champions.title." + rank.getTier())
-                      .func_240702_b_(" ")
-                      .func_230529_a_(livingEntity.getCombatTracker().getDeathMessage()),
+                      .appendString(" ")
+                      .append(livingEntity.getCombatTracker().getDeathMessage()),
                   ChatType.SYSTEM, Util.DUMMY_UUID);
             }
           }

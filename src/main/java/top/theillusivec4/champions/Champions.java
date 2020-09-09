@@ -102,7 +102,7 @@ public class Champions {
     NetworkHandler.register();
     AffixManager.register();
     net.minecraftforge.fml.DeferredWorkQueue.runLater(() -> Registry
-        .register(Registry.field_239704_ba_,
+        .register(Registry.LOOT_CONDITION_TYPE,
             new ResourceLocation(Champions.MODID, "entity_champion"), EntityIsChampion.type));
   }
 

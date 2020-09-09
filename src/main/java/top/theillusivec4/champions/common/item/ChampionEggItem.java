@@ -39,6 +39,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.registries.ForgeRegistries;
 import top.theillusivec4.champions.Champions;
@@ -80,10 +81,10 @@ public class ChampionEggItem extends Item {
       }
     }
     IFormattableTextComponent root = new TranslationTextComponent("rank.champions.title." + tier);
-    root.func_240702_b_(" ");
-    root.func_230529_a_(type.map(EntityType::getName).orElse(EntityType.ZOMBIE.getName()));
-    root.func_240702_b_(" ");
-    root.func_230529_a_(new TranslationTextComponent(this.getTranslationKey(stack)));
+    root.appendString(" ");
+    root.append(type.map(EntityType::getName).orElse(EntityType.ZOMBIE.getName()));
+    root.appendString(" ");
+    root.append(new TranslationTextComponent(this.getTranslationKey(stack)));
     return root;
   }
 
@@ -104,13 +105,13 @@ public class ChampionEggItem extends Item {
         listNBT.forEach(affix -> Champions.API.getAffix(affix.getString()).ifPresent(
             affix1 -> tooltip.add(
                 new TranslationTextComponent("affix.champions." + affix1.getIdentifier())
-                    .func_240699_a_(TextFormatting.GRAY))));
+                    .mergeStyle(TextFormatting.GRAY))));
       }
     }
 
     if (!hasAffix) {
       tooltip.add(new TranslationTextComponent("item.champions.egg.tooltip")
-          .func_240699_a_(TextFormatting.AQUA));
+          .mergeStyle(TextFormatting.AQUA));
     }
   }
 
@@ -119,7 +120,7 @@ public class ChampionEggItem extends Item {
   public ActionResultType onItemUse(ItemUseContext context) {
     World world = context.getWorld();
 
-    if (!world.isRemote()) {
+    if (!world.isRemote() && world instanceof ServerWorld) {
       ItemStack itemstack = context.getItem();
       BlockPos blockpos = context.getPos();
       Direction direction = context.getFace();
@@ -133,9 +134,10 @@ public class ChampionEggItem extends Item {
       }
       Optional<EntityType<?>> entitytype = getType(itemstack);
       entitytype.ifPresent(type -> {
-        Entity entity = type.create(world, itemstack.getTag(), null, context.getPlayer(), blockpos1,
-            SpawnReason.SPAWN_EGG, true,
-            !Objects.equals(blockpos, blockpos1) && direction == Direction.UP);
+        Entity entity = type
+            .create((ServerWorld) world, itemstack.getTag(), null, context.getPlayer(), blockpos1,
+                SpawnReason.SPAWN_EGG, true,
+                !Objects.equals(blockpos, blockpos1) && direction == Direction.UP);
 
         if (entity instanceof LivingEntity) {
           ChampionCapability.getCapability((LivingEntity) entity)
@@ -156,7 +158,7 @@ public class ChampionEggItem extends Item {
 
     if (worldIn.isRemote()) {
       return new ActionResult<>(ActionResultType.PASS, itemstack);
-    } else {
+    } else if (worldIn instanceof ServerWorld) {
       BlockRayTraceResult raytraceresult = rayTrace(worldIn, playerIn,
           RayTraceContext.FluidMode.SOURCE_ONLY);
 
@@ -171,8 +173,9 @@ public class ChampionEggItem extends Item {
             .canPlayerEdit(blockpos, raytraceresult.getFace(), itemstack)) {
           Optional<EntityType<?>> entityType = getType(itemstack);
           return entityType.map(type -> {
-            Entity entity = type.create(worldIn, itemstack.getTag(), null, playerIn, blockpos,
-                SpawnReason.SPAWN_EGG, false, false);
+            Entity entity = type
+                .create((ServerWorld) worldIn, itemstack.getTag(), null, playerIn, blockpos,
+                    SpawnReason.SPAWN_EGG, false, false);
 
             if (entity instanceof LivingEntity) {
               ChampionCapability.getCapability((LivingEntity) entity)
@@ -193,6 +196,7 @@ public class ChampionEggItem extends Item {
         }
       }
     }
+    return new ActionResult<>(ActionResultType.FAIL, itemstack);
   }
 
   public static int getColor(ItemStack stack, int tintIndex) {

@@ -15,6 +15,8 @@ import net.minecraft.entity.monster.EndermiteEntity;
 import net.minecraft.entity.monster.ShulkerEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Tuple;
+import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import top.theillusivec4.champions.api.AffixCategory;
 import top.theillusivec4.champions.api.IChampion;
 import top.theillusivec4.champions.common.affix.core.AffixData;
@@ -61,7 +63,11 @@ public class InfestedAffix extends GoalAffix {
     if (source.getTrueSource() instanceof LivingEntity) {
       target = (LivingEntity) source.getTrueSource();
     }
-    spawnParasites(champion.getLivingEntity(), buffer.num, target);
+    World world = champion.getLivingEntity().getEntityWorld();
+
+    if (world instanceof ServerWorld) {
+      spawnParasites(champion.getLivingEntity(), buffer.num, target, (ServerWorld) world);
+    }
     return true;
   }
 
@@ -79,7 +85,7 @@ public class InfestedAffix extends GoalAffix {
   }
 
   private static void spawnParasites(LivingEntity livingEntity, int amount,
-      @Nullable LivingEntity target) {
+      @Nullable LivingEntity target, ServerWorld world) {
     boolean isEnder =
         livingEntity instanceof EndermanEntity || livingEntity instanceof ShulkerEntity
             || livingEntity instanceof EndermiteEntity || livingEntity instanceof EnderDragonEntity;
@@ -88,8 +94,8 @@ public class InfestedAffix extends GoalAffix {
 
     for (int i = 0; i < amount; i++) {
       Entity entity = type
-          .create(livingEntity.getEntityWorld(), null, null, null, livingEntity.func_233580_cy_(),
-              SpawnReason.MOB_SUMMONED, false, false);
+          .create(world, null, null, null, livingEntity.getPosition(), SpawnReason.MOB_SUMMONED,
+              false, false);
 
       if (entity instanceof LivingEntity) {
         ChampionCapability.getCapability((LivingEntity) entity)
@@ -128,11 +134,12 @@ public class InfestedAffix extends GoalAffix {
           AffixData.IntegerData buffer = AffixData
               .getData(champion, InfestedAffix.this.getIdentifier(), AffixData.IntegerData.class);
 
-          if (buffer.num > 0) {
+          if (buffer.num > 0 && this.mobEntity.world instanceof ServerWorld) {
             this.attackTime =
                 ChampionsConfig.infestedInterval * 20 + this.mobEntity.getRNG().nextInt(5) * 10;
             int amount = ChampionsConfig.infestedAmount;
-            spawnParasites(this.mobEntity, amount, this.mobEntity.getAttackTarget());
+            spawnParasites(this.mobEntity, amount, this.mobEntity.getAttackTarget(),
+                (ServerWorld) this.mobEntity.world);
             buffer.num = Math.max(0, buffer.num - amount);
             buffer.saveData();
           }

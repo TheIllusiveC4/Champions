@@ -20,7 +20,7 @@ public class ChampionHelper {
 
   public static boolean checkPotential(final LivingEntity livingEntity) {
     return !nearActiveBeacon(livingEntity) && isValidDimension(
-        livingEntity.getEntityWorld().func_234922_V_().getRegistryName()) && (
+        livingEntity.getEntityWorld().func_234923_W_().getRegistryName()) && (
         !Champions.gameStagesLoaded || ChampionsStages.hasChampionStage(livingEntity));
   }
 
