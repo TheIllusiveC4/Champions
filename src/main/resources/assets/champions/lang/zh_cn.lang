@@ -29,6 +29,7 @@ champions.injured=易伤
 champions.immune=免伤
 
 death.attack.reflecting=%1$s遭报应了
+death.attack.cinderSpark=%1$s被火球击中
 
 #################
 #     Items     #
