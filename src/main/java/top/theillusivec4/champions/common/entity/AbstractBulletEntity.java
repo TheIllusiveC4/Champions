@@ -185,12 +185,12 @@ public abstract class AbstractBulletEntity extends Entity {
         }
       }
 
-      direction = Direction.func_239631_a_(this.rand);
+      direction = Direction.getRandomDirection(this.rand);
 
       if (list.isEmpty()) {
 
         for (int i = 5; !this.world.isAirBlock(blockpos1.offset(direction)) && i > 0; --i) {
-          direction = Direction.func_239631_a_(this.rand);
+          direction = Direction.getRandomDirection(this.rand);
         }
       } else {
         direction = list.get(this.rand.nextInt(list.size()));

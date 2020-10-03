@@ -124,7 +124,6 @@ curseforge {
         addArtifact(sourcesJar)
         relations {
             optionalDependency 'game-stages'
-            optionalDependency 'scaling-health'
             optionalDependency 'crafttweaker'
         }
     }

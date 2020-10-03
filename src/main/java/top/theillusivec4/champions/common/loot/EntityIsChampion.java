@@ -68,7 +68,7 @@ public class EntityIsChampion implements ILootCondition {
   public static class Serializer implements ILootSerializer<EntityIsChampion> {
 
     @Override
-    public void func_230424_a_(JsonObject json, EntityIsChampion value,
+    public void serialize(JsonObject json, EntityIsChampion value,
         JsonSerializationContext context) {
       json.addProperty("maxTier", value.maxTier);
       json.addProperty("minTier", value.minTier);
@@ -77,7 +77,7 @@ public class EntityIsChampion implements ILootCondition {
 
     @Nonnull
     @Override
-    public EntityIsChampion func_230423_a_(JsonObject json,
+    public EntityIsChampion deserialize(JsonObject json,
         @Nonnull JsonDeserializationContext context) {
       Integer minTier = json.has("minTier") ? JSONUtils.getInt(json, "minTier") : null;
       Integer maxTier = json.has("maxTier") ? JSONUtils.getInt(json, "maxTier") : null;

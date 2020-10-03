@@ -69,7 +69,7 @@ public class ChampionsStages {
   }
 
   private static boolean hasRequiredStages(@Nonnull Info info, @Nonnull LivingEntity living) {
-    String dimension = living.getEntityWorld().func_234923_W_().getRegistryName().toString();
+    String dimension = living.getEntityWorld().getDimensionKey().getRegistryName().toString();
     Set<String> stages;
 
     if (info.dimensionalStages.containsKey(dimension)) {
