@@ -46,7 +46,6 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.monster.IMob;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
@@ -71,7 +70,7 @@ public class ChampionHelper {
     private static Map<ResourceLocation, Tuple<Integer, Integer>> champions = Maps.newHashMap();
 
     public static boolean isValidChampion(final Entity entity) {
-        return entity instanceof EntityLiving && entity instanceof IMob && isValidEntity(entity);
+        return entity instanceof EntityLiving && isValidEntity(entity);
     }
 
     public static Rank generateRank(final EntityLiving entityLivingIn) {
