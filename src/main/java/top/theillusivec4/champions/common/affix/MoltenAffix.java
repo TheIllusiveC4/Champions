@@ -72,7 +72,8 @@ public class MoltenAffix extends BasicAffix {
     LivingEntity livingEntity = champion.getLivingEntity();
 
     if (!livingEntity.getEntityWorld().isRemote() && livingEntity.ticksExisted % 20 == 0) {
-      livingEntity.setFire(10);
+//      todo: figure out a better way to do this fire effect
+//      livingEntity.setFire(10);
       livingEntity.addPotionEffect(new EffectInstance(Effects.FIRE_RESISTANCE, 40, 0, true, false));
 
       if (!ChampionsConfig.moltenWaterResistance && livingEntity.isWet()) {
