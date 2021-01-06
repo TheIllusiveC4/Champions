@@ -60,7 +60,7 @@ repositories {
     }
 
     maven {
-        url 'https://maven.mcmoddev.com/'
+        url 'https://mmdmaven.blamejared.com/'
     }
 }
 
