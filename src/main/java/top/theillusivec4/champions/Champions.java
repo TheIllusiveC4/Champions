@@ -48,9 +48,10 @@ import net.minecraftforge.fml.config.ModConfig.ModConfigEvent;
 import net.minecraftforge.fml.config.ModConfig.Type;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -90,20 +91,45 @@ public class Champions {
     eventBus.addListener(this::config);
     eventBus.addListener(this::setup);
     eventBus.addListener(this::clientSetup);
-    eventBus.addListener(this::postSetup);
+    eventBus.addListener(this::dispatch);
     MinecraftForge.EVENT_BUS.addListener(this::registerCommands);
-
     gameStagesLoaded = ModList.get().isLoaded("gamestages");
   }
 
-  @SuppressWarnings("deprecation")
   private void setup(final FMLCommonSetupEvent evt) {
     ChampionCapability.register();
     NetworkHandler.register();
     AffixManager.register();
-    net.minecraftforge.fml.DeferredWorkQueue.runLater(() -> Registry
-        .register(Registry.LOOT_CONDITION_TYPE,
-            new ResourceLocation(Champions.MODID, "entity_champion"), EntityIsChampion.type));
+  }
+
+  private void dispatch(final ParallelDispatchEvent evt) {
+    evt.enqueueWork(() -> {
+      Registry
+          .register(Registry.LOOT_CONDITION_TYPE,
+              new ResourceLocation(Champions.MODID, "entity_champion"), EntityIsChampion.type);
+      DefaultDispenseItemBehavior dispenseBehavior = new DefaultDispenseItemBehavior() {
+        @Nonnull
+        @Override
+        public ItemStack dispenseStack(IBlockSource source, @Nonnull ItemStack stack) {
+          Direction direction = source.getBlockState().get(DispenserBlock.FACING);
+          Optional<EntityType<?>> entitytype = ChampionEggItem.getType(stack);
+          entitytype.ifPresent(type -> {
+            Entity entity = type.create(source.getWorld(), stack.getTag(), null, null,
+                source.getBlockPos().offset(direction), SpawnReason.DISPENSER, true,
+                direction != Direction.UP);
+
+            if (entity instanceof LivingEntity) {
+              ChampionCapability.getCapability((LivingEntity) entity)
+                  .ifPresent(champion -> ChampionEggItem.read(champion, stack));
+              source.getWorld().addEntity(entity);
+              stack.shrink(1);
+            }
+          });
+          return stack;
+        }
+      };
+      DispenserBlock.registerDispenseBehavior(ChampionsRegistry.EGG, dispenseBehavior);
+    });
   }
 
   private void clientSetup(final FMLClientSetupEvent evt) {
@@ -112,31 +138,6 @@ public class Champions {
     Minecraft.getInstance().getItemColors()
         .register(ChampionEggItem::getColor, ChampionsRegistry.EGG);
     ChampionsRenderer.register();
-  }
-
-  private void postSetup(final FMLLoadCompleteEvent evt) {
-    DefaultDispenseItemBehavior dispenseBehavior = new DefaultDispenseItemBehavior() {
-      @Nonnull
-      @Override
-      public ItemStack dispenseStack(IBlockSource source, ItemStack stack) {
-        Direction direction = source.getBlockState().get(DispenserBlock.FACING);
-        Optional<EntityType<?>> entitytype = ChampionEggItem.getType(stack);
-        entitytype.ifPresent(type -> {
-          Entity entity = type.create(source.getWorld(), stack.getTag(), null, null,
-              source.getBlockPos().offset(direction), SpawnReason.DISPENSER, true,
-              direction != Direction.UP);
-
-          if (entity instanceof LivingEntity) {
-            ChampionCapability.getCapability((LivingEntity) entity)
-                .ifPresent(champion -> ChampionEggItem.read(champion, stack));
-            source.getWorld().addEntity(entity);
-            stack.shrink(1);
-          }
-        });
-        return stack;
-      }
-    };
-    DispenserBlock.registerDispenseBehavior(ChampionsRegistry.EGG, dispenseBehavior);
   }
 
   private void registerCommands(final RegisterCommandsEvent evt) {
