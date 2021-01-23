@@ -23,6 +23,7 @@ import top.theillusivec4.champions.common.config.ConfigEnums.LootSource;
 import top.theillusivec4.champions.common.config.ConfigEnums.Permission;
 import top.theillusivec4.champions.common.config.EntitiesConfig.EntityConfig;
 import top.theillusivec4.champions.common.config.RanksConfig.RankConfig;
+import top.theillusivec4.champions.common.integration.scalinghealth.ScalingHealthManager;
 
 public class ChampionsConfig {
 
@@ -660,6 +661,10 @@ public class ChampionsConfig {
     woundingChance = SERVER.woundingChance.get();
 
     scalingHealthSpawnModifiers = SERVER.scalingHealthSpawnModifiers.get();
+
+    if (Champions.scalingHealthLoaded) {
+      ScalingHealthManager.buildModifiers();
+    }
   }
 }
 

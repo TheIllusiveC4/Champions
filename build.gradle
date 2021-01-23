@@ -62,15 +62,22 @@ repositories {
     maven {
         url 'https://mmdmaven.blamejared.com/'
     }
+
+    maven {
+        name = "CurseMaven"
+        url = "https://www.cursemaven.com"
+    }
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${version_forge}"
 
-    compile fg.deobf("com.blamejared.crafttweaker:CraftTweaker-${version_mc}:${version_crafttweaker}")
-    compile fg.deobf("net.darkhax.gamestages:GameStages-${version_mc}:${version_gamestages}")
+    compile fg.deobf("com.blamejared.crafttweaker:CraftTweaker-1.16.5:7.1.0.100")
+    compile fg.deobf("net.darkhax.gamestages:GameStages-1.16.4:6.0.4")
+    compile fg.deobf("curse.maven:scalinghealth-248027:3170946")
 
-    runtimeOnly fg.deobf("net.darkhax.bookshelf:Bookshelf-${version_mc}:${version_bookshelf}")
+    runtimeOnly fg.deobf("net.darkhax.bookshelf:Bookshelf-1.16.5:10.0.1")
+    runtimeOnly fg.deobf("curse.maven:silentlib-242998:3165746")
 }
 
 sourceSets {
@@ -122,6 +129,9 @@ curseforge {
         changelogType = 'markdown'
         changelog = file('docs/CHANGELOG.md')
         addArtifact(sourcesJar)
+        "${curse_versions}".split(',').each {
+            addGameVersion "${it}"
+        }
         relations {
             optionalDependency 'game-stages'
             optionalDependency 'crafttweaker'
