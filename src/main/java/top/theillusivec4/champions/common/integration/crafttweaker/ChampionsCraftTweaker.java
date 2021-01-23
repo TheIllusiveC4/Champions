@@ -4,12 +4,11 @@ import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import com.blamejared.crafttweaker.api.annotations.ZenRegister;
 import org.openzen.zencode.java.ZenCodeType.Method;
 import org.openzen.zencode.java.ZenCodeType.Name;
-import top.theillusivec4.champions.Champions;
 import top.theillusivec4.champions.common.integration.crafttweaker.action.AddEntityStageAction;
 import top.theillusivec4.champions.common.integration.crafttweaker.action.AddTierStageAction;
 
-@Name(Champions.MODID)
-@ZenRegister(modDeps = "gamestages")
+@Name("mods.champions.ChampionStages")
+@ZenRegister(modDeps = {"gamestages"})
 public class ChampionsCraftTweaker {
 
   @Method
