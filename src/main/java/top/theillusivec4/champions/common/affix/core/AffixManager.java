@@ -51,7 +51,7 @@ public class AffixManager {
     List<AffixConfig> configs = ChampionsConfig.affixes;
     SETTINGS.clear();
 
-    if (configs.isEmpty()) {
+    if (configs == null || configs.isEmpty()) {
       return;
     }
 

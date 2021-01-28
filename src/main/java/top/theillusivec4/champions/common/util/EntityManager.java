@@ -28,7 +28,7 @@ public class EntityManager {
     List<EntityConfig> configs = ChampionsConfig.entities;
     SETTINGS.clear();
 
-    if (configs.isEmpty()) {
+    if (configs == null || configs.isEmpty()) {
       return;
     }
 
