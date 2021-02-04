@@ -117,7 +117,7 @@ public class ChampionBuilder {
 	Iterator<Integer> iter = ranks.navigableKeySet().tailSet(firstTier, false).iterator();
 	Rank result = ranks.get(firstTier);
 
-	while (iter.hasNext() && result.getTier() < maxTier) {
+	while (iter.hasNext() && (result.getTier() < maxTier || maxTier == -1)) {
 	  Rank rank = ranks.get(iter.next());
 	  float chance = rank.getChance();
 
