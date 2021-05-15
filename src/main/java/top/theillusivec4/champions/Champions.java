@@ -27,6 +27,8 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.client.Minecraft;
+import net.minecraft.command.arguments.ArgumentSerializer;
+import net.minecraft.command.arguments.ArgumentTypes;
 import net.minecraft.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.entity.Entity;
@@ -48,10 +50,8 @@ import net.minecraftforge.fml.config.ModConfig.ModConfigEvent;
 import net.minecraftforge.fml.config.ModConfig.Type;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -70,6 +70,7 @@ import top.theillusivec4.champions.common.network.NetworkHandler;
 import top.theillusivec4.champions.common.rank.RankManager;
 import top.theillusivec4.champions.common.registry.ChampionsRegistry;
 import top.theillusivec4.champions.common.util.EntityManager;
+import top.theillusivec4.champions.server.command.AffixArgument;
 import top.theillusivec4.champions.server.command.ChampionsCommand;
 
 @Mod(Champions.MODID)
@@ -92,7 +93,6 @@ public class Champions {
     eventBus.addListener(this::config);
     eventBus.addListener(this::setup);
     eventBus.addListener(this::clientSetup);
-    eventBus.addListener(this::dispatch);
     MinecraftForge.EVENT_BUS.addListener(this::registerCommands);
     gameStagesLoaded = ModList.get().isLoaded("gamestages");
     scalingHealthLoaded = ModList.get().isLoaded("scalinghealth");
@@ -102,9 +102,6 @@ public class Champions {
     ChampionCapability.register();
     NetworkHandler.register();
     AffixManager.register();
-  }
-
-  private void dispatch(final ParallelDispatchEvent evt) {
     evt.enqueueWork(() -> {
       Registry
           .register(Registry.LOOT_CONDITION_TYPE,
@@ -131,6 +128,8 @@ public class Champions {
         }
       };
       DispenserBlock.registerDispenseBehavior(ChampionsRegistry.EGG, dispenseBehavior);
+      ArgumentTypes.register(Champions.MODID + ":affix", AffixArgument.class,
+          new ArgumentSerializer<>(AffixArgument::affix));
     });
   }
 
