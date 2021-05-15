@@ -2,6 +2,7 @@ package top.theillusivec4.champions.common;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
@@ -24,6 +25,7 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
@@ -46,6 +48,7 @@ import top.theillusivec4.champions.common.config.ConfigLoot;
 import top.theillusivec4.champions.common.rank.Rank;
 import top.theillusivec4.champions.common.registry.ChampionsRegistry;
 import top.theillusivec4.champions.common.registry.RegistryReference;
+import top.theillusivec4.champions.common.util.ChampionBuilder;
 
 public class ChampionEventsHandler {
 
@@ -154,6 +157,11 @@ public class ChampionEventsHandler {
       LivingEntity livingEntity = (LivingEntity) entity;
       ChampionCapability.getCapability(livingEntity).ifPresent(champion -> {
         IChampion.Server serverChampion = champion.getServer();
+        Optional<Rank> maybeRank = serverChampion.getRank();
+
+        if (!maybeRank.isPresent()) {
+          ChampionBuilder.spawn(champion);
+        }
         serverChampion.getAffixes().forEach(affix -> affix.onSpawn(champion));
         serverChampion.getRank().ifPresent(rank -> {
           List<Tuple<Effect, Integer>> effects = rank.getEffects();
