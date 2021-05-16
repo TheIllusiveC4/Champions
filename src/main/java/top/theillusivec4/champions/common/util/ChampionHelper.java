@@ -14,14 +14,29 @@ import top.theillusivec4.champions.common.integration.gamestages.ChampionsStages
 
 public class ChampionHelper {
 
-  public static boolean isValidEntity(final Entity entity) {
+  public static boolean isValidChampion(final Entity entity) {
     return entity instanceof LivingEntity && entity instanceof IMob;
   }
 
   public static boolean checkPotential(final LivingEntity livingEntity) {
-    return !nearActiveBeacon(livingEntity) && isValidDimension(
-        livingEntity.getEntityWorld().getDimensionKey().getLocation()) && (
-        !Champions.gameStagesLoaded || ChampionsStages.hasChampionStage(livingEntity));
+    return isValidEntity(livingEntity) &&
+        isValidDimension(livingEntity.getEntityWorld().getDimensionKey().getLocation()) &&
+        (!Champions.gameStagesLoaded || ChampionsStages.hasChampionStage(livingEntity)) &&
+        !nearActiveBeacon(livingEntity);
+  }
+
+  private static boolean isValidEntity(final LivingEntity livingEntity) {
+    String entity = livingEntity.getEntityString();
+
+    if (entity != null) {
+
+      if (ChampionsConfig.entitiesPermission == Permission.BLACKLIST) {
+        return !ChampionsConfig.entitiesList.contains(entity);
+      } else {
+        return ChampionsConfig.entitiesList.contains(entity);
+      }
+    }
+    return true;
   }
 
   private static boolean isValidDimension(final ResourceLocation resourceLocation) {

@@ -2,6 +2,7 @@ package top.theillusivec4.champions.common.config;
 
 import com.electronwill.nightconfig.core.CommentedConfig;
 import com.electronwill.nightconfig.core.conversion.ObjectConverter;
+import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.entity.EntityType;
@@ -46,6 +47,8 @@ public class ChampionsConfig {
     public final IntValue deathMessageTier;
     public final ConfigValue<List<? extends String>> dimensionList;
     public final EnumValue<ConfigEnums.Permission> dimensionPermission;
+    public final ConfigValue<List<? extends String>> entitiesList;
+    public final EnumValue<ConfigEnums.Permission> entitiesPermission;
     public final BooleanValue showHud;
     public final BooleanValue showParticles;
 
@@ -136,6 +139,17 @@ public class ChampionsConfig {
           .comment("Set whether the dimension list is a blacklist or whitelist")
           .translation(CONFIG_PREFIX + "dimensionPermission")
           .defineEnum("dimensionPermission", Permission.BLACKLIST);
+
+      entitiesList = builder
+          .comment("A list of entities that are blacklisted/whitelisted for champions")
+          .translation(CONFIG_PREFIX + "entitiesList")
+          .defineListAllowEmpty(Lists.newArrayList("entitiesList"), ArrayList::new,
+              s -> s instanceof String);
+
+      entitiesPermission = builder
+          .comment("Set whether the entities list is a blacklist or whitelist")
+          .translation(CONFIG_PREFIX + "entitiesPermission")
+          .defineEnum("entitiesPermission", Permission.BLACKLIST);
 
       showHud = builder.comment(
           "Set to true to show HUD display for champions, including health, affixes, and tier")
@@ -497,6 +511,8 @@ public class ChampionsConfig {
   public static int deathMessageTier;
   public static List<? extends String> dimensionList;
   public static Permission dimensionPermission;
+  public static List<? extends String> entitiesList;
+  public static Permission entitiesPermission;
   public static boolean showHud;
   public static boolean showParticles;
 
@@ -567,6 +583,8 @@ public class ChampionsConfig {
     deathMessageTier = SERVER.deathMessageTier.get();
     dimensionList = SERVER.dimensionList.get();
     dimensionPermission = SERVER.dimensionPermission.get();
+    entitiesList = SERVER.entitiesList.get();
+    entitiesPermission = SERVER.entitiesPermission.get();
     showHud = SERVER.showHud.get();
     showParticles = SERVER.showParticles.get();
 
