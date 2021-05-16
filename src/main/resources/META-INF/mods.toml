@@ -24,3 +24,9 @@ ${mod_description}
     versionRange="[1.16.2,1.17)"
     ordering="NONE"
     side="BOTH"
+[[dependencies.champions]]
+    modId="scalinghealth"
+    mandatory=false
+    versionRange="[4.1.0,)"
+    ordering="NONE"
+    side="BOTH"

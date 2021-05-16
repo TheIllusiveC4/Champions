@@ -3,7 +3,7 @@ package top.theillusivec4.champions.common.integration.scalinghealth;
 import java.util.Map;
 import java.util.TreeMap;
 import net.minecraft.entity.LivingEntity;
-import net.silentchaos512.scalinghealth.utils.SHDifficulty;
+import net.silentchaos512.scalinghealth.resources.mechanics.SHMechanicListener;
 import top.theillusivec4.champions.common.config.ChampionsConfig;
 
 public class ScalingHealthManager {
@@ -11,7 +11,8 @@ public class ScalingHealthManager {
   private static final Map<Integer, Double> MODIFIERS = new TreeMap<>();
 
   public static double getSpawnIncrease(int tier, LivingEntity livingEntity) {
-    double difficulty = SHDifficulty.areaDifficulty(livingEntity.world, livingEntity.getPosition());
+    double difficulty = SHMechanicListener.getDifficultyMechanics().mode
+        .getDifficulty(livingEntity.world, livingEntity.getPosition());
     return getSpawnModifier(tier) * difficulty;
   }
 

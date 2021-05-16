@@ -69,9 +69,9 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${version_forge}"
 
-    compileOnly fg.deobf("com.blamejared.crafttweaker:CraftTweaker-1.16.5:7.1.0.100")
-    compileOnly fg.deobf("net.darkhax.gamestages:GameStages-1.16.4:6.0.4")
-    compileOnly fg.deobf("curse.maven:scalinghealth-248027:3170946")
+    compileOnly fg.deobf("com.blamejared.crafttweaker:CraftTweaker-${version_mc}:${version_crafttweaker}")
+    compileOnly fg.deobf("net.darkhax.gamestages:GameStages-${version_mc}:${version_gamestages}")
+    compileOnly fg.deobf("curse.maven:scalinghealth-248027:${cf_scalinghealth}")
 
 //    compile fg.deobf("com.blamejared.crafttweaker:CraftTweaker-1.16.5:7.1.0.100")
 //    compile fg.deobf("net.darkhax.gamestages:GameStages-1.16.4:6.0.4")
