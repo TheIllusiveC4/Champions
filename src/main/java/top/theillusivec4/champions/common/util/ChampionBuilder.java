@@ -131,6 +131,10 @@ public class ChampionBuilder {
 
     while (iter.hasNext() && (result.getTier() < maxTier || maxTier == -1)) {
       Rank rank = ranks.get(iter.next());
+
+      if (rank == null) {
+        return result;
+      }
       float chance = rank.getChance();
 
       if (Champions.scalingHealthLoaded) {
