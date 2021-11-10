@@ -15,12 +15,11 @@ import top.theillusivec4.champions.Champions;
 public class ConfigLoot {
 
   private static final Random RAND = new Random();
-
-  private static Map<Integer, List<Data>> drops;
+  private static final Map<Integer, List<Data>> DROPS = new HashMap<>();
 
   public static List<ItemStack> getLootDrops(int tier) {
     double totalWeight;
-    List<Data> data = new ArrayList<>(drops.getOrDefault(tier, new ArrayList<>()));
+    List<Data> data = new ArrayList<>(DROPS.getOrDefault(tier, new ArrayList<>()));
     List<ItemStack> drops = new ArrayList<>();
 
     if (data.isEmpty()) {
@@ -50,7 +49,7 @@ public class ConfigLoot {
   }
 
   public static void parse(List<? extends String> lootDrops) {
-    drops = new HashMap<>();
+    Map<Integer, List<Data>> result = new HashMap<>();
 
     for (String s : lootDrops) {
       String[] parsed = s.split(";");
@@ -105,10 +104,12 @@ public class ConfigLoot {
           }
         }
         stack = new ItemStack(item, amount);
-        drops.computeIfAbsent(tier, list -> new ArrayList<>())
+        result.computeIfAbsent(tier, list -> new ArrayList<>())
             .add(new Data(stack, enchant, weight));
       }
     }
+    DROPS.clear();
+    DROPS.putAll(result);
   }
 
   private static class Data {
