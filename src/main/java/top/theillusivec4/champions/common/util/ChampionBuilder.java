@@ -123,6 +123,12 @@ public class ChampionBuilder {
     Iterator<Integer> iter = ranks.navigableKeySet().tailSet(firstTier, false).iterator();
     Rank result = ranks.get(firstTier);
 
+    if (result == null) {
+      Champions.LOGGER.error("Tier {} cannot be found in {}! Assigning lowest available rank to {}",
+          firstTier, ranks, livingEntity);
+      return RankManager.getLowestRank();
+    }
+
     while (iter.hasNext() && (result.getTier() < maxTier || maxTier == -1)) {
       Rank rank = ranks.get(iter.next());
       float chance = rank.getChance();
@@ -138,7 +144,7 @@ public class ChampionBuilder {
         return result;
       }
     }
-    return result != null ? result : RankManager.getLowestRank();
+    return result;
   }
 
   public static void applyGrowth(final LivingEntity livingEntity, int growthFactor) {
