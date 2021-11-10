@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
+## [1.16.5-2.0.1.8] - 2021.11.09
+### Fixed
+- Fixed compatibility with other mods that interact with the boss health bars [#96](https://github.com/TheIllusiveC4/Champions/issues/96) [#82](https://github.com/TheIllusiveC4/Champions/issues/82)
+- Fixed potential NPE crashes [#92](https://github.com/TheIllusiveC4/Champions/issues/92) [#83](https://github.com/TheIllusiveC4/Champions/issues/83)
+- Fixed potential CME crash with configuration loot [#84](https://github.com/TheIllusiveC4/Champions/issues/84)
+
 ## [1.16.5-2.0.1.7] - 2021.05.15
 ### Added
 - Added config option for blacklisting/whitelisting entities
