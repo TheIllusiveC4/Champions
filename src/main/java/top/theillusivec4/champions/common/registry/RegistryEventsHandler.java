@@ -1,12 +1,12 @@
 package top.theillusivec4.champions.common.registry;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntityType;
-import net.minecraft.item.Item;
-import net.minecraft.particles.BasicParticleType;
-import net.minecraft.particles.ParticleType;
-import net.minecraft.potion.Effect;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -30,33 +30,33 @@ public class RegistryEventsHandler {
   @SubscribeEvent
   public static void registerParticleTypes(RegistryEvent.Register<ParticleType<?>> evt) {
     evt.getRegistry()
-        .register(new BasicParticleType(false).setRegistryName(RegistryReference.RANK));
+        .register(new SimpleParticleType(false).setRegistryName(RegistryReference.RANK));
   }
 
   @SubscribeEvent
   public static void registerParticleFactories(ParticleFactoryRegisterEvent evt) {
-    Minecraft.getInstance().particles.registerFactory(ChampionsRegistry.RANK, RankFactory::new);
+    Minecraft.getInstance().particleEngine.register(ChampionsRegistry.RANK, RankFactory::new);
   }
 
   @SubscribeEvent
-  public static void registerEffects(RegistryEvent.Register<Effect> evt) {
+  public static void registerEffects(RegistryEvent.Register<MobEffect> evt) {
     evt.getRegistry().registerAll(new ParalysisEffect(), new WoundEffect());
   }
 
   @SubscribeEvent
   public static void registerEntities(RegistryEvent.Register<EntityType<?>> evt) {
-    EntityType<?> arcticBullet = EntityType.Builder.<ArcticBulletEntity>create(
-        (type, world) -> new ArcticBulletEntity(world), EntityClassification.MISC)
-        .size(0.3125F, 0.3125F).setCustomClientFactory(
+    EntityType<?> arcticBullet = EntityType.Builder.of(
+        (type, world) -> new ArcticBulletEntity(world), MobCategory.MISC)
+        .sized(0.3125F, 0.3125F).setCustomClientFactory(
             (spawnEntity, world) -> new ArcticBulletEntity(world, spawnEntity.getPosX(),
-                spawnEntity.getPosY(), spawnEntity.getPosZ(), 0, 0, 0))
+                spawnEntity.getPosX(), spawnEntity.getPosZ(), 0, 0, 0))
         .build(RegistryReference.ARCTIC_BULLET).setRegistryName(RegistryReference.ARCTIC_BULLET);
 
-    EntityType<?> enkindlingBullet = EntityType.Builder.<EnkindlingBulletEntity>create(
-        (type, world) -> new EnkindlingBulletEntity(world), EntityClassification.MISC)
-        .size(0.3125F, 0.3125F).setCustomClientFactory(
+    EntityType<?> enkindlingBullet = EntityType.Builder.of(
+        (type, world) -> new EnkindlingBulletEntity(world), MobCategory.MISC)
+        .sized(0.3125F, 0.3125F).setCustomClientFactory(
             (spawnEntity, world) -> new EnkindlingBulletEntity(world, spawnEntity.getPosX(),
-                spawnEntity.getPosY(), spawnEntity.getPosZ(), 0, 0, 0))
+              spawnEntity.getPosX(), spawnEntity.getPosZ(), 0, 0, 0))
         .build(RegistryReference.ENKINDLING_BULLET)
         .setRegistryName(RegistryReference.ENKINDLING_BULLET);
 

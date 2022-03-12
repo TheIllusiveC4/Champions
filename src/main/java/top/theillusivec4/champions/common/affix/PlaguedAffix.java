@@ -1,68 +1,67 @@
 package top.theillusivec4.champions.common.affix;
 
-import java.util.List;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import top.theillusivec4.champions.api.AffixCategory;
 import top.theillusivec4.champions.api.IChampion;
 import top.theillusivec4.champions.common.affix.core.BasicAffix;
 import top.theillusivec4.champions.common.config.ChampionsConfig;
 
+import java.util.List;
+
 public class PlaguedAffix extends BasicAffix {
+    public PlaguedAffix() {
+        super("plagued", AffixCategory.OFFENSE);
+    }
 
-  public PlaguedAffix() {
-    super("plagued", AffixCategory.OFFENSE);
-  }
+    @Override
+    public void onServerUpdate(IChampion champion) {
+        Mob livingEntity = (Mob) champion.getLivingEntity();
 
-  @Override
-  public void onUpdate(IChampion champion) {
-    LivingEntity livingEntity = champion.getLivingEntity();
+        List<Entity> list = livingEntity.getLevel().getEntities(livingEntity,
+                livingEntity.getBoundingBox().inflate(ChampionsConfig.plaguedRange),
+                entity -> entity instanceof LivingEntity && BasicAffix
+                        .canTarget(livingEntity, (LivingEntity) entity, true));
+        list.forEach(entity -> {
 
-    if (livingEntity.ticksExisted % 10 == 0) {
-      List<Entity> list = livingEntity.getEntityWorld().getEntitiesInAABBexcluding(livingEntity,
-          livingEntity.getBoundingBox().grow(ChampionsConfig.plaguedRange),
-          entity -> entity instanceof LivingEntity && BasicAffix
-              .canTarget(livingEntity, (LivingEntity) entity, true));
-      list.forEach(entity -> {
+            if (entity instanceof LivingEntity) {
+                ((LivingEntity) entity).addEffect(
+                        new MobEffectInstance(ChampionsConfig.plaguedEffect.getEffect(),
+                                ChampionsConfig.plaguedEffect.getDuration(),
+                                ChampionsConfig.plaguedEffect.getAmplifier()));
+            }
+        });
 
-        if (entity instanceof LivingEntity) {
-          ((LivingEntity) entity).addPotionEffect(
-              new EffectInstance(ChampionsConfig.plaguedEffect.getPotion(),
-                  ChampionsConfig.plaguedEffect.getDuration(),
-                  ChampionsConfig.plaguedEffect.getAmplifier()));
+        float radius = ChampionsConfig.plaguedRange;
+        float circle = (float) Math.PI * radius * radius;
+
+        for (int circleParticles = 0; (float) circleParticles < circle; ++circleParticles) {
+            float f6 = livingEntity.getRandom().nextFloat() * ((float) Math.PI * 2F);
+            float randomRadiusSection = Mth.sqrt(livingEntity.getRandom().nextFloat()) * radius;
+            float f8 = Mth.cos(f6) * randomRadiusSection;
+            float f9 = Mth.sin(f6) * randomRadiusSection;
+            int l1 = ChampionsConfig.plaguedEffect.getEffect().getColor();
+            int i2 = l1 >> 16 & 255;
+            int j2 = l1 >> 8 & 255;
+            int j1 = l1 & 255;
+            ((ServerLevel) livingEntity.getLevel())
+                    .sendParticles(ParticleTypes.ENTITY_EFFECT, livingEntity.position().x + (double) f8,
+                            livingEntity.position().y, livingEntity.position().z + (double) f9, 5,
+                            ((float) i2 / 255.0F), ((float) j2 / 255.0F), ((float) j1 / 255.0F), 1.0F);
         }
-      });
+        livingEntity.removeEffect(ChampionsConfig.plaguedEffect.getEffect());
     }
-    float radius = ChampionsConfig.plaguedRange;
-    float f5 = (float) Math.PI * radius * radius;
 
-    for (int k1 = 0; (float) k1 < f5; ++k1) {
-      float f6 = livingEntity.getRNG().nextFloat() * ((float) Math.PI * 2F);
-      float f7 = MathHelper.sqrt(livingEntity.getRNG().nextFloat()) * radius;
-      float f8 = MathHelper.cos(f6) * f7;
-      float f9 = MathHelper.sin(f6) * f7;
-      int l1 = ChampionsConfig.plaguedEffect.getPotion().getLiquidColor();
-      int i2 = l1 >> 16 & 255;
-      int j2 = l1 >> 8 & 255;
-      int j1 = l1 & 255;
-      ((ServerWorld) livingEntity.getEntityWorld())
-          .spawnParticle(ParticleTypes.ENTITY_EFFECT, livingEntity.getPosX() + (double) f8,
-              livingEntity.getPosY(), livingEntity.getPosZ() + (double) f9, 0,
-              ((float) i2 / 255.0F), ((float) j2 / 255.0F), ((float) j1 / 255.0F), 1.0F);
+    @Override
+    public boolean onAttack(IChampion champion, LivingEntity target, DamageSource source, float amount) {
+        target.addEffect(new MobEffectInstance(ChampionsConfig.plaguedEffect.getEffect(),
+                ChampionsConfig.plaguedEffect.getDuration(), ChampionsConfig.plaguedEffect.getAmplifier()));
+        return true;
     }
-    livingEntity.removeActivePotionEffect(ChampionsConfig.plaguedEffect.getPotion());
-  }
-
-  @Override
-  public boolean onAttack(IChampion champion, LivingEntity target, DamageSource source,
-      float amount) {
-    target.addPotionEffect(new EffectInstance(ChampionsConfig.plaguedEffect.getPotion(),
-        ChampionsConfig.plaguedEffect.getDuration(), ChampionsConfig.plaguedEffect.getAmplifier()));
-    return true;
-  }
 }

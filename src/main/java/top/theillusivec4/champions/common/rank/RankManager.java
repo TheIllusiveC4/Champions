@@ -5,9 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 import javax.annotation.Nonnull;
-import net.minecraft.potion.Effect;
-import net.minecraft.util.ResourceLocation;
+
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraftforge.registries.ForgeRegistries;
 import top.theillusivec4.champions.Champions;
 import top.theillusivec4.champions.api.IAffix;
@@ -97,11 +98,11 @@ public class RankManager {
     } else {
       growthFactor = rank.growthFactor;
     }
-    List<Tuple<Effect, Integer>> effects = new ArrayList<>();
+    List<Tuple<MobEffect, Integer>> effects = new ArrayList<>();
 
     rank.effects.forEach(effect -> {
       String[] parsed = effect.split(";");
-      Effect found = ForgeRegistries.POTIONS.getValue(new ResourceLocation(parsed[0]));
+      MobEffect found = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation(parsed[0]));
 
       if (found != null) {
         int amplifier = 0;

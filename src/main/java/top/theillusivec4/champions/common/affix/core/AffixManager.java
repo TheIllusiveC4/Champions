@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Nullable;
-import net.minecraft.entity.EntityType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.registries.ForgeRegistries;
 import top.theillusivec4.champions.Champions;
 import top.theillusivec4.champions.api.IChampion;
@@ -78,9 +78,9 @@ public class AffixManager {
     final boolean enabled;
     final int minTier;
     @Nullable
-    final Integer maxTier;
+    final Integer             maxTier;
     final List<EntityType<?>> mobList;
-    final Permission mobPermission;
+    final Permission          mobPermission;
 
     public AffixSettings(String identifier, Boolean enabled, Integer minTier,
         @Nullable Integer maxTier, List<String> mobList, String mobPermission) {

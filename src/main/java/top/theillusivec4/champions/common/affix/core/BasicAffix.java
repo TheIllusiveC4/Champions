@@ -1,9 +1,10 @@
 package top.theillusivec4.champions.common.affix.core;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
-import net.minecraft.entity.item.ArmorStandEntity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraftforge.common.MinecraftForge;
 import top.theillusivec4.champions.api.AffixCategory;
 import top.theillusivec4.champions.api.IAffix;
@@ -37,18 +38,19 @@ public abstract class BasicAffix implements IAffix {
     return this.category;
   }
 
-  public static boolean canTarget(LivingEntity livingEntity, LivingEntity target,
+  public static boolean canTarget(
+    Mob mob, LivingEntity target,
       boolean sightCheck) {
 
-    if (target == null || !target.isAlive() || target instanceof ArmorStandEntity || (sightCheck
-        && !livingEntity.canEntityBeSeen(target))) {
+    if (target == null || !target.isAlive() || target instanceof ArmorStand || (sightCheck
+        && !mob.getSensing().hasLineOfSight(target))) {
       return false;
     }
-    ModifiableAttributeInstance attributeInstance = livingEntity
+    AttributeInstance attributeInstance = mob
         .getAttribute(Attributes.FOLLOW_RANGE);
     double range = attributeInstance == null ? 16.0D : attributeInstance.getValue();
     range = ChampionsConfig.affixTargetRange == 0 ? range
         : Math.min(range, ChampionsConfig.affixTargetRange);
-    return livingEntity.getDistance(target) <= range;
+    return mob.distanceTo(target) <= range;
   }
 }

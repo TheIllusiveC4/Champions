@@ -3,11 +3,11 @@ package top.theillusivec4.champions.common.network;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
-import net.minecraftforge.fml.network.NetworkRegistry;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.simple.SimpleChannel;
 import top.theillusivec4.champions.Champions;
 
 public class NetworkHandler {
@@ -27,8 +27,8 @@ public class NetworkHandler {
         SPacketSyncChampion::handle);
   }
 
-  private static <M> void register(Class<M> messageType, BiConsumer<M, PacketBuffer> encoder,
-      Function<PacketBuffer, M> decoder, BiConsumer<M, Supplier<Context>> messageConsumer) {
+  private static <M> void register(Class<M> messageType, BiConsumer<M, FriendlyByteBuf> encoder,
+      Function<FriendlyByteBuf, M> decoder, BiConsumer<M, Supplier<NetworkEvent.Context>> messageConsumer) {
     INSTANCE.registerMessage(id++, messageType, encoder, decoder, messageConsumer);
   }
 }

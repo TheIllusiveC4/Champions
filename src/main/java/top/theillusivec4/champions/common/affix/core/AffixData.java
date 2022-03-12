@@ -1,6 +1,6 @@
 package top.theillusivec4.champions.common.affix.core;
 
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
 import top.theillusivec4.champions.Champions;
 import top.theillusivec4.champions.api.IChampion;
 
@@ -17,9 +17,9 @@ public abstract class AffixData {
     readFromNBT(champion.getServer().getData(identifier));
   }
 
-  public abstract void readFromNBT(CompoundNBT tag);
+  public abstract void readFromNBT(CompoundTag tag);
 
-  public abstract CompoundNBT writeToNBT();
+  public abstract CompoundTag writeToNBT();
 
   public void saveData() {
     champion.getServer().setData(identifier, writeToNBT());
@@ -42,13 +42,13 @@ public abstract class AffixData {
     public boolean mode;
 
     @Override
-    public void readFromNBT(CompoundNBT tag) {
+    public void readFromNBT(CompoundTag tag) {
       mode = tag.getBoolean("mode");
     }
 
     @Override
-    public CompoundNBT writeToNBT() {
-      CompoundNBT compound = new CompoundNBT();
+    public CompoundTag writeToNBT() {
+      CompoundTag compound = new CompoundTag();
       compound.putBoolean("mode", mode);
       return compound;
     }
@@ -59,13 +59,13 @@ public abstract class AffixData {
     public int num;
 
     @Override
-    public void readFromNBT(CompoundNBT tag) {
+    public void readFromNBT(CompoundTag tag) {
       num = tag.getInt("num");
     }
 
     @Override
-    public CompoundNBT writeToNBT() {
-      CompoundNBT compound = new CompoundNBT();
+    public CompoundTag writeToNBT() {
+      CompoundTag compound = new CompoundTag();
       compound.putInt("num", num);
       return compound;
     }

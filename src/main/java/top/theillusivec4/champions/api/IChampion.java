@@ -3,9 +3,9 @@ package top.theillusivec4.champions.api;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tuple;
+import net.minecraft.world.entity.LivingEntity;
 import top.theillusivec4.champions.common.rank.Rank;
 
 public interface IChampion {
@@ -31,9 +31,9 @@ public interface IChampion {
 
     void setAffixes(List<IAffix> affixes);
 
-    CompoundNBT getData(String identifier);
+    CompoundTag getData(String identifier);
 
-    void setData(String identifier, CompoundNBT data);
+    void setData(String identifier, CompoundTag data);
   }
 
   Client getClient();
