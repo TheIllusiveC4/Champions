@@ -6,20 +6,20 @@ import java.util.function.Supplier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.util.Tuple;
 import net.minecraftforge.network.NetworkEvent;
 import top.theillusivec4.champions.api.IChampion;
 import top.theillusivec4.champions.common.capability.ChampionCapability;
 
 public class SPacketSyncChampion {
 
-  private int entityId;
-  private int tier;
-  private int defaultColor;
-  private Set<String> affixes;
-  private int affixSize;
+  private final int entityId;
+  private final int tier;
+  private final int defaultColor;
+  private final Set<String> affixes;
+  private final int affixSize;
 
   public SPacketSyncChampion(int entityId, int tier, int defaultColor, Set<String> affixes) {
     this.entityId = entityId;

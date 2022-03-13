@@ -62,7 +62,7 @@ public class AffixManager {
         return;
       }
 
-      if (!Champions.API.getAffix(affixConfig.identifier).isPresent()) {
+      if (Champions.API.getAffix(affixConfig.identifier).isEmpty()) {
         Champions.LOGGER.error("Invalid identifier while building affix settings, skipping...");
         return;
       }
@@ -78,12 +78,12 @@ public class AffixManager {
     final boolean enabled;
     final int minTier;
     @Nullable
-    final Integer             maxTier;
+    final Integer maxTier;
     final List<EntityType<?>> mobList;
-    final Permission          mobPermission;
+    final Permission mobPermission;
 
     public AffixSettings(String identifier, Boolean enabled, Integer minTier,
-        @Nullable Integer maxTier, List<String> mobList, String mobPermission) {
+                         @Nullable Integer maxTier, List<String> mobList, String mobPermission) {
       this.identifier = identifier;
       this.enabled = enabled != null ? enabled : true;
       this.minTier = minTier != null ? minTier : 1;

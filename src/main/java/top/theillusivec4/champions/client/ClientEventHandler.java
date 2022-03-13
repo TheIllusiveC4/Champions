@@ -1,8 +1,7 @@
 package top.theillusivec4.champions.client;
 
-import java.util.Optional;
-
 import com.mojang.blaze3d.vertex.PoseStack;
+import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;

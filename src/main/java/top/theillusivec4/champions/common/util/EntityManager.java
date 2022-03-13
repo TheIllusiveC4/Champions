@@ -62,7 +62,8 @@ public class EntityManager {
     final Permission affixPermission;
 
     public EntitySettings(EntityType<?> type, @Nullable Integer minTier, @Nullable Integer maxTier,
-        List<String> presetAffixes, List<String> affixList, String affixPermission) {
+                          List<String> presetAffixes, List<String> affixList,
+                          String affixPermission) {
       this.entityType = type;
       this.minTier = minTier;
       this.maxTier = maxTier;

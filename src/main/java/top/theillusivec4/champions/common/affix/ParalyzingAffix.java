@@ -10,19 +10,19 @@ import top.theillusivec4.champions.common.config.ChampionsConfig;
 import top.theillusivec4.champions.common.registry.ChampionsRegistry;
 
 public class ParalyzingAffix extends BasicAffix {
-    public ParalyzingAffix() {
-        super("paralyzing", AffixCategory.CC);
-    }
+  public ParalyzingAffix() {
+    super("paralyzing", AffixCategory.CC);
+  }
 
-    @Override
-    public boolean onAttack(
-            IChampion champion, LivingEntity target, DamageSource source,
-            float amount) {
+  @Override
+  public boolean onAttack(
+      IChampion champion, LivingEntity target, DamageSource source,
+      float amount) {
 
-        if (target.getRandom().nextFloat() < ChampionsConfig.paralyzingChance && !target.hasEffect(
-                ChampionsRegistry.PARALYSIS)) {
-            target.addEffect(new MobEffectInstance(ChampionsRegistry.PARALYSIS, 60, 0));
-        }
-        return true;
+    if (target.getRandom().nextFloat() < ChampionsConfig.paralyzingChance && !target.hasEffect(
+        ChampionsRegistry.PARALYSIS)) {
+      target.addEffect(new MobEffectInstance(ChampionsRegistry.PARALYSIS, 60, 0));
     }
+    return true;
+  }
 }

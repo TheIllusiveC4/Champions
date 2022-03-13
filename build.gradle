@@ -1,29 +1,31 @@
 buildscript {
     repositories {
         maven { url = 'https://files.minecraftforge.net/maven' }
-        mavenLocal()
-        mavenCentral()
+        maven { url = 'https://plugins.gradle.org/m2/' }
+		maven { url = 'https://maven.parchmentmc.org' }
         maven {
             url "https://plugins.gradle.org/m2/"
         }
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-        classpath "gradle.plugin.com.github.jengelman.gradle.plugins:shadow:7.0.0"
-        classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
-        classpath 'de.undercouch:gradle-download-task:4.1.2'
+        classpath group: 'gradle.plugin.com.matthewprenger', name: 'CurseGradle', version: '1.4.0'
+		classpath group: 'org.parchmentmc', name: 'librarian', version: '1.+'
     }
 }
 
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'com.matthewprenger.cursegradle'
+apply plugin: 'org.parchmentmc.librarian.forgegradle'
+
 version = "${mod_version}"
-group = "${mod_group}"
-archivesBaseName = "${mod_id}-forge"
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '17'
+group = "top.theillusivec4.champions"
+archivesBaseName = "champions-forge"
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 minecraft {
-    mappings channel: 'official', version: "${version_mcp}".toString()
+    mappings channel: 'parchment', version: '1.18.1-2022.03.06-1.18.2'
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
@@ -56,15 +58,6 @@ minecraft {
 }
 
 repositories {
-
-    maven {
-        url 'https://maven.blamejared.com/'
-    }
-
-    maven {
-        url 'https://mmdmaven.blamejared.com/'
-    }
-
     maven {
         name = "CurseMaven"
         url = "https://www.cursemaven.com"
@@ -72,17 +65,9 @@ repositories {
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${version_forge}"
+    minecraft "net.minecraftforge:forge:${forge_version}"
 
-//    compileOnly fg.deobf("com.blamejared.crafttweaker:CraftTweaker-${version_mc}:${version_crafttweaker}")
-//    compileOnly fg.deobf("net.darkhax.gamestages:GameStages-${version_mc}:${version_gamestages}")
-//    compileOnly fg.deobf("curse.maven:scalinghealth-248027:${cf_scalinghealth}")
-
-//    compile fg.deobf("com.blamejared.crafttweaker:CraftTweaker-1.16.5:7.1.0.100")
-//    compile fg.deobf("net.darkhax.gamestages:GameStages-1.16.4:6.0.4")
-//    compile fg.deobf("curse.maven:scalinghealth-248027:3170946")
-//    runtimeOnly fg.deobf("net.darkhax.bookshelf:Bookshelf-1.16.5:10.0.1")
-//    runtimeOnly fg.deobf("curse.maven:silentlib-242998:3165746")
+    compileOnly fg.deobf("curse.maven:scalinghealth-248027:${cf_scalinghealth}")
 }
 
 sourceSets {
@@ -95,14 +80,30 @@ sourceSets {
 
 jar {
     manifest {
-        attributes(["Specification-Title": "${mod_name}",
-                    "Specification-Vendor": "${mod_author}",
-                    "Specification-Version": "${getArchiveVersion()}",
-                    "Implementation-Title": "${mod_name}",
-                    "Implementation-Version": "${getArchiveVersion()}",
-                    "Implementation-Vendor" :"${mod_author}",
-                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")],)
+        attributes(["Specification-Title"     : "Champions",
+                    "Specification-Vendor"    : "C4",
+                    "Specification-Version"   : "1",
+                    "Implementation-Title"    : "Champions",
+                    "Implementation-Version"  : "${getArchiveVersion()}",
+                    "Implementation-Vendor"   : "C4",
+                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")])
     }
+}
+
+def replaceResources = tasks.register("replaceResources", Copy) {
+    it.outputs.upToDateWhen { false }
+
+    it.from(sourceSets.main.resources) {
+        include "META-INF/mods.toml"
+        expand 'version': version, 'mc_version_range': mc_version_range, 'forge_version_range': forge_version_range, "loader_version": loader_version
+    }
+    it.into "$buildDir/resources/main/"
+}
+
+processResources {
+    duplicatesStrategy(DuplicatesStrategy.FAIL)
+    exclude('META-INF/mods.toml')
+    configure { finalizedBy(replaceResources) }
 }
 
 task sourcesJar(type: Jar) {
@@ -110,27 +111,17 @@ task sourcesJar(type: Jar) {
     from sourceSets.main.allJava
 }
 
-tasks.build.dependsOn sourcesJar
-
-processResources {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-
-    from(sourceSets.main.resources.srcDirs) {
-        include 'META-INF/mods.toml'
-        expand 'version': project.version, 'mod_id' : mod_id, 'mod_name': mod_name, 'mod_url': mod_url, 'mod_author': mod_author, 'mod_description': mod_description, 'mod_icon': mod_icon
-    }
-
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'META-INF/mods.toml'
-    }
+artifacts {
+    archives sourcesJar
 }
 
+jar.finalizedBy('reobfJar')
 
 curseforge {
 
     project {
         apiKey = findProperty('curseKey') ?: 0
-        id = "${curse_id}"
+        id = "307152"
         releaseType = "${curse_release}"
         changelogType = 'markdown'
         changelog = file('docs/CHANGELOG.md')
@@ -139,8 +130,7 @@ curseforge {
             addGameVersion "${it}"
         }
         relations {
-            optionalDependency 'game-stages'
-            optionalDependency 'crafttweaker'
+            optionalDependency 'scaling-health'
         }
     }
 }

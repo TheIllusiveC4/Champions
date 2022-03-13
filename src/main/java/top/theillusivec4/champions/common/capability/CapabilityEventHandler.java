@@ -1,7 +1,6 @@
 package top.theillusivec4.champions.common.capability;
 
 import java.util.stream.Collectors;
-
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,54 +20,55 @@ import top.theillusivec4.champions.common.rank.RankManager;
 import top.theillusivec4.champions.common.util.ChampionBuilder;
 import top.theillusivec4.champions.common.util.ChampionHelper;
 
+@SuppressWarnings("unused")
 public class CapabilityEventHandler {
 
-    @SubscribeEvent
-    public void attachCapabilities(final AttachCapabilitiesEvent<Entity> evt) {
-        Entity entity = evt.getObject();
+  @SubscribeEvent
+  public void attachCapabilities(final AttachCapabilitiesEvent<Entity> evt) {
+    Entity entity = evt.getObject();
 
-        if (ChampionHelper.isValidChampion(entity)) {
-            evt.addCapability(ChampionCapability.ID,
-                    ChampionCapability.createProvider((LivingEntity) entity));
-        }
+    if (ChampionHelper.isValidChampion(entity)) {
+      evt.addCapability(ChampionCapability.ID,
+          ChampionCapability.createProvider((LivingEntity) entity));
     }
+  }
 
-    @SubscribeEvent
-    public void onSpecialSpawn(LivingSpawnEvent.SpecialSpawn evt) {
-        LivingEntity entity = evt.getEntityLiving();
+  @SubscribeEvent
+  public void onSpecialSpawn(LivingSpawnEvent.SpecialSpawn evt) {
+    LivingEntity entity = evt.getEntityLiving();
 
-        if (!entity.getLevel().isClientSide()) {
-            ChampionCapability.getCapability(entity).ifPresent(champion -> {
-                IChampion.Server serverChampion = champion.getServer();
+    if (!entity.getLevel().isClientSide()) {
+      ChampionCapability.getCapability(entity).ifPresent(champion -> {
+        IChampion.Server serverChampion = champion.getServer();
 
-                if (!serverChampion.getRank().isPresent()) {
+        if (serverChampion.getRank().isEmpty()) {
 
-                    if (!ChampionsConfig.championSpawners && evt.getSpawner() != null) {
-                        serverChampion.setRank(RankManager.getLowestRank());
-                    } else {
-                        ChampionBuilder.spawn(champion);
-                    }
-                }
-            });
+          if (!ChampionsConfig.championSpawners && evt.getSpawner() != null) {
+            serverChampion.setRank(RankManager.getLowestRank());
+          } else {
+            ChampionBuilder.spawn(champion);
+          }
         }
+      });
     }
+  }
 
-    @SubscribeEvent
-    public void startTracking(PlayerEvent.StartTracking evt) {
-        Entity entity = evt.getTarget();
-        Player playerEntity = evt.getPlayer();
+  @SubscribeEvent
+  public void startTracking(PlayerEvent.StartTracking evt) {
+    Entity entity = evt.getTarget();
+    Player playerEntity = evt.getPlayer();
 
-        if (entity instanceof LivingEntity && playerEntity instanceof ServerPlayer) {
-            ChampionCapability.getCapability((LivingEntity) entity).ifPresent(champion -> {
-                IChampion.Server serverChampion = champion.getServer();
-                NetworkHandler.INSTANCE
-                        .send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) playerEntity),
-                                new SPacketSyncChampion(entity.getId(),
-                                        serverChampion.getRank().map(Rank::getTier).orElse(0),
-                                        serverChampion.getRank().map(Rank::getDefaultColor).orElse(0),
-                                        serverChampion.getAffixes().stream().map(IAffix::getIdentifier)
-                                                .collect(Collectors.toSet())));
-            });
-        }
+    if (entity instanceof LivingEntity && playerEntity instanceof ServerPlayer) {
+      ChampionCapability.getCapability((LivingEntity) entity).ifPresent(champion -> {
+        IChampion.Server serverChampion = champion.getServer();
+        NetworkHandler.INSTANCE
+            .send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) playerEntity),
+                new SPacketSyncChampion(entity.getId(),
+                    serverChampion.getRank().map(Rank::getTier).orElse(0),
+                    serverChampion.getRank().map(Rank::getDefaultColor).orElse(0),
+                    serverChampion.getAffixes().stream().map(IAffix::getIdentifier)
+                        .collect(Collectors.toSet())));
+      });
     }
+  }
 }

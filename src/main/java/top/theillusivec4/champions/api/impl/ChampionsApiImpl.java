@@ -1,7 +1,6 @@
 package top.theillusivec4.champions.api.impl;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +16,8 @@ import top.theillusivec4.champions.api.IChampionsApi;
 public class ChampionsApiImpl implements IChampionsApi {
 
   private static final ConcurrentHashMap<String, IAffix> affixes = new ConcurrentHashMap<>();
-  private static final ConcurrentHashMap<AffixCategory, List<IAffix>> categories = new ConcurrentHashMap<>();
+  private static final ConcurrentHashMap<AffixCategory, List<IAffix>> categories =
+      new ConcurrentHashMap<>();
 
   private static ChampionsApiImpl instance = null;
 
@@ -36,7 +36,8 @@ public class ChampionsApiImpl implements IChampionsApi {
     return instance;
   }
 
-  private ChampionsApiImpl() {}
+  private ChampionsApiImpl() {
+  }
 
   @Override
   public void registerAffix(IAffix affix) {
@@ -65,7 +66,7 @@ public class ChampionsApiImpl implements IChampionsApi {
 
   @Override
   public List<IAffix> getAffixes() {
-    return Collections.unmodifiableList(new ArrayList<>(affixes.values()));
+    return List.copyOf(affixes.values());
   }
 
   @Override

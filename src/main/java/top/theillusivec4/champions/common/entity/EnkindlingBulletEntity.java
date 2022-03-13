@@ -19,12 +19,12 @@ public class EnkindlingBulletEntity extends AbstractBulletEntity {
 
   @OnlyIn(Dist.CLIENT)
   public EnkindlingBulletEntity(Level worldIn, double x, double y, double z, double motionXIn,
-      double motionYIn, double motionZIn) {
+                                double motionYIn, double motionZIn) {
     super(ChampionsRegistry.ENKINDLING_BULLET, worldIn, x, y, z, motionXIn, motionYIn, motionZIn);
   }
 
   public EnkindlingBulletEntity(Level worldIn, LivingEntity ownerIn, Entity targetIn,
-      Direction.Axis direction) {
+                                Direction.Axis direction) {
     super(ChampionsRegistry.ENKINDLING_BULLET, worldIn, ownerIn, targetIn, direction);
   }
 

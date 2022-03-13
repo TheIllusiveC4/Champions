@@ -112,17 +112,7 @@ public class ConfigLoot {
     DROPS.putAll(result);
   }
 
-  private static class Data {
-
-    private ItemStack stack;
-    private boolean enchant;
-    private int weight;
-
-    Data(ItemStack stack, boolean enchant, int weight) {
-      this.stack = stack;
-      this.enchant = enchant;
-      this.weight = weight;
-    }
+  private record Data(ItemStack stack, boolean enchant, int weight) {
 
     public ItemStack getStack() {
       ItemStack loot = stack.copy();

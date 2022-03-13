@@ -1,5 +1,6 @@
 package top.theillusivec4.champions.common.affix.core;
 
+import java.lang.reflect.InvocationTargetException;
 import net.minecraft.nbt.CompoundTag;
 import top.theillusivec4.champions.Champions;
 import top.theillusivec4.champions.api.IChampion;
@@ -9,7 +10,8 @@ public abstract class AffixData {
   private IChampion champion;
   private String identifier;
 
-  protected AffixData() {}
+  protected AffixData() {
+  }
 
   public void readData(IChampion champion, String identifier) {
     this.champion = champion;
@@ -29,10 +31,10 @@ public abstract class AffixData {
     T data = null;
 
     try {
-      data = clazz.newInstance();
+      data = clazz.getDeclaredConstructor().newInstance();
       data.readData(champion, id);
-    } catch (IllegalAccessException | InstantiationException e) {
-      Champions.LOGGER.error("Error reading data from class " + clazz.toString());
+    } catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
+      Champions.LOGGER.error("Error reading data from class " + clazz);
     }
     return data;
   }

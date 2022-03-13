@@ -20,11 +20,12 @@ public class ArcticBulletEntity extends AbstractBulletEntity {
 
   @OnlyIn(Dist.CLIENT)
   public ArcticBulletEntity(Level worldIn, double x, double y, double z, double motionXIn,
-      double motionYIn, double motionZIn) {
+                            double motionYIn, double motionZIn) {
     super(ChampionsRegistry.ARCTIC_BULLET, worldIn, x, y, z, motionXIn, motionYIn, motionZIn);
   }
 
-  public ArcticBulletEntity(Level worldIn, LivingEntity ownerIn, Entity targetIn, Direction.Axis direction) {
+  public ArcticBulletEntity(Level worldIn, LivingEntity ownerIn, Entity targetIn,
+                            Direction.Axis direction) {
     super(ChampionsRegistry.ARCTIC_BULLET, worldIn, ownerIn, targetIn, direction);
   }
 
@@ -32,7 +33,8 @@ public class ArcticBulletEntity extends AbstractBulletEntity {
   protected void bulletEffect(Entity target) {
 
     if (target instanceof LivingEntity) {
-      ((LivingEntity) target).addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 2));
+      ((LivingEntity) target).addEffect(
+          new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 2));
       ((LivingEntity) target).addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 100, 2));
     }
   }

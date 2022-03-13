@@ -1,10 +1,11 @@
 package top.theillusivec4.champions.client.renderer;
 
-import javax.annotation.Nonnull;
+import static net.minecraft.client.gui.screens.inventory.tooltip.ClientBundleTooltip.TEXTURE_LOCATION;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
+import javax.annotation.Nonnull;
 import net.minecraft.client.model.ShulkerBulletModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -18,14 +19,12 @@ import net.minecraft.util.Mth;
 import top.theillusivec4.champions.Champions;
 import top.theillusivec4.champions.common.entity.AbstractBulletEntity;
 
-import static net.minecraft.client.gui.screens.inventory.tooltip.ClientBundleTooltip.TEXTURE_LOCATION;
-
 public class ColorizedBulletRenderer extends EntityRenderer<AbstractBulletEntity> {
 
   private static final ResourceLocation GENERIC_SPARK_TEXTURE = new ResourceLocation(
-    Champions.MODID, "textures/entity/generic_spark.png");
-    private static final RenderType RENDER_TYPE = RenderType.entityTranslucent(TEXTURE_LOCATION);
-  private final        ShulkerBulletModel<AbstractBulletEntity> model;
+      Champions.MODID, "textures/entity/generic_spark.png");
+  private static final RenderType RENDER_TYPE = RenderType.entityTranslucent(TEXTURE_LOCATION);
+  private final ShulkerBulletModel<AbstractBulletEntity> model;
 
   private final int color;
 
@@ -36,14 +35,15 @@ public class ColorizedBulletRenderer extends EntityRenderer<AbstractBulletEntity
     this.model = new ShulkerBulletModel<>(manager.bakeLayer(ModelLayers.SHULKER_BULLET));
   }
 
-    @Override
-    protected int getBlockLightLevel(final AbstractBulletEntity bullet, final BlockPos blockPos)
-    {
-        return 15;
-    }
+  @Override
+  protected int getBlockLightLevel(@Nonnull final AbstractBulletEntity bullet,
+                                   @Nonnull final BlockPos blockPos) {
+    return 15;
+  }
 
   @Override
-  public void render(AbstractBulletEntity entity, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
+  public void render(AbstractBulletEntity entity, float entityYaw, float partialTicks,
+                     PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
     matrixStack.pushPose();
     float yRot = Mth.rotLerp(entity.yRotO, entity.getYRot(), partialTicks);
     float xRot = Mth.lerp(partialTicks, entity.xRotO, entity.getXRot());
@@ -58,10 +58,12 @@ public class ColorizedBulletRenderer extends EntityRenderer<AbstractBulletEntity
     matrixStack.scale(-0.5F, -0.5F, 0.5F);
     this.model.setupAnim(entity, 0.0F, 0.0F, 0.0F, yRot, xRot);
     VertexConsumer vertexconsumer = buffer.getBuffer(this.model.renderType(TEXTURE_LOCATION));
-    this.model.renderToBuffer(matrixStack, vertexconsumer, packedLight, OverlayTexture.NO_OVERLAY, r, g, b, 0.5F);
+    this.model.renderToBuffer(matrixStack, vertexconsumer, packedLight, OverlayTexture.NO_OVERLAY,
+        r, g, b, 0.5F);
     matrixStack.scale(1.5F, 1.5F, 1.5F);
     VertexConsumer vertexconsumer1 = buffer.getBuffer(RENDER_TYPE);
-    this.model.renderToBuffer(matrixStack, vertexconsumer1, packedLight, OverlayTexture.NO_OVERLAY, r, g, b, 0.15F);
+    this.model.renderToBuffer(matrixStack, vertexconsumer1, packedLight, OverlayTexture.NO_OVERLAY,
+        r, g, b, 0.15F);
     matrixStack.popPose();
     super.render(entity, entityYaw, partialTicks, matrixStack, buffer, packedLight);
   }

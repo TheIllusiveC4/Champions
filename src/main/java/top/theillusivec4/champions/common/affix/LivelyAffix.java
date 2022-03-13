@@ -10,35 +10,37 @@ import top.theillusivec4.champions.common.config.ChampionsConfig;
 
 public class LivelyAffix extends BasicAffix {
 
-    public LivelyAffix() {
-        super("lively", AffixCategory.DEFENSE);
-    }
+  public LivelyAffix() {
+    super("lively", AffixCategory.DEFENSE);
+  }
 
-    @Override
-    public float onDamage(IChampion champion, DamageSource source, float amount, float newAmount) {
-        AffixData.IntegerData lastAttackTime = AffixData
-                .getData(champion, this.getIdentifier(), AffixData.IntegerData.class);
-        LivingEntity livingEntity = champion.getLivingEntity();
-        lastAttackTime.num = (int) livingEntity.level.getGameTime();
-        lastAttackTime.saveData();
-        return super.onDamage(champion, source, amount, newAmount);
-    }
+  @Override
+  public float onDamage(IChampion champion, DamageSource source, float amount, float newAmount) {
+    AffixData.IntegerData lastAttackTime = AffixData
+        .getData(champion, this.getIdentifier(), AffixData.IntegerData.class);
+    LivingEntity livingEntity = champion.getLivingEntity();
+    lastAttackTime.num = (int) livingEntity.level.getGameTime();
+    lastAttackTime.saveData();
+    return super.onDamage(champion, source, amount, newAmount);
+  }
 
-    @Override
-    public void onServerUpdate(IChampion champion) {
-        LivingEntity livingEntity = champion.getLivingEntity();
+  @Override
+  public void onServerUpdate(IChampion champion) {
+    LivingEntity livingEntity = champion.getLivingEntity();
 
-        if (!livingEntity.getLevel().isClientSide() && livingEntity.tickCount % 20 == 0) {
-            AffixData.IntegerData lastAttackTime = AffixData.getData(champion, this.getIdentifier(), AffixData.IntegerData.class);
+    if (!livingEntity.getLevel().isClientSide() && livingEntity.tickCount % 20 == 0) {
+      AffixData.IntegerData lastAttackTime =
+          AffixData.getData(champion, this.getIdentifier(), AffixData.IntegerData.class);
 
-            if ((lastAttackTime.num + ChampionsConfig.livelyCooldown * 20) < livingEntity.getLevel().getGameTime()) {
-                double heal = ChampionsConfig.livelyHealAmount;
+      if ((lastAttackTime.num + ChampionsConfig.livelyCooldown * 20L) <
+          livingEntity.getLevel().getGameTime()) {
+        double heal = ChampionsConfig.livelyHealAmount;
 
-                if (livingEntity.getNoActionTime() >= 100) {
-                    heal *= ChampionsConfig.livelyPassiveMultiplier;
-                }
-                livingEntity.heal((float) heal);
-            }
+        if (livingEntity.getNoActionTime() >= 100) {
+          heal *= ChampionsConfig.livelyPassiveMultiplier;
         }
+        livingEntity.heal((float) heal);
+      }
     }
+  }
 }

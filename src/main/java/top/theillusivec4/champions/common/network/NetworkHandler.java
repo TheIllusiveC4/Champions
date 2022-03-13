@@ -28,7 +28,8 @@ public class NetworkHandler {
   }
 
   private static <M> void register(Class<M> messageType, BiConsumer<M, FriendlyByteBuf> encoder,
-      Function<FriendlyByteBuf, M> decoder, BiConsumer<M, Supplier<NetworkEvent.Context>> messageConsumer) {
+                                   Function<FriendlyByteBuf, M> decoder,
+                                   BiConsumer<M, Supplier<NetworkEvent.Context>> messageConsumer) {
     INSTANCE.registerMessage(id++, messageType, encoder, decoder, messageConsumer);
   }
 }

@@ -11,19 +11,19 @@ import top.theillusivec4.champions.common.affix.core.BasicAffix;
 import top.theillusivec4.champions.common.config.ChampionsConfig;
 
 public class KnockingAffix extends BasicAffix {
-    public KnockingAffix() {
-        super("knocking", AffixCategory.CC);
-    }
+  public KnockingAffix() {
+    super("knocking", AffixCategory.CC);
+  }
 
-    @Override
-    public boolean onAttack(
-            IChampion champion, LivingEntity target, DamageSource source,
-            float amount) {
-        target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 2));
-        LivingEntity livingEntity = champion.getLivingEntity();
-        target.knockback(1.0F * (float) ChampionsConfig.knockingMultiplier,
-                Mth.sin(livingEntity.getYRot() * ((float) Math.PI / 180F)),
-                (-Mth.cos(livingEntity.getYRot() * ((float) Math.PI / 180F))));
-        return true;
-    }
+  @Override
+  public boolean onAttack(
+      IChampion champion, LivingEntity target, DamageSource source,
+      float amount) {
+    target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 2));
+    LivingEntity livingEntity = champion.getLivingEntity();
+    target.knockback((float) ChampionsConfig.knockingMultiplier,
+        Mth.sin(livingEntity.getYRot() * ((float) Math.PI / 180F)),
+        (-Mth.cos(livingEntity.getYRot() * ((float) Math.PI / 180F))));
+    return true;
+  }
 }

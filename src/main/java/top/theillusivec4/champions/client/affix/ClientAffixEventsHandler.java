@@ -5,6 +5,7 @@ import net.minecraftforge.client.event.MovementInputUpdateEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import top.theillusivec4.champions.common.registry.ChampionsRegistry;
 
+@SuppressWarnings("unused")
 public class ClientAffixEventsHandler {
 
   @SubscribeEvent

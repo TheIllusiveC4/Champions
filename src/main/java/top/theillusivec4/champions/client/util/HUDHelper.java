@@ -1,16 +1,15 @@
 package top.theillusivec4.champions.client.util;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import java.util.Set;
-
 import com.mojang.blaze3d.vertex.PoseStack;
+import java.util.Set;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
 import top.theillusivec4.champions.Champions;
 import top.theillusivec4.champions.api.IChampion;
 import top.theillusivec4.champions.client.config.ClientChampionsConfig;
@@ -20,10 +19,9 @@ public class HUDHelper {
 
   private static final ResourceLocation GUI_BAR_TEXTURES = new ResourceLocation(
       "textures/gui/bars.png");
-  private static final ResourceLocation GUI_STAR         = new ResourceLocation(Champions.MODID,
+  private static final ResourceLocation GUI_STAR = new ResourceLocation(Champions.MODID,
       "textures/gui/staricon.png");
 
-  @SuppressWarnings("deprecation")
   public static boolean renderHealthBar(PoseStack matrixStack, final LivingEntity livingEntity) {
     return ChampionCapability.getCapability(livingEntity).map(champion -> {
       IChampion.Client clientChampion = champion.getClient();
@@ -50,10 +48,12 @@ public class HUDHelper {
           RenderSystem.setShaderTexture(0, GUI_BAR_TEXTURES);
 
           GuiComponent.blit(matrixStack, xOffset + k, yOffset + j, 0, 60, 182, 5, 256, 256);
-          int healthOffset = (int) ((livingEntity.getHealth() / livingEntity.getMaxHealth()) * 183.0F);
+          int healthOffset =
+              (int) ((livingEntity.getHealth() / livingEntity.getMaxHealth()) * 183.0F);
 
           if (healthOffset > 0) {
-              GuiComponent.blit(matrixStack, xOffset + k, yOffset + j, 0, 65, healthOffset, 5, 256, 256);
+            GuiComponent.blit(matrixStack, xOffset + k, yOffset + j, 0, 65, healthOffset, 5, 256,
+                256);
           }
 
           RenderSystem.setShaderTexture(0, GUI_STAR);
@@ -62,14 +62,14 @@ public class HUDHelper {
             int startStarsX = xOffset + i / 2 - 5 - 5 * (num - 1);
 
             for (int tier = 0; tier < num; tier++) {
-                GuiComponent.blit(matrixStack, startStarsX, yOffset + 1, 0, 0, 9, 9, 9, 9);
+              GuiComponent.blit(matrixStack, startStarsX, yOffset + 1, 0, 0, 9, 9, 9, 9);
               startStarsX += 10;
             }
           } else {
             int startStarsX = xOffset + i / 2 - 5;
             String count = "x" + num;
-              GuiComponent.blit(matrixStack, startStarsX - client.font.width(count) / 2,
-                    yOffset + 1, 0, 0, 9, 9, 9, 9);
+            GuiComponent.blit(matrixStack, startStarsX - client.font.width(count) / 2,
+                yOffset + 1, 0, 0, 9, 9, 9, 9);
             client.font.draw(matrixStack, count,
                 startStarsX + 10 - client.font.width(count) / 2.0F, yOffset + 2,
                 16777215);

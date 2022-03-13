@@ -5,7 +5,6 @@ import com.electronwill.nightconfig.core.conversion.ObjectConverter;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;
-
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -25,13 +24,14 @@ import top.theillusivec4.champions.common.config.ConfigEnums.LootSource;
 import top.theillusivec4.champions.common.config.ConfigEnums.Permission;
 import top.theillusivec4.champions.common.config.EntitiesConfig.EntityConfig;
 import top.theillusivec4.champions.common.config.RanksConfig.RankConfig;
+import top.theillusivec4.champions.common.integration.scalinghealth.ScalingHealthPlugin;
 
 public class ChampionsConfig {
 
   private static final String CONFIG_PREFIX = "gui." + Champions.MODID + ".config.";
 
   public static final ForgeConfigSpec SERVER_SPEC;
-  public static final ServerConfig    SERVER;
+  public static final ServerConfig SERVER;
 
   static {
     final Pair<ServerConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder()
@@ -40,8 +40,7 @@ public class ChampionsConfig {
     SERVER = specPair.getLeft();
   }
 
-  public static class ServerConfig
-  {
+  public static class ServerConfig {
 
     public final IntValue beaconProtectionRange;
     public final BooleanValue championSpawners;
@@ -127,7 +126,7 @@ public class ChampionsConfig {
           .translation(CONFIG_PREFIX + "championSpawners").define("championSpawners", false);
 
       deathMessageTier = builder.comment(
-          "The minimum tier of champions that will have death messages sent out upon defeat (0 to disable)")
+              "The minimum tier of champions that will have death messages sent out upon defeat (0 to disable)")
           .translation(CONFIG_PREFIX + "deathMessageTier")
           .defineInRange("deathMessageTier", 0, 0, Integer.MAX_VALUE);
 
@@ -153,11 +152,11 @@ public class ChampionsConfig {
           .defineEnum("entitiesPermission", Permission.BLACKLIST);
 
       showHud = builder.comment(
-          "Set to true to show HUD display for champions, including health, affixes, and tier")
+              "Set to true to show HUD display for champions, including health, affixes, and tier")
           .translation(CONFIG_PREFIX + "showHud").define("showHud", true);
 
       showParticles = builder.comment(
-          "Set to true to have champions generate a colored particle effect indicating their rank")
+              "Set to true to have champions generate a colored particle effect indicating their rank")
           .translation(CONFIG_PREFIX + "showParticles").define("showParticles", true);
 
       builder.pop();
@@ -172,12 +171,12 @@ public class ChampionsConfig {
           .defineEnum("lootSource", LootSource.LOOT_TABLE);
 
       lootDrops = builder.comment(
-          "List of loot drops from champions if sourced from config\nFormat: [tier];[modid:name];[amount];[enchant(true/false)];[weight]")
+              "List of loot drops from champions if sourced from config\nFormat: [tier];[modid:name];[amount];[enchant(true/false)];[weight]")
           .translation(CONFIG_PREFIX + "lootDrops")
           .defineList("lootDrops", new ArrayList<>(), s -> s instanceof String);
 
       lootScaling = builder.comment(
-          "Set to true to scale amount of loot drops from champions to tier if sourced from config")
+              "Set to true to scale amount of loot drops from champions to tier if sourced from config")
           .translation(CONFIG_PREFIX + "lootScaling").define("lootScaling", false);
 
       builder.pop();
@@ -223,14 +222,14 @@ public class ChampionsConfig {
       builder.push("affixes");
 
       affixTargetRange = builder.comment(
-          "Set the maximum distance that mobs can use their targeted abilities from, 0 to disable")
+              "Set the maximum distance that mobs can use their targeted abilities from, 0 to disable")
           .translation(CONFIG_PREFIX + "affixTargetRange")
           .defineInRange("affixTargetRange", 0.0D, 0.0D, 100.0D);
 
       builder.push("adaptable");
 
       adaptableDamageReductionIncrement = builder.comment(
-          "The increase in damage reduction for each consecutive attack of the same damage type")
+              "The increase in damage reduction for each consecutive attack of the same damage type")
           .translation(CONFIG_PREFIX + "adaptableDamageReductionIncrement")
           .defineInRange("adaptableDamageReductionIncrement", 0.15D, 0.0D, 1.0D);
 
@@ -265,7 +264,7 @@ public class ChampionsConfig {
           .defineInRange("desecratingCloudInterval", 3, 1, Integer.MAX_VALUE);
 
       desecratingCloudActivationTime = builder.comment(
-          "How long (in seconds) it takes for the effect cloud to activate after being placed")
+              "How long (in seconds) it takes for the effect cloud to activate after being placed")
           .translation(CONFIG_PREFIX + "desecratingCloudActivationTime")
           .defineInRange("desecratingCloudActivationTime", 1, 0, Integer.MAX_VALUE);
 
@@ -420,7 +419,7 @@ public class ChampionsConfig {
       builder.push("integrations");
 
       scalingHealthSpawnModifiers = builder.comment(
-          "Scaling Health\nList of tiers with numbers to multiply spawn rates by difficulty\nFormat: [tier];[percent increase]")
+              "Scaling Health\nList of tiers with numbers to multiply spawn rates by difficulty\nFormat: [tier];[percent increase]")
           .translation(CONFIG_PREFIX + "scalingHealthSpawnModifiers")
           .defineList("scalingHealthSpawnModifiers", new ArrayList<>(), s -> s instanceof String);
 
@@ -550,7 +549,7 @@ public class ChampionsConfig {
   public static int infestedAmount;
   public static int infestedInterval;
   public static double infestedPerHealth;
-  public static int           infestedTotal;
+  public static int infestedTotal;
   public static EntityType<?> infestedParasite;
   public static EntityType<?> infestedEnderParasite;
 
@@ -567,7 +566,7 @@ public class ChampionsConfig {
   public static boolean moltenWaterResistance;
 
   public static MobEffectInstance plaguedEffect;
-  public static int            plaguedRange;
+  public static int plaguedRange;
 
   public static double reflectiveMaxPercent;
   public static double reflectiveMinPercent;
@@ -680,6 +679,10 @@ public class ChampionsConfig {
     woundingChance = SERVER.woundingChance.get();
 
     scalingHealthSpawnModifiers = SERVER.scalingHealthSpawnModifiers.get();
+
+    if (Champions.scalingHealthLoaded) {
+      ScalingHealthPlugin.buildModifiers();
+    }
   }
 }
 

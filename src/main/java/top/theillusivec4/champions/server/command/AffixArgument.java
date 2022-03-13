@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.TranslatableComponent;
 import top.theillusivec4.champions.Champions;
@@ -26,7 +25,8 @@ public class AffixArgument implements ArgumentType<IAffixProvider> {
     return new AffixArgument();
   }
 
-  public static Collection<IAffix> getAffixes(CommandContext<CommandSourceStack> context, String name)
+  public static Collection<IAffix> getAffixes(CommandContext<CommandSourceStack> context,
+                                              String name)
       throws CommandSyntaxException {
     return context.getArgument(name, IAffixProvider.class).getAffixes(context.getSource());
   }

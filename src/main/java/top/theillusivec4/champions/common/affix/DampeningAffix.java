@@ -8,13 +8,13 @@ import top.theillusivec4.champions.common.affix.core.BasicAffix;
 import top.theillusivec4.champions.common.config.ChampionsConfig;
 
 public class DampeningAffix extends BasicAffix {
-    public DampeningAffix() {
-        super("dampening", AffixCategory.DEFENSE);
-    }
+  public DampeningAffix() {
+    super("dampening", AffixCategory.DEFENSE);
+  }
 
-    @Override
-    public float onHurt(IChampion champion, DamageSource source, float amount, float newAmount) {
-        return source instanceof IndirectEntityDamageSource ? newAmount * (float) (1.0F
-                - ChampionsConfig.dampenedDamageReduction) : newAmount;
-    }
+  @Override
+  public float onHurt(IChampion champion, DamageSource source, float amount, float newAmount) {
+    return source instanceof IndirectEntityDamageSource ? newAmount * (float) (1.0F
+        - ChampionsConfig.dampenedDamageReduction) : newAmount;
+  }
 }

@@ -39,7 +39,7 @@ public abstract class BasicAffix implements IAffix {
   }
 
   public static boolean canTarget(
-    Mob mob, LivingEntity target,
+      Mob mob, LivingEntity target,
       boolean sightCheck) {
 
     if (target == null || !target.isAlive() || target instanceof ArmorStand || (sightCheck

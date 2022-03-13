@@ -8,19 +8,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import javax.annotation.Nonnull;
-
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.*;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
+import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.champions.Champions;
@@ -32,190 +32,183 @@ import top.theillusivec4.champions.common.rank.RankManager;
 
 public class ChampionCapability {
 
-    public static final Capability<IChampion> CHAMPION_CAP = CapabilityManager.get(new CapabilityToken<>() {
-    });
+  public static final Capability<IChampion> CHAMPION_CAP =
+      CapabilityManager.get(new CapabilityToken<>() {
+      });
 
-    public static final ResourceLocation ID = new ResourceLocation(Champions.MODID, "champion");
+  public static final ResourceLocation ID = new ResourceLocation(Champions.MODID, "champion");
 
-    private static final String AFFIX_TAG = "affixes";
-    private static final String TIER_TAG = "tier";
-    private static final String DATA_TAG = "data";
-    private static final String ID_TAG = "identifier";
+  private static final String AFFIX_TAG = "affixes";
+  private static final String TIER_TAG = "tier";
+  private static final String DATA_TAG = "data";
+  private static final String ID_TAG = "identifier";
 
-    @SubscribeEvent
-    public static void registerCaps(final RegisterCapabilitiesEvent event) {
-        event.register(IChampion.class);
+  public static void register() {
+    MinecraftForge.EVENT_BUS.register(new CapabilityEventHandler());
+    MinecraftForge.EVENT_BUS.register(new ChampionEventsHandler());
+  }
+
+  public static Provider createProvider(final LivingEntity livingEntity) {
+    return new Provider(livingEntity);
+  }
+
+  public static LazyOptional<IChampion> getCapability(final LivingEntity livingEntity) {
+    return livingEntity.getCapability(CHAMPION_CAP);
+  }
+
+  public static class Champion implements IChampion {
+
+    private final LivingEntity champion;
+    private final Client client;
+    private final Server server;
+
+    private Champion(final LivingEntity livingEntity) {
+      this.champion = livingEntity;
+      this.client = new Client();
+      this.server = new Server();
     }
 
-    public static void register() {
-        MinecraftForge.EVENT_BUS.register(new CapabilityEventHandler());
-        MinecraftForge.EVENT_BUS.register(new ChampionEventsHandler());
+    @Override
+    public Client getClient() {
+      return this.client;
     }
 
-    public static Provider createProvider(final LivingEntity livingEntity) {
-        return new Provider(livingEntity);
+    @Override
+    public Server getServer() {
+      return this.server;
     }
 
-    public static LazyOptional<IChampion> getCapability(final LivingEntity livingEntity) {
-        return livingEntity.getCapability(CHAMPION_CAP);
+    @Override
+    public LivingEntity getLivingEntity() {
+      return this.champion;
     }
 
-    public static class Champion implements IChampion {
+    public static class Server implements IChampion.Server {
 
-        private final LivingEntity champion;
-        private final Client client;
-        private final Server server;
+      private Rank rank = null;
+      private List<IAffix> affixes = new ArrayList<>();
+      private final Map<String, CompoundTag> data = new HashMap<>();
 
-        private Champion() {
-            this(null);
-        }
+      @Override
+      public Optional<Rank> getRank() {
+        return Optional.ofNullable(rank);
+      }
 
-        private Champion(final LivingEntity livingEntity) {
-            this.champion = livingEntity;
-            this.client = new Client();
-            this.server = new Server();
-        }
+      @Override
+      public void setRank(Rank rank) {
+        this.rank = rank;
+      }
 
-        @Override
-        public Client getClient() {
-            return this.client;
-        }
+      @Override
+      public List<IAffix> getAffixes() {
+        return Collections.unmodifiableList(affixes);
+      }
 
-        @Override
-        public Server getServer() {
-            return this.server;
-        }
+      @Override
+      public void setAffixes(List<IAffix> affixes) {
+        this.affixes = affixes;
+      }
 
-        @Override
-        public LivingEntity getLivingEntity() {
-            return this.champion;
-        }
+      @Override
+      public void setData(String identifier, CompoundTag data) {
+        this.data.put(identifier, data);
+      }
 
-        public static class Server implements IChampion.Server {
-
-            private Rank rank = null;
-            private List<IAffix> affixes = new ArrayList<>();
-            private Map<String, CompoundTag> data = new HashMap<>();
-
-            @Override
-            public Optional<Rank> getRank() {
-                return Optional.ofNullable(rank);
-            }
-
-            @Override
-            public void setRank(Rank rank) {
-                this.rank = rank;
-            }
-
-            @Override
-            public List<IAffix> getAffixes() {
-                return Collections.unmodifiableList(affixes);
-            }
-
-            @Override
-            public void setAffixes(List<IAffix> affixes) {
-                this.affixes = affixes;
-            }
-
-            @Override
-            public void setData(String identifier, CompoundTag data) {
-                this.data.put(identifier, data);
-            }
-
-            @Override
-            public CompoundTag getData(String identifier) {
-                return this.data.getOrDefault(identifier, new CompoundTag());
-            }
-        }
-
-        public static class Client implements IChampion.Client {
-
-            private Tuple<Integer, Integer> rank = null;
-            private Set<String> affixes = new HashSet<>();
-
-            @Override
-            public Optional<Tuple<Integer, Integer>> getRank() {
-                return Optional.ofNullable(rank);
-            }
-
-            @Override
-            public void setRank(Tuple<Integer, Integer> rank) {
-                this.rank = rank;
-            }
-
-            @Override
-            public Set<String> getAffixes() {
-                return this.affixes;
-            }
-
-            @Override
-            public void setAffixes(Set<String> affixes) {
-                this.affixes = affixes;
-            }
-        }
+      @Override
+      public CompoundTag getData(String identifier) {
+        return this.data.getOrDefault(identifier, new CompoundTag());
+      }
     }
 
-    public static class Provider implements ICapabilitySerializable<Tag> {
+    public static class Client implements IChampion.Client {
 
-        final LazyOptional<IChampion> optional;
-        final IChampion data;
+      private Tuple<Integer, Integer> rank = null;
+      private Set<String> affixes = new HashSet<>();
 
-        Provider(final LivingEntity livingEntity) {
-            this.data = new Champion(livingEntity);
-            this.optional = LazyOptional.of(() -> data);
-        }
+      @Override
+      public Optional<Tuple<Integer, Integer>> getRank() {
+        return Optional.ofNullable(rank);
+      }
 
-        @NotNull
-        @Override
-        public <T> LazyOptional<T> getCapability(@NotNull final Capability<T> cap, @Nullable final Direction side) {
-            return cap == CHAMPION_CAP ? optional.cast() : LazyOptional.empty();
-        }
+      @Override
+      public void setRank(Tuple<Integer, Integer> rank) {
+        this.rank = rank;
+      }
 
-        @Override
-        public Tag serializeNBT() {
-            CompoundTag compoundNBT = new CompoundTag();
-            IChampion.Server champion = data.getServer();
-            champion.getRank().ifPresent(rank -> compoundNBT.putInt(TIER_TAG, rank.getTier()));
-            List<IAffix> affixes = champion.getAffixes();
-            ListTag list = new ListTag();
-            affixes.forEach(affix -> {
-                CompoundTag tag = new CompoundTag();
-                String id = affix.getIdentifier();
-                tag.putString(ID_TAG, id);
-                tag.put(DATA_TAG, champion.getData(id));
-                list.add(tag);
-            });
-            compoundNBT.put(AFFIX_TAG, list);
-            return compoundNBT;
-        }
+      @Override
+      public Set<String> getAffixes() {
+        return this.affixes;
+      }
 
-        @Override
-        public void deserializeNBT(final Tag nbt) {
-            CompoundTag compoundNBT = (CompoundTag) nbt;
-            IChampion.Server champion = data.getServer();
-
-            if (compoundNBT.contains(TIER_TAG)) {
-                int tier = compoundNBT.getInt(TIER_TAG);
-                champion.setRank(RankManager.getRank(tier));
-            }
-
-            if (compoundNBT.contains(AFFIX_TAG)) {
-                ListTag list = compoundNBT.getList(AFFIX_TAG, CompoundTag.TAG_COMPOUND);
-                List<IAffix> affixes = new ArrayList<>();
-
-                for (int i = 0; i < list.size(); i++) {
-                    CompoundTag tag = list.getCompound(i);
-                    String id = tag.getString(ID_TAG);
-                    Champions.API.getAffix(id).ifPresent(affix -> {
-                        affixes.add(affix);
-
-                        if (tag.hasUUID(DATA_TAG)) {
-                            champion.setData(id, tag.getCompound(DATA_TAG));
-                        }
-                    });
-                }
-                champion.setAffixes(affixes);
-            }
-        }
+      @Override
+      public void setAffixes(Set<String> affixes) {
+        this.affixes = affixes;
+      }
     }
+  }
+
+  public static class Provider implements ICapabilitySerializable<Tag> {
+
+    final LazyOptional<IChampion> optional;
+    final IChampion data;
+
+    Provider(final LivingEntity livingEntity) {
+      this.data = new Champion(livingEntity);
+      this.optional = LazyOptional.of(() -> data);
+    }
+
+    @NotNull
+    @Override
+    public <T> LazyOptional<T> getCapability(@NotNull final Capability<T> cap,
+                                             @Nullable final Direction side) {
+      return cap == CHAMPION_CAP ? optional.cast() : LazyOptional.empty();
+    }
+
+    @Override
+    public Tag serializeNBT() {
+      CompoundTag compoundNBT = new CompoundTag();
+      IChampion.Server champion = data.getServer();
+      champion.getRank().ifPresent(rank -> compoundNBT.putInt(TIER_TAG, rank.getTier()));
+      List<IAffix> affixes = champion.getAffixes();
+      ListTag list = new ListTag();
+      affixes.forEach(affix -> {
+        CompoundTag tag = new CompoundTag();
+        String id = affix.getIdentifier();
+        tag.putString(ID_TAG, id);
+        tag.put(DATA_TAG, champion.getData(id));
+        list.add(tag);
+      });
+      compoundNBT.put(AFFIX_TAG, list);
+      return compoundNBT;
+    }
+
+    @Override
+    public void deserializeNBT(final Tag nbt) {
+      CompoundTag compoundNBT = (CompoundTag) nbt;
+      IChampion.Server champion = data.getServer();
+
+      if (compoundNBT.contains(TIER_TAG)) {
+        int tier = compoundNBT.getInt(TIER_TAG);
+        champion.setRank(RankManager.getRank(tier));
+      }
+
+      if (compoundNBT.contains(AFFIX_TAG)) {
+        ListTag list = compoundNBT.getList(AFFIX_TAG, CompoundTag.TAG_COMPOUND);
+        List<IAffix> affixes = new ArrayList<>();
+
+        for (int i = 0; i < list.size(); i++) {
+          CompoundTag tag = list.getCompound(i);
+          String id = tag.getString(ID_TAG);
+          Champions.API.getAffix(id).ifPresent(affix -> {
+            affixes.add(affix);
+
+            if (tag.hasUUID(DATA_TAG)) {
+              champion.setData(id, tag.getCompound(DATA_TAG));
+            }
+          });
+        }
+        champion.setAffixes(affixes);
+      }
+    }
+  }
 }
