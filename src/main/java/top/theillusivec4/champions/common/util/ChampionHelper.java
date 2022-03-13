@@ -1,42 +1,36 @@
 package top.theillusivec4.champions.common.util;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.monster.IMob;
-import net.minecraft.tileentity.BeaconTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.level.block.entity.BeaconBlockEntity;
+import net.minecraft.world.level.block.entity.TickingBlockEntity;
 import top.theillusivec4.champions.Champions;
 import top.theillusivec4.champions.common.config.ChampionsConfig;
 import top.theillusivec4.champions.common.config.ConfigEnums.Permission;
-import top.theillusivec4.champions.common.integration.gamestages.ChampionsStages;
 
 public class ChampionHelper {
 
   public static boolean isValidChampion(final Entity entity) {
-    return entity instanceof LivingEntity && entity instanceof IMob;
+    return entity instanceof LivingEntity && entity instanceof Enemy;
   }
 
   public static boolean checkPotential(final LivingEntity livingEntity) {
     return isValidEntity(livingEntity) &&
-        isValidDimension(livingEntity.getEntityWorld().getDimensionKey().getLocation()) &&
-        (!Champions.gameStagesLoaded || ChampionsStages.hasChampionStage(livingEntity)) &&
+        isValidDimension(livingEntity.getLevel().dimension().location()) &&
+        (!Champions.gameStagesLoaded) &&
         !nearActiveBeacon(livingEntity);
   }
 
   private static boolean isValidEntity(final LivingEntity livingEntity) {
-    String entity = livingEntity.getEntityString();
-
-    if (entity != null) {
-
+    String entity = livingEntity.getType().toString();
       if (ChampionsConfig.entitiesPermission == Permission.BLACKLIST) {
         return !ChampionsConfig.entitiesList.contains(entity);
       } else {
         return ChampionsConfig.entitiesList.contains(entity);
       }
-    }
-    return true;
   }
 
   private static boolean isValidDimension(final ResourceLocation resourceLocation) {
@@ -56,14 +50,14 @@ public class ChampionHelper {
       return false;
     }
 
-    for (TileEntity te : livingEntity.getEntityWorld().tickableTileEntities) {
+    for (TickingBlockEntity te : livingEntity.getLevel().blockEntityTickers) {
       BlockPos pos = te.getPos();
 
-      if (Math.sqrt(livingEntity.getDistanceSq(pos.getX(), pos.getY(), pos.getZ())) <= range
-          && te instanceof BeaconTileEntity) {
-        BeaconTileEntity beacon = (BeaconTileEntity) te;
+      if (Math.sqrt(livingEntity.distanceToSqr(pos.getX(), pos.getY(), pos.getZ())) <= range
+          && te instanceof BeaconBlockEntity) {
+          BeaconBlockEntity beacon = (BeaconBlockEntity) te;
 
-        if (beacon.getLevels() > 0) {
+        if (beacon.levels > 0) {
           return true;
         }
       }

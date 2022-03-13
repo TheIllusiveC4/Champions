@@ -1,32 +1,26 @@
 modLoader="javafml"
 loaderVersion="[33,)"
 issueTrackerURL="https://github.com/TheIllusiveC4/Champions/issues"
-logoFile="${mod_icon}"
+logoFile="champions_icon.png"
 license="LGPL-3.0-or-later"
 [[mods]]
-modId="${mod_id}"
-version="${version}"
-displayName="${mod_name}"
-displayURL="${mod_url}"
-authors="${mod_author}"
+modId="champions"
+version="1.18.1-2.0.1.8"
+displayName="Champions"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/champions"
+authors="C4"
 description='''
-${mod_description}
+Creates elite mobs of different rarities, with enhanced stats and extra abilities.
 '''
 [[dependencies.champions]]
     modId="forge"
     mandatory=true
-    versionRange="[33,)"
+    versionRange="[39.0.0, )" #mandatory
     ordering="NONE"
     side="BOTH"
 [[dependencies.champions]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.2,1.17)"
-    ordering="NONE"
-    side="BOTH"
-[[dependencies.champions]]
-    modId="scalinghealth"
-    mandatory=false
-    versionRange="[4.1.0,)"
+    versionRange="[1.18.1, 1.19)"
     ordering="NONE"
     side="BOTH"

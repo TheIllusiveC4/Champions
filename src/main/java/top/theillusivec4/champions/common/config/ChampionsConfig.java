@@ -5,11 +5,12 @@ import com.electronwill.nightconfig.core.conversion.ObjectConverter;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.entity.EntityType;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.ResourceLocation;
+
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
@@ -24,23 +25,23 @@ import top.theillusivec4.champions.common.config.ConfigEnums.LootSource;
 import top.theillusivec4.champions.common.config.ConfigEnums.Permission;
 import top.theillusivec4.champions.common.config.EntitiesConfig.EntityConfig;
 import top.theillusivec4.champions.common.config.RanksConfig.RankConfig;
-import top.theillusivec4.champions.common.integration.scalinghealth.ScalingHealthManager;
 
 public class ChampionsConfig {
 
   private static final String CONFIG_PREFIX = "gui." + Champions.MODID + ".config.";
 
   public static final ForgeConfigSpec SERVER_SPEC;
-  public static final Server SERVER;
+  public static final ServerConfig    SERVER;
 
   static {
-    final Pair<Server, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder()
-        .configure(Server::new);
+    final Pair<ServerConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder()
+        .configure(ServerConfig::new);
     SERVER_SPEC = specPair.getRight();
     SERVER = specPair.getLeft();
   }
 
-  public static class Server {
+  public static class ServerConfig
+  {
 
     public final IntValue beaconProtectionRange;
     public final BooleanValue championSpawners;
@@ -114,7 +115,7 @@ public class ChampionsConfig {
 
     public final ConfigValue<List<? extends String>> scalingHealthSpawnModifiers;
 
-    public Server(ForgeConfigSpec.Builder builder) {
+    public ServerConfig(ForgeConfigSpec.Builder builder) {
       builder.push("general");
 
       beaconProtectionRange = builder
@@ -549,7 +550,7 @@ public class ChampionsConfig {
   public static int infestedAmount;
   public static int infestedInterval;
   public static double infestedPerHealth;
-  public static int infestedTotal;
+  public static int           infestedTotal;
   public static EntityType<?> infestedParasite;
   public static EntityType<?> infestedEnderParasite;
 
@@ -565,8 +566,8 @@ public class ChampionsConfig {
 
   public static boolean moltenWaterResistance;
 
-  public static EffectInstance plaguedEffect;
-  public static int plaguedRange;
+  public static MobEffectInstance plaguedEffect;
+  public static int            plaguedRange;
 
   public static double reflectiveMaxPercent;
   public static double reflectiveMinPercent;
@@ -652,22 +653,22 @@ public class ChampionsConfig {
       if (s.length < 1) {
         throw new IllegalArgumentException();
       }
-      Effect effect = ForgeRegistries.POTIONS.getValue(new ResourceLocation(s[0]));
+      MobEffect effect = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation(s[0]));
 
       if (effect == null) {
         throw new IllegalArgumentException();
       }
 
       if (s.length < 2) {
-        plaguedEffect = new EffectInstance(effect);
+        plaguedEffect = new MobEffectInstance(effect);
       } else if (s.length < 3) {
-        plaguedEffect = new EffectInstance(effect, Integer.parseInt(s[1]) * 20);
+        plaguedEffect = new MobEffectInstance(effect, Integer.parseInt(s[1]) * 20);
       } else {
-        plaguedEffect = new EffectInstance(effect, Integer.parseInt(s[1]) * 20,
+        plaguedEffect = new MobEffectInstance(effect, Integer.parseInt(s[1]) * 20,
             Integer.parseInt(s[2]) - 1);
       }
     } catch (IllegalArgumentException e) {
-      plaguedEffect = new EffectInstance(Effects.POISON, 300, 0);
+      plaguedEffect = new MobEffectInstance(MobEffects.POISON, 300, 0);
       Champions.LOGGER.error("Error parsing plaguedEffect config value!");
     }
 
@@ -679,10 +680,6 @@ public class ChampionsConfig {
     woundingChance = SERVER.woundingChance.get();
 
     scalingHealthSpawnModifiers = SERVER.scalingHealthSpawnModifiers.get();
-
-    if (Champions.scalingHealthLoaded) {
-      ScalingHealthManager.buildModifiers();
-    }
   }
 }
 

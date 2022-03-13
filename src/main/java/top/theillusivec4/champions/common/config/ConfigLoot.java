@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import top.theillusivec4.champions.Champions;
 
@@ -128,7 +128,7 @@ public class ConfigLoot {
       ItemStack loot = stack.copy();
 
       if (enchant) {
-        EnchantmentHelper.addRandomEnchantment(RAND, loot, 30, true);
+        EnchantmentHelper.enchantItem(RAND, loot, 30, true);
       }
       return loot;
     }

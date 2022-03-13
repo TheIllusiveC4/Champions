@@ -1,13 +1,14 @@
 package top.theillusivec4.champions.common.potion;
 
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectType;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
 import top.theillusivec4.champions.common.registry.RegistryReference;
 
-public class WoundEffect extends Effect {
+public class WoundEffect extends MobEffect
+{
 
   public WoundEffect() {
-    super(EffectType.HARMFUL, 0x8d0037);
+    super(MobEffectCategory.HARMFUL, 0x8d0037);
     this.setRegistryName(RegistryReference.WOUND);
   }
 }

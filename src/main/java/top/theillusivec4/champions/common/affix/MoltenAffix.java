@@ -1,21 +1,16 @@
 package top.theillusivec4.champions.common.affix;
 
-import java.lang.reflect.Field;
 import java.util.Iterator;
 import java.util.Set;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.goal.FleeSunGoal;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.goal.GoalSelector;
-import net.minecraft.entity.ai.goal.PrioritizedGoal;
-import net.minecraft.entity.ai.goal.RestrictSunGoal;
-import net.minecraft.pathfinding.GroundPathNavigator;
-import net.minecraft.pathfinding.PathNodeType;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.DamageSource;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import top.theillusivec4.champions.Champions;
 import top.theillusivec4.champions.api.AffixCategory;
 import top.theillusivec4.champions.api.IChampion;
@@ -24,69 +19,65 @@ import top.theillusivec4.champions.common.config.ChampionsConfig;
 
 public class MoltenAffix extends BasicAffix {
 
-  private static final Field GOALS = ObfuscationReflectionHelper
-      .findField(GoalSelector.class, "field_220892_d");
+    public MoltenAffix() {
+        super("molten", AffixCategory.OFFENSE);
+    }
 
-  public MoltenAffix() {
-    super("molten", AffixCategory.OFFENSE);
-  }
+    @Override
+    public void onSpawn(IChampion champion) {
+        LivingEntity livingEntity = champion.getLivingEntity();
+        livingEntity.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 40, 0, true, false));
 
-  @Override
-  public void onSpawn(IChampion champion) {
-    LivingEntity livingEntity = champion.getLivingEntity();
-    livingEntity.addPotionEffect(new EffectInstance(Effects.FIRE_RESISTANCE, 40, 0, true, false));
+        if (livingEntity instanceof Mob) {
+            Mob mobEntity = (Mob) livingEntity;
 
-    if (livingEntity instanceof MobEntity) {
-      MobEntity mobEntity = (MobEntity) livingEntity;
+            mobEntity.setPathfindingMalus(BlockPathTypes.WATER, -1.0F);
+            mobEntity.setPathfindingMalus(BlockPathTypes.LAVA, 8.0F);
+            mobEntity.setPathfindingMalus(BlockPathTypes.DANGER_FIRE, 0.0F);
+            mobEntity.setPathfindingMalus(BlockPathTypes.DAMAGE_FIRE, 0.0F);
 
-      mobEntity.setPathPriority(PathNodeType.WATER, -1.0F);
-      mobEntity.setPathPriority(PathNodeType.LAVA, 8.0F);
-      mobEntity.setPathPriority(PathNodeType.DANGER_FIRE, 0.0F);
-      mobEntity.setPathPriority(PathNodeType.DAMAGE_FIRE, 0.0F);
+            try {
 
-      try {
-        @SuppressWarnings("unchecked") Set<PrioritizedGoal> goals = (Set<PrioritizedGoal>) GOALS
-            .get(mobEntity.goalSelector);
-        Iterator<PrioritizedGoal> iter = goals.iterator();
+                Set<WrappedGoal> goals = mobEntity.goalSelector.getAvailableGoals();
+                Iterator<WrappedGoal> iter = goals.iterator();
 
-        while (iter.hasNext()) {
-          PrioritizedGoal goal = iter.next();
-          Goal baseGoal = goal.getGoal();
+                while (iter.hasNext()) {
+                    WrappedGoal goal = iter.next();
+                    Goal baseGoal = goal.getGoal();
 
-          if (baseGoal instanceof FleeSunGoal || baseGoal instanceof RestrictSunGoal) {
-            iter.remove();
-          }
+                    if (baseGoal instanceof FleeSunGoal || baseGoal instanceof RestrictSunGoal) {
+                        iter.remove();
+                    }
+                }
+            } catch (Exception e) {
+                Champions.LOGGER.error("Error accessing goals!");
+            }
+
+            if (mobEntity.getNavigation() instanceof GroundPathNavigation) {
+                ((GroundPathNavigation) mobEntity.getNavigation()).setAvoidSun(false);
+            }
         }
-      } catch (Exception e) {
-        Champions.LOGGER.error("Error accessing goals!");
-      }
-
-      if (mobEntity.getNavigator() instanceof GroundPathNavigator) {
-        ((GroundPathNavigator) mobEntity.getNavigator()).setAvoidSun(false);
-      }
     }
-  }
 
-  @Override
-  public void onUpdate(IChampion champion) {
-    LivingEntity livingEntity = champion.getLivingEntity();
+    @Override
+    public void onServerUpdate(IChampion champion) {
+        LivingEntity livingEntity = champion.getLivingEntity();
 
-    if (!livingEntity.getEntityWorld().isRemote() && livingEntity.ticksExisted % 20 == 0) {
-//      todo: figure out a better way to do this fire effect
-//      livingEntity.setFire(10);
-      livingEntity.addPotionEffect(new EffectInstance(Effects.FIRE_RESISTANCE, 40, 0, true, false));
+        if (!livingEntity.getLevel().isClientSide() && livingEntity.tickCount % 20 == 0) {
+            //todo: figure out a better way to do this fire effect
+            //livingEntity.setFire(10);
+            livingEntity.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 40, 0, true, false));
 
-      if (!ChampionsConfig.moltenWaterResistance && livingEntity.isWet()) {
-        livingEntity.attackEntityFrom(DamageSource.DROWN, 1.0F);
-      }
+            if (!ChampionsConfig.moltenWaterResistance && livingEntity.isInWaterOrRain()) {
+                livingEntity.hurt(DamageSource.DROWN, 1.0F);
+            }
+        }
     }
-  }
 
-  @Override
-  public boolean onAttack(IChampion champion, LivingEntity target, DamageSource source,
-      float amount) {
-    target.setFire(10);
-    source.setFireDamage();
-    return true;
-  }
+    @Override
+    public boolean onAttack(IChampion champion, LivingEntity target, DamageSource source, float amount) {
+        target.setSecondsOnFire(10);
+        source.setIsFire();
+        return true;
+    }
 }

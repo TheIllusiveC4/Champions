@@ -4,12 +4,12 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Supplier;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.util.Tuple;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraftforge.network.NetworkEvent;
 import top.theillusivec4.champions.api.IChampion;
 import top.theillusivec4.champions.common.capability.ChampionCapability;
 
@@ -29,15 +29,15 @@ public class SPacketSyncChampion {
     this.defaultColor = defaultColor;
   }
 
-  public static void encode(SPacketSyncChampion msg, PacketBuffer buf) {
+  public static void encode(SPacketSyncChampion msg, FriendlyByteBuf buf) {
     buf.writeInt(msg.entityId);
     buf.writeInt(msg.tier);
     buf.writeInt(msg.affixSize);
     buf.writeInt(msg.defaultColor);
-    msg.affixes.forEach(buf::writeString);
+    msg.affixes.forEach(buf::writeUtf);
   }
 
-  public static SPacketSyncChampion decode(PacketBuffer buf) {
+  public static SPacketSyncChampion decode(FriendlyByteBuf buf) {
     int entityId = buf.readInt();
     int tier = buf.readInt();
     Set<String> affixes = new HashSet<>();
@@ -45,17 +45,17 @@ public class SPacketSyncChampion {
     int defaultColor = buf.readInt();
 
     for (int i = 0; i < affixSize; i++) {
-      affixes.add(buf.readString());
+      affixes.add(buf.readUtf());
     }
     return new SPacketSyncChampion(entityId, tier, defaultColor, affixes);
   }
 
-  public static void handle(SPacketSyncChampion msg, Supplier<Context> ctx) {
+  public static void handle(SPacketSyncChampion msg, Supplier<NetworkEvent.Context> ctx) {
     ctx.get().enqueueWork(() -> {
-      ClientWorld world = Minecraft.getInstance().world;
+      ClientLevel world = Minecraft.getInstance().level;
 
       if (world != null) {
-        Entity entity = world.getEntityByID(msg.entityId);
+        Entity entity = world.getEntity(msg.entityId);
 
         if (entity instanceof LivingEntity) {
           ChampionCapability.getCapability((LivingEntity) entity).ifPresent(champion -> {
