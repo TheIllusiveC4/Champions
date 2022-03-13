@@ -18,7 +18,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'com.matthewprenger.cursegradle'
 version = "${mod_version}"
-group = "top.theillusivec4.champions"
+group = "${mod_group}"
 archivesBaseName = "${mod_id}-forge"
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '17'
 

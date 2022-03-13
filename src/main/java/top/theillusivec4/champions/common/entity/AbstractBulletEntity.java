@@ -174,7 +174,7 @@ public abstract class AbstractBulletEntity extends Projectile
         double d3 = (double) blockpos.getZ() + 0.5D;
         Direction direction = null;
 
-        if (!blockpos.closerThan(this.position(), 2.0D))
+        if (!blockpos.closerThan(this.blockPosition(), 2.0D))
         {
             BlockPos blockpos1 = this.blockPosition();
             List<Direction> list = Lists.newArrayList();

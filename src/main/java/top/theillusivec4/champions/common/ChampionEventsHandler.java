@@ -39,10 +39,8 @@ import net.minecraftforge.event.entity.living.LivingHealEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import top.theillusivec4.champions.Champions;
 import top.theillusivec4.champions.api.IChampion;
-import top.theillusivec4.champions.common.affix.core.AffixManager;
 import top.theillusivec4.champions.common.capability.ChampionCapability;
 import top.theillusivec4.champions.common.config.ChampionsConfig;
 import top.theillusivec4.champions.common.config.ConfigEnums.LootSource;
@@ -53,9 +51,6 @@ import top.theillusivec4.champions.common.registry.RegistryReference;
 import top.theillusivec4.champions.common.util.ChampionBuilder;
 
 public class ChampionEventsHandler {
-
-  private static final Field EXPLOSION_SIZE = ObfuscationReflectionHelper
-      .findField(Explosion.class, "radius");
 
   @SubscribeEvent
   public void onLivingDrops(LivingDropsEvent evt) {
@@ -140,12 +135,7 @@ public class ChampionEventsHandler {
             int growth = rank.getGrowthFactor();
 
             if (growth > 0) {
-              try {
-                float size = EXPLOSION_SIZE.getFloat(explosion);
-                EXPLOSION_SIZE.setFloat(explosion, size + ChampionsConfig.explosionGrowth * growth);
-              } catch (IllegalAccessException e) {
-                Champions.LOGGER.error("Cannot increase explosion size!");
-              }
+              explosion.radius += ChampionsConfig.explosionGrowth * growth;
             }
           }));
     }

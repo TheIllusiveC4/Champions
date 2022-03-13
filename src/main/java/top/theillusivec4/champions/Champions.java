@@ -83,18 +83,16 @@ import top.theillusivec4.champions.server.command.AffixArgument;
 import top.theillusivec4.champions.server.command.ChampionsCommand;
 
 @Mod(Champions.MODID)
-public class Champions
-{
+public class Champions {
 
-    public static final String        MODID  = "champions";
-    public static final Logger        LOGGER = LogManager.getLogger();
-    public static final IChampionsApi API    = ChampionsApiImpl.getInstance();
+    public static final String MODID = "champions";
+    public static final Logger LOGGER = LogManager.getLogger();
+    public static final IChampionsApi API = ChampionsApiImpl.getInstance();
 
-    public static boolean gameStagesLoaded    = false;
+    public static boolean gameStagesLoaded = false;
     public static boolean scalingHealthLoaded = false;
 
-    public Champions()
-    {
+    public Champions() {
         ModLoadingContext.get().registerConfig(Type.CLIENT, ClientChampionsConfig.CLIENT_SPEC);
         ModLoadingContext.get().registerConfig(Type.SERVER, ChampionsConfig.SERVER_SPEC);
         createServerConfig(ChampionsConfig.RANKS_SPEC, "ranks");
@@ -112,33 +110,29 @@ public class Champions
         Mod.EventBusSubscriber.Bus.MOD.bus().get().register(this.getClass());
     }
 
-    private void setup(final FMLCommonSetupEvent evt)
-    {
+    private void setup(final FMLCommonSetupEvent evt) {
         ChampionCapability.register();
         NetworkHandler.register();
         AffixManager.register();
         evt.enqueueWork(() -> {
             Registry
-              .register(Registry.LOOT_CONDITION_TYPE,
-                new ResourceLocation(Champions.MODID, "entity_champion"), EntityIsChampion.type);
-            DispenseItemBehavior dispenseBehavior = new DispenseItemBehavior()
-            {
+                    .register(Registry.LOOT_CONDITION_TYPE,
+                            new ResourceLocation(Champions.MODID, "entity_champion"), EntityIsChampion.type);
+            DispenseItemBehavior dispenseBehavior = new DispenseItemBehavior() {
 
                 @NotNull
                 @Override
-                public ItemStack dispense(final BlockSource source, final @NotNull ItemStack stack)
-                {
+                public ItemStack dispense(final BlockSource source, final @NotNull ItemStack stack) {
                     Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
                     Optional<EntityType<?>> entitytype = ChampionEggItem.getType(stack);
                     entitytype.ifPresent(type -> {
                         Entity entity = type.create(source.getLevel(), stack.getTag(), null, null,
-                          source.getPos().relative(direction), MobSpawnType.DISPENSER, true,
-                          direction != Direction.UP);
+                                source.getPos().relative(direction), MobSpawnType.DISPENSER, true,
+                                direction != Direction.UP);
 
-                        if (entity instanceof LivingEntity)
-                        {
+                        if (entity instanceof LivingEntity) {
                             ChampionCapability.getCapability((LivingEntity) entity)
-                              .ifPresent(champion -> ChampionEggItem.read(champion, stack));
+                                    .ifPresent(champion -> ChampionEggItem.read(champion, stack));
                             source.getLevel().addFreshEntity(entity);
                             stack.shrink(1);
                         }
@@ -148,31 +142,26 @@ public class Champions
             };
             DispenserBlock.registerBehavior(ChampionsRegistry.EGG, dispenseBehavior);
             ArgumentTypes.register(Champions.MODID + ":affix", AffixArgument.class,
-              new ArgumentSerializer<>()
-              {
-                  @Override
-                  public void serializeToNetwork(final AffixArgument argument, final FriendlyByteBuf buffer)
-                  {
-                      // noop
-                  }
+                    new ArgumentSerializer<>() {
+                        @Override
+                        public void serializeToNetwork(final AffixArgument argument, final FriendlyByteBuf buffer) {
+                            // noop
+                        }
 
-                  @Override
-                  public AffixArgument deserializeFromNetwork(final FriendlyByteBuf buffer)
-                  {
-                      return null;
-                  }
+                        @Override
+                        public AffixArgument deserializeFromNetwork(final FriendlyByteBuf buffer) {
+                            return null;
+                        }
 
-                  @Override
-                  public void serializeToJson(final AffixArgument argument, final JsonObject json)
-                  {
-                      // noop
-                  }
-              });
+                        @Override
+                        public void serializeToJson(final AffixArgument argument, final JsonObject json) {
+                            // noop
+                        }
+                    });
         });
     }
 
-    private void clientSetup(final FMLClientSetupEvent evt)
-    {
+    private void clientSetup(final FMLClientSetupEvent evt) {
         MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
         MinecraftForge.EVENT_BUS.register(new ClientAffixEventsHandler());
         Minecraft.getInstance().getItemColors().register(ChampionEggItem::getColor, ChampionsRegistry.EGG);
@@ -180,68 +169,51 @@ public class Champions
 
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
-    public static void rendererRegistering(final EntityRenderersEvent.RegisterRenderers event)
-    {
+    public static void rendererRegistering(final EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ChampionsRegistry.ARCTIC_BULLET,
-          (renderManager) -> new ColorizedBulletRenderer(renderManager, 0x42F5E3));
+                (renderManager) -> new ColorizedBulletRenderer(renderManager, 0x42F5E3));
         event.registerEntityRenderer(ChampionsRegistry.ENKINDLING_BULLET,
-          (renderManager) -> new ColorizedBulletRenderer(renderManager, 0xFC5A03));
+                (renderManager) -> new ColorizedBulletRenderer(renderManager, 0xFC5A03));
     }
 
-    private void registerCommands(final RegisterCommandsEvent evt)
-    {
+    private void registerCommands(final RegisterCommandsEvent evt) {
         ChampionsCommand.register(evt.getDispatcher());
     }
 
-    private void config(final ModConfigEvent evt)
-    {
-        if (evt.getConfig().getModId().equals(MODID))
-        {
-            if (evt.getConfig().getType() == Type.SERVER)
-            {
+    private void config(final ModConfigEvent evt) {
+        if (evt.getConfig().getModId().equals(MODID)) {
+            if (evt.getConfig().getType() == Type.SERVER) {
                 ChampionsConfig.bake();
                 IConfigSpec spec = evt.getConfig().getSpec();
                 CommentedConfig commentedConfig = evt.getConfig().getConfigData();
 
-                if (spec == ChampionsConfig.RANKS_SPEC)
-                {
+                if (spec == ChampionsConfig.RANKS_SPEC) {
                     ChampionsConfig.transformRanks(commentedConfig);
                     RankManager.buildRanks();
-                }
-                else if (spec == ChampionsConfig.AFFIXES_SPEC)
-                {
+                } else if (spec == ChampionsConfig.AFFIXES_SPEC) {
                     ChampionsConfig.transformAffixes(commentedConfig);
                     AffixManager.buildAffixSettings();
-                }
-                else if (spec == ChampionsConfig.ENTITIES_SPEC)
-                {
+                } else if (spec == ChampionsConfig.ENTITIES_SPEC) {
                     ChampionsConfig.transformEntities(commentedConfig);
                     EntityManager.buildEntitySettings();
                 }
-            }
-            else if (evt.getConfig().getType() == Type.CLIENT)
-            {
+            } else if (evt.getConfig().getType() == Type.CLIENT) {
                 ClientChampionsConfig.bake();
             }
         }
     }
 
-    private static void createServerConfig(ForgeConfigSpec spec, String suffix)
-    {
+    private static void createServerConfig(ForgeConfigSpec spec, String suffix) {
         String fileName = "champions-" + suffix + ".toml";
         ModLoadingContext.get().registerConfig(Type.SERVER, spec, fileName);
         File defaults = new File(FMLPaths.GAMEDIR.get() + "/defaultconfigs/" + fileName);
 
-        if (!defaults.exists())
-        {
-            try
-            {
+        if (!defaults.exists()) {
+            try {
                 FileUtils.copyInputStreamToFile(
-                  Objects.requireNonNull(Champions.class.getClassLoader().getResourceAsStream(fileName)),
-                  defaults);
-            }
-            catch (IOException e)
-            {
+                        Objects.requireNonNull(Champions.class.getClassLoader().getResourceAsStream(fileName)),
+                        defaults);
+            } catch (IOException e) {
                 LOGGER.error("Error creating default config for " + fileName);
             }
         }
