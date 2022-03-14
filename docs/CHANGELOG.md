@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
+## [1.16.5-2.0.1.9] - 2022.03.13
+### Added
+- Added `ko_kr.json` localization (thanks PixVoxel!) [#100](https://github.com/TheIllusiveC4/Champions/pull/100)
+- Added `ru_ru.json` localization (thanks MiniRaptor!) [#107](https://github.com/TheIllusiveC4/Champions/pull/107)
+### Fixed
+- Fixed Hasty affix not persisting
+
 ## [1.16.5-2.0.1.8] - 2021.11.09
 ### Fixed
 - Fixed compatibility with other mods that interact with the boss health bars [#96](https://github.com/TheIllusiveC4/Champions/issues/96) [#82](https://github.com/TheIllusiveC4/Champions/issues/82)
