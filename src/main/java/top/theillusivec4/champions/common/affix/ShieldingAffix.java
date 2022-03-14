@@ -34,7 +34,7 @@ public class ShieldingAffix extends BasicAffix {
           livingEntity.position().x + (random.nextFloat() - 0.5D) * livingEntity.getBbWidth(),
           livingEntity.position().y + random.nextFloat() * livingEntity.getBbHeight(),
           livingEntity.position().z + (random.nextFloat() - 0.5D) * livingEntity.getBbWidth(),
-          5, 1.0F, 1.0F, 1.0F, 1.0F);
+          0, 1.0F, 1.0F, 1.0F, 1.0F);
     }
   }
 

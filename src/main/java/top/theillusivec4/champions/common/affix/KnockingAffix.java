@@ -16,9 +16,8 @@ public class KnockingAffix extends BasicAffix {
   }
 
   @Override
-  public boolean onAttack(
-      IChampion champion, LivingEntity target, DamageSource source,
-      float amount) {
+  public boolean onAttack(IChampion champion, LivingEntity target, DamageSource source,
+                          float amount) {
     target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 2));
     LivingEntity livingEntity = champion.getLivingEntity();
     target.knockback((float) ChampionsConfig.knockingMultiplier,

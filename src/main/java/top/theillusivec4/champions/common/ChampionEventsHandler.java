@@ -15,7 +15,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
@@ -45,6 +44,7 @@ import top.theillusivec4.champions.common.rank.Rank;
 import top.theillusivec4.champions.common.registry.ChampionsRegistry;
 import top.theillusivec4.champions.common.registry.RegistryReference;
 import top.theillusivec4.champions.common.util.ChampionBuilder;
+import top.theillusivec4.champions.common.util.ChampionHelper;
 
 @SuppressWarnings("unused")
 public class ChampionEventsHandler {
@@ -53,8 +53,9 @@ public class ChampionEventsHandler {
   public void onLivingDrops(LivingDropsEvent evt) {
     LivingEntity livingEntity = evt.getEntityLiving();
 
-    if (!livingEntity.getLevel().getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT) || (
-        !ChampionsConfig.fakeLoot && evt.getSource().getDirectEntity() instanceof FakePlayer)) {
+    if (!ChampionHelper.isValidChampion(livingEntity) ||
+        !livingEntity.getLevel().getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT) ||
+        (!ChampionsConfig.fakeLoot && evt.getSource().getDirectEntity() instanceof FakePlayer)) {
       return;
     }
     ChampionCapability.getCapability(livingEntity).ifPresent(champion -> {
@@ -109,25 +110,28 @@ public class ChampionEventsHandler {
   @SubscribeEvent
   public void onLivingXpDrop(LivingExperienceDropEvent evt) {
     LivingEntity livingEntity = evt.getEntityLiving();
-    ChampionCapability.getCapability(livingEntity)
-        .ifPresent(champion -> champion.getServer().getRank().ifPresent(rank -> {
-          int growth = rank.getGrowthFactor();
 
-          if (growth > 0) {
-            evt.setDroppedExperience(
-                growth * ChampionsConfig.experienceGrowth * evt.getOriginalExperience() + evt
-                    .getOriginalExperience());
-          }
-        }));
+    if (ChampionHelper.isValidChampion(livingEntity)) {
+      ChampionCapability.getCapability(livingEntity)
+          .ifPresent(champion -> champion.getServer().getRank().ifPresent(rank -> {
+            int growth = rank.getGrowthFactor();
+
+            if (growth > 0) {
+              evt.setDroppedExperience(
+                  (growth * ChampionsConfig.experienceGrowth * evt.getOriginalExperience() +
+                      evt.getOriginalExperience()));
+            }
+          }));
+    }
   }
 
   @SubscribeEvent
   public void onExplosion(ExplosionEvent.Start evt) {
     Explosion explosion = evt.getExplosion();
-    Entity livingEntity = explosion.getExploder();
+    Entity entity = explosion.getExploder();
 
-    if (livingEntity instanceof LivingEntity && !livingEntity.getLevel().isClientSide()) {
-      ChampionCapability.getCapability((LivingEntity) livingEntity)
+    if (ChampionHelper.isValidChampion(entity) && !entity.getLevel().isClientSide()) {
+      ChampionCapability.getCapability((LivingEntity) entity)
           .ifPresent(champion -> champion.getServer().getRank().ifPresent(rank -> {
             int growth = rank.getGrowthFactor();
 
@@ -142,7 +146,8 @@ public class ChampionEventsHandler {
   public void onLivingJoinWorld(EntityJoinWorldEvent evt) {
     Entity entity = evt.getEntity();
 
-    if (!entity.getLevel().isClientSide() && entity instanceof LivingEntity livingEntity) {
+    if (!entity.getLevel().isClientSide() && ChampionHelper.isValidChampion(entity)) {
+      LivingEntity livingEntity = (LivingEntity) entity;
       ChampionCapability.getCapability(livingEntity).ifPresent(champion -> {
         IChampion.Server serverChampion = champion.getServer();
         Optional<Rank> maybeRank = serverChampion.getRank();
@@ -162,26 +167,12 @@ public class ChampionEventsHandler {
 
   @SubscribeEvent
   public void onLivingUpdate(LivingUpdateEvent evt) {
-    Entity entity = evt.getEntity();
+    LivingEntity livingEntity = evt.getEntityLiving();
 
-    if (entity.tickCount % 10 == 0 && entity instanceof Enemy &&
-        entity instanceof LivingEntity livingEntity && !entity.level.isClientSide) {
+    if (ChampionHelper.isValidChampion(livingEntity)) {
       ChampionCapability.getCapability(livingEntity).ifPresent(champion -> {
-        IChampion.Server serverChampion = champion.getServer();
-        serverChampion.getAffixes().forEach(affix -> affix.onServerUpdate(champion));
-        serverChampion.getRank().ifPresent(rank -> {
-          if (livingEntity.tickCount % 4 == 0) {
-            List<Tuple<MobEffect, Integer>> effects = rank.getEffects();
-            effects.forEach(effectPair -> livingEntity.addEffect(
-                new MobEffectInstance(effectPair.getA(), 100, effectPair.getB())));
-          }
-        });
-      });
-    } else if (entity.level.isClientSide) {
 
-      if (entity.getLevel().isClientSide()) {
-        LivingEntity livingEntity = (LivingEntity) entity;
-        ChampionCapability.getCapability(livingEntity).ifPresent(champion -> {
+        if (livingEntity.getLevel().isClientSide()) {
           IChampion.Client clientChampion = champion.getClient();
           clientChampion.getRank().ifPresent(rank -> {
             if (ChampionsConfig.showParticles && rank.getA() > 0) {
@@ -192,15 +183,24 @@ public class ChampionEventsHandler {
 
               livingEntity.getLevel().addParticle(ChampionsRegistry.RANK,
                   livingEntity.position().x + (livingEntity.getRandom().nextDouble() - 0.5D) *
-                      (double) livingEntity.getBbWidth(),
-                  livingEntity.position().y +
+                      (double) livingEntity.getBbWidth(), livingEntity.position().y +
                       livingEntity.getRandom().nextDouble() * livingEntity.getBbHeight(),
                   livingEntity.position().z + (livingEntity.getRandom().nextDouble() - 0.5D) *
                       (double) livingEntity.getBbWidth(), r, g, b);
             }
           });
-        });
-      }
+        } else {
+          IChampion.Server serverChampion = champion.getServer();
+          serverChampion.getAffixes().forEach(affix -> affix.onServerUpdate(champion));
+          serverChampion.getRank().ifPresent(rank -> {
+            if (livingEntity.tickCount % 4 == 0) {
+              List<Tuple<MobEffect, Integer>> effects = rank.getEffects();
+              effects.forEach(effectPair -> livingEntity.addEffect(
+                  new MobEffectInstance(effectPair.getA(), 100, effectPair.getB())));
+            }
+          });
+        }
+      });
     }
   }
 
@@ -212,8 +212,8 @@ public class ChampionEventsHandler {
       return;
     }
 
-    if (entity instanceof LivingEntity livingEntity) {
-      ChampionCapability.getCapability(livingEntity).ifPresent(champion -> {
+    if (ChampionHelper.isValidChampion(entity)) {
+      ChampionCapability.getCapability((LivingEntity) entity).ifPresent(champion -> {
         IChampion.Server serverChampion = champion.getServer();
         serverChampion.getAffixes().forEach(affix -> {
 
@@ -229,8 +229,8 @@ public class ChampionEventsHandler {
     }
     Entity source = evt.getSource().getDirectEntity();
 
-    if (source instanceof LivingEntity livingSource) {
-      ChampionCapability.getCapability(livingSource).ifPresent(champion -> {
+    if (ChampionHelper.isValidChampion(source)) {
+      ChampionCapability.getCapability((LivingEntity) source).ifPresent(champion -> {
         IChampion.Server serverChampion = champion.getServer();
         serverChampion.getAffixes().forEach(affix -> {
 
@@ -246,9 +246,9 @@ public class ChampionEventsHandler {
   public void onLivingHurt(LivingHurtEvent evt) {
     Entity entity = evt.getEntity();
 
-    if (!entity.getLevel().isClientSide() && entity instanceof LivingEntity livingEntity) {
+    if (!entity.getLevel().isClientSide() && ChampionHelper.isValidChampion(entity)) {
       float[] amounts = new float[] {evt.getAmount(), evt.getAmount()};
-      ChampionCapability.getCapability(livingEntity).ifPresent(champion -> {
+      ChampionCapability.getCapability((LivingEntity) entity).ifPresent(champion -> {
         IChampion.Server serverChampion = champion.getServer();
         serverChampion.getAffixes().forEach(
             affix -> amounts[1] = affix.onHurt(champion, evt.getSource(), amounts[0], amounts[1]));
@@ -261,9 +261,9 @@ public class ChampionEventsHandler {
   public void onLivingDamage(LivingDamageEvent evt) {
     Entity entity = evt.getEntity();
 
-    if (!entity.getLevel().isClientSide() && entity instanceof LivingEntity livingEntity) {
+    if (!entity.getLevel().isClientSide() && ChampionHelper.isValidChampion(entity)) {
       float[] amounts = new float[] {evt.getAmount(), evt.getAmount()};
-      ChampionCapability.getCapability(livingEntity).ifPresent(champion -> {
+      ChampionCapability.getCapability((LivingEntity) entity).ifPresent(champion -> {
         IChampion.Server serverChampion = champion.getServer();
         serverChampion.getAffixes().forEach(affix -> amounts[1] = affix
             .onDamage(champion, evt.getSource(), amounts[0], amounts[1]));
@@ -276,10 +276,9 @@ public class ChampionEventsHandler {
   public void onLivingDeath(LivingDeathEvent evt) {
     LivingEntity livingEntity = evt.getEntityLiving();
 
-    if (livingEntity.getLevel().isClientSide()) {
+    if (livingEntity.getLevel().isClientSide() || !ChampionHelper.isValidChampion(livingEntity)) {
       return;
     }
-
     ChampionCapability.getCapability(livingEntity).ifPresent(champion -> {
       IChampion.Server serverChampion = champion.getServer();
       serverChampion.getAffixes().forEach(affix -> {
@@ -312,9 +311,9 @@ public class ChampionEventsHandler {
   public void onLivingHeal(LivingHealEvent evt) {
     Entity entity = evt.getEntity();
 
-    if (!entity.getLevel().isClientSide() && entity instanceof LivingEntity livingEntity) {
+    if (!entity.getLevel().isClientSide() && ChampionHelper.isValidChampion(entity)) {
       float[] amounts = new float[] {evt.getAmount(), evt.getAmount()};
-      ChampionCapability.getCapability(livingEntity).ifPresent(champion -> {
+      ChampionCapability.getCapability((LivingEntity) entity).ifPresent(champion -> {
         IChampion.Server serverChampion = champion.getServer();
         serverChampion.getAffixes()
             .forEach(affix -> amounts[1] = affix.onHeal(champion, amounts[0], amounts[1]));

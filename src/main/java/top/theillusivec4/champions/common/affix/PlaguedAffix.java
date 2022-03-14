@@ -51,7 +51,7 @@ public class PlaguedAffix extends BasicAffix {
       int j1 = l1 & 255;
       ((ServerLevel) livingEntity.getLevel())
           .sendParticles(ParticleTypes.ENTITY_EFFECT, livingEntity.position().x + (double) f8,
-              livingEntity.position().y, livingEntity.position().z + (double) f9, 5,
+              livingEntity.position().y, livingEntity.position().z + (double) f9, 0,
               ((float) i2 / 255.0F), ((float) j2 / 255.0F), ((float) j1 / 255.0F), 1.0F);
     }
     livingEntity.removeEffect(ChampionsConfig.plaguedEffect.getEffect());

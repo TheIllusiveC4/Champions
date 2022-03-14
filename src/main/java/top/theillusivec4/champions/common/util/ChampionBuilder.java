@@ -149,7 +149,7 @@ public class ChampionBuilder {
     return result;
   }
 
-  public static void applyGrowth(final LivingEntity livingEntity, int growthFactor) {
+  public static void applyGrowth(final LivingEntity livingEntity, float growthFactor) {
 
     if (growthFactor < 1) {
       return;
