@@ -49,15 +49,13 @@ public class RegistryEventsHandler {
     EntityType<?> arcticBullet = EntityType.Builder.of(
             (type, world) -> new ArcticBulletEntity(world), MobCategory.MISC)
         .sized(0.3125F, 0.3125F).setCustomClientFactory(
-            (spawnEntity, world) -> new ArcticBulletEntity(world, spawnEntity.getPosX(),
-                spawnEntity.getPosX(), spawnEntity.getPosZ(), 0, 0, 0))
+            (spawnEntity, world) -> new ArcticBulletEntity(world))
         .build(RegistryReference.ARCTIC_BULLET).setRegistryName(RegistryReference.ARCTIC_BULLET);
 
     EntityType<?> enkindlingBullet = EntityType.Builder.of(
             (type, world) -> new EnkindlingBulletEntity(world), MobCategory.MISC)
         .sized(0.3125F, 0.3125F).setCustomClientFactory(
-            (spawnEntity, world) -> new EnkindlingBulletEntity(world, spawnEntity.getPosX(),
-                spawnEntity.getPosX(), spawnEntity.getPosZ(), 0, 0, 0))
+            (spawnEntity, world) -> new EnkindlingBulletEntity(world))
         .build(RegistryReference.ENKINDLING_BULLET)
         .setRegistryName(RegistryReference.ENKINDLING_BULLET);
 

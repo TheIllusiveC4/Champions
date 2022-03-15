@@ -6,7 +6,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.ObjectHolder;
 import top.theillusivec4.champions.Champions;
-import top.theillusivec4.champions.common.entity.AbstractBulletEntity;
+import top.theillusivec4.champions.common.entity.BaseBulletEntity;
 
 @ObjectHolder(Champions.MODID)
 public class ChampionsRegistry {
@@ -24,10 +24,10 @@ public class ChampionsRegistry {
   public static final MobEffect WOUND;
 
   @ObjectHolder(RegistryReference.ARCTIC_BULLET)
-  public static final EntityType<? extends AbstractBulletEntity> ARCTIC_BULLET;
+  public static final EntityType<? extends BaseBulletEntity> ARCTIC_BULLET;
 
   @ObjectHolder(RegistryReference.ENKINDLING_BULLET)
-  public static final EntityType<? extends AbstractBulletEntity> ENKINDLING_BULLET;
+  public static final EntityType<? extends BaseBulletEntity> ENKINDLING_BULLET;
 
   static {
     RANK = null;

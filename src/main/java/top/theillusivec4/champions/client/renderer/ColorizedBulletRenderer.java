@@ -1,7 +1,5 @@
 package top.theillusivec4.champions.client.renderer;
 
-import static net.minecraft.client.gui.screens.inventory.tooltip.ClientBundleTooltip.TEXTURE_LOCATION;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
@@ -17,17 +15,16 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import top.theillusivec4.champions.Champions;
-import top.theillusivec4.champions.common.entity.AbstractBulletEntity;
+import top.theillusivec4.champions.common.entity.BaseBulletEntity;
 
-public class ColorizedBulletRenderer extends EntityRenderer<AbstractBulletEntity> {
+public class ColorizedBulletRenderer extends EntityRenderer<BaseBulletEntity> {
 
   private static final ResourceLocation GENERIC_SPARK_TEXTURE = new ResourceLocation(
       Champions.MODID, "textures/entity/generic_spark.png");
-  private static final RenderType RENDER_TYPE = RenderType.entityTranslucent(TEXTURE_LOCATION);
-  private final ShulkerBulletModel<AbstractBulletEntity> model;
+  private static final RenderType RENDER_TYPE = RenderType.entityTranslucent(GENERIC_SPARK_TEXTURE);
+  private final ShulkerBulletModel<BaseBulletEntity> model;
 
   private final int color;
-
 
   public ColorizedBulletRenderer(EntityRendererProvider.Context manager, int color) {
     super(manager);
@@ -36,13 +33,13 @@ public class ColorizedBulletRenderer extends EntityRenderer<AbstractBulletEntity
   }
 
   @Override
-  protected int getBlockLightLevel(@Nonnull final AbstractBulletEntity bullet,
+  protected int getBlockLightLevel(@Nonnull final BaseBulletEntity bullet,
                                    @Nonnull final BlockPos blockPos) {
     return 15;
   }
 
   @Override
-  public void render(AbstractBulletEntity entity, float entityYaw, float partialTicks,
+  public void render(BaseBulletEntity entity, float entityYaw, float partialTicks,
                      PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
     matrixStack.pushPose();
     float yRot = Mth.rotLerp(entity.yRotO, entity.getYRot(), partialTicks);
@@ -57,9 +54,9 @@ public class ColorizedBulletRenderer extends EntityRenderer<AbstractBulletEntity
     float b = (float) ((this.color) & 0xFF) / 255F;
     matrixStack.scale(-0.5F, -0.5F, 0.5F);
     this.model.setupAnim(entity, 0.0F, 0.0F, 0.0F, yRot, xRot);
-    VertexConsumer vertexconsumer = buffer.getBuffer(this.model.renderType(TEXTURE_LOCATION));
+    VertexConsumer vertexconsumer = buffer.getBuffer(this.model.renderType(GENERIC_SPARK_TEXTURE));
     this.model.renderToBuffer(matrixStack, vertexconsumer, packedLight, OverlayTexture.NO_OVERLAY,
-        r, g, b, 0.5F);
+        r, g, b, 1.0F);
     matrixStack.scale(1.5F, 1.5F, 1.5F);
     VertexConsumer vertexconsumer1 = buffer.getBuffer(RENDER_TYPE);
     this.model.renderToBuffer(matrixStack, vertexconsumer1, packedLight, OverlayTexture.NO_OVERLAY,
@@ -70,7 +67,7 @@ public class ColorizedBulletRenderer extends EntityRenderer<AbstractBulletEntity
 
   @Nonnull
   @Override
-  public ResourceLocation getTextureLocation(@Nonnull AbstractBulletEntity entity) {
+  public ResourceLocation getTextureLocation(@Nonnull BaseBulletEntity entity) {
     return GENERIC_SPARK_TEXTURE;
   }
 }
