@@ -176,6 +176,7 @@ public class ChampionEventsHandler {
 
         if (livingEntity.getLevel().isClientSide()) {
           IChampion.Client clientChampion = champion.getClient();
+          clientChampion.getAffixes().forEach(affix -> affix.onUpdate(champion));
           clientChampion.getRank().ifPresent(rank -> {
             if (ChampionsConfig.showParticles && rank.getA() > 0) {
               int color = rank.getB();
@@ -193,7 +194,7 @@ public class ChampionEventsHandler {
           });
         } else {
           IChampion.Server serverChampion = champion.getServer();
-          serverChampion.getAffixes().forEach(affix -> affix.onServerUpdate(champion));
+          serverChampion.getAffixes().forEach(affix -> affix.onUpdate(champion));
           serverChampion.getRank().ifPresent(rank -> {
             if (livingEntity.tickCount % 4 == 0) {
               List<Tuple<MobEffect, Integer>> effects = rank.getEffects();

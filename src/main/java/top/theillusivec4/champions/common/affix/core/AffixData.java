@@ -2,6 +2,7 @@ package top.theillusivec4.champions.common.affix.core;
 
 import java.lang.reflect.InvocationTargetException;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.LivingEntity;
 import top.theillusivec4.champions.Champions;
 import top.theillusivec4.champions.api.IChampion;
 
@@ -16,7 +17,15 @@ public abstract class AffixData {
   public void readData(IChampion champion, String identifier) {
     this.champion = champion;
     this.identifier = identifier;
-    readFromNBT(champion.getServer().getData(identifier));
+    LivingEntity livingEntity = champion.getLivingEntity();
+    CompoundTag tag;
+
+    if (!livingEntity.getLevel().isClientSide()) {
+      tag = champion.getServer().getData(identifier);
+    } else {
+      tag = champion.getClient().getData(identifier);
+    }
+    readFromNBT(tag);
   }
 
   public abstract void readFromNBT(CompoundTag tag);
@@ -24,7 +33,13 @@ public abstract class AffixData {
   public abstract CompoundTag writeToNBT();
 
   public void saveData() {
-    champion.getServer().setData(identifier, writeToNBT());
+    LivingEntity livingEntity = champion.getLivingEntity();
+
+    if (!livingEntity.getLevel().isClientSide()) {
+      champion.getServer().setData(identifier, writeToNBT());
+    } else {
+      champion.getClient().setData(identifier, writeToNBT());
+    }
   }
 
   public static <T extends AffixData> T getData(IChampion champion, String id, Class<T> clazz) {

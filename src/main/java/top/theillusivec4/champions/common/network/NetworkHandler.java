@@ -25,6 +25,8 @@ public class NetworkHandler {
 
     register(SPacketSyncChampion.class, SPacketSyncChampion::encode, SPacketSyncChampion::decode,
         SPacketSyncChampion::handle);
+    register(SPacketSyncAffixData.class, SPacketSyncAffixData::encode, SPacketSyncAffixData::decode,
+        SPacketSyncAffixData::handle);
   }
 
   private static <M> void register(Class<M> messageType, BiConsumer<M, FriendlyByteBuf> encoder,

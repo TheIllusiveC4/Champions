@@ -3,12 +3,10 @@ package top.theillusivec4.champions.common.capability;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.WeakHashMap;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -120,7 +118,7 @@ public class ChampionCapability {
 
       @Override
       public List<IAffix> getAffixes() {
-        return Collections.unmodifiableList(affixes);
+        return Collections.unmodifiableList(this.affixes);
       }
 
       @Override
@@ -142,7 +140,9 @@ public class ChampionCapability {
     public static class Client implements IChampion.Client {
 
       private Tuple<Integer, Integer> rank = null;
-      private Set<String> affixes = new HashSet<>();
+      private final List<IAffix> affixes = new ArrayList<>();
+      private final Map<String, IAffix> idToAffix = new HashMap<>();
+      private final Map<String, CompoundTag> data = new HashMap<>();
 
       @Override
       public Optional<Tuple<Integer, Integer>> getRank() {
@@ -155,13 +155,35 @@ public class ChampionCapability {
       }
 
       @Override
-      public Set<String> getAffixes() {
-        return this.affixes;
+      public List<IAffix> getAffixes() {
+        return Collections.unmodifiableList(this.affixes);
       }
 
       @Override
       public void setAffixes(Set<String> affixes) {
-        this.affixes = affixes;
+        this.affixes.clear();
+
+        for (String affix : affixes) {
+          Champions.API.getAffix(affix).ifPresent(val -> {
+            this.affixes.add(val);
+            this.idToAffix.put(val.getIdentifier(), val);
+          });
+        }
+      }
+
+      @Override
+      public Optional<IAffix> getAffix(String id) {
+        return Optional.ofNullable(this.idToAffix.get(id));
+      }
+
+      @Override
+      public void setData(String identifier, CompoundTag data) {
+        this.data.put(identifier, data);
+      }
+
+      @Override
+      public CompoundTag getData(String identifier) {
+        return this.data.getOrDefault(identifier, new CompoundTag());
       }
     }
   }

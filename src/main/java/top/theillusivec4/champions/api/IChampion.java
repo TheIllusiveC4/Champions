@@ -16,9 +16,15 @@ public interface IChampion {
 
     void setRank(Tuple<Integer, Integer> rank);
 
-    Set<String> getAffixes();
+    Optional<IAffix> getAffix(String id);
+
+    List<IAffix> getAffixes();
 
     void setAffixes(Set<String> affixIds);
+
+    CompoundTag getData(String identifier);
+
+    void setData(String identifier, CompoundTag data);
   }
 
   interface Server {

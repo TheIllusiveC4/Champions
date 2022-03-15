@@ -12,6 +12,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.network.NetworkEvent;
 import top.theillusivec4.champions.api.IChampion;
 import top.theillusivec4.champions.common.capability.ChampionCapability;
+import top.theillusivec4.champions.common.util.ChampionHelper;
 
 public class SPacketSyncChampion {
 
@@ -57,7 +58,7 @@ public class SPacketSyncChampion {
       if (world != null) {
         Entity entity = world.getEntity(msg.entityId);
 
-        if (entity instanceof LivingEntity) {
+        if (ChampionHelper.isValidChampion(entity)) {
           ChampionCapability.getCapability((LivingEntity) entity).ifPresent(champion -> {
             IChampion.Client clientChampion = champion.getClient();
             clientChampion.setRank(new Tuple<>(msg.tier, msg.defaultColor));

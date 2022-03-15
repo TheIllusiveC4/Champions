@@ -1,5 +1,6 @@
 package top.theillusivec4.champions.api;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -17,7 +18,7 @@ public interface IAffix {
 
   }
 
-  default void onServerUpdate(IChampion champion) {
+  default void onUpdate(IChampion champion) {
 
   }
 
@@ -52,5 +53,15 @@ public interface IAffix {
 
   default boolean isCompatible(IAffix affix) {
     return affix != this;
+  }
+
+  void sync(IChampion champion);
+
+  default void readSyncTag(IChampion champion, CompoundTag tag) {
+
+  }
+
+  default CompoundTag writeSyncTag(IChampion champion) {
+    return new CompoundTag();
   }
 }

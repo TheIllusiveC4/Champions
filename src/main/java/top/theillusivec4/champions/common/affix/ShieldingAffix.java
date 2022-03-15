@@ -2,7 +2,7 @@ package top.theillusivec4.champions.common.affix;
 
 import java.util.Random;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -18,24 +18,45 @@ public class ShieldingAffix extends BasicAffix {
   }
 
   @Override
-  public void onServerUpdate(IChampion champion) {
-    AffixData.BooleanData shielding =
-        AffixData.getData(champion, this.getIdentifier(), AffixData.BooleanData.class);
+  public void onUpdate(IChampion champion) {
     LivingEntity livingEntity = champion.getLivingEntity();
 
-    if (livingEntity.tickCount % 40 == 0 && livingEntity.getRandom().nextFloat() < 0.5F) {
-      shielding.mode = !shielding.mode;
-      shielding.saveData();
-    }
-    Random random = livingEntity.getRandom();
+    if (!livingEntity.getLevel().isClientSide()) {
 
-    if (shielding.mode) {
-      ((ServerLevel) livingEntity.getLevel()).sendParticles(ParticleTypes.ENTITY_EFFECT,
-          livingEntity.position().x + (random.nextFloat() - 0.5D) * livingEntity.getBbWidth(),
-          livingEntity.position().y + random.nextFloat() * livingEntity.getBbHeight(),
-          livingEntity.position().z + (random.nextFloat() - 0.5D) * livingEntity.getBbWidth(),
-          0, 1.0F, 1.0F, 1.0F, 1.0F);
+      if (livingEntity.tickCount % 40 == 0 && livingEntity.getRandom().nextFloat() < 0.5F) {
+        AffixData.BooleanData shielding =
+            AffixData.getData(champion, this.getIdentifier(), AffixData.BooleanData.class);
+        shielding.mode = !shielding.mode;
+        shielding.saveData();
+        this.sync(champion);
+      }
+    } else {
+      AffixData.BooleanData shielding =
+          AffixData.getData(champion, this.getIdentifier(), AffixData.BooleanData.class);
+      Random random = livingEntity.getRandom();
+
+      if (shielding.mode) {
+        livingEntity.getLevel().addParticle(ParticleTypes.ENTITY_EFFECT,
+            livingEntity.position().x + (random.nextFloat() - 0.5D) * livingEntity.getBbWidth(),
+            livingEntity.position().y + random.nextFloat() * livingEntity.getBbHeight(),
+            livingEntity.position().z + (random.nextFloat() - 0.5D) * livingEntity.getBbWidth(),
+            1.0F, 1.0F, 1.0F);
+      }
     }
+  }
+
+  @Override
+  public void readSyncTag(IChampion champion, CompoundTag tag) {
+    AffixData.BooleanData shielding =
+        AffixData.getData(champion, this.getIdentifier(), AffixData.BooleanData.class);
+    shielding.readFromNBT(tag);
+    shielding.saveData();
+  }
+
+  @Override
+  public CompoundTag writeSyncTag(IChampion champion) {
+    return AffixData.getData(champion, this.getIdentifier(), AffixData.BooleanData.class)
+        .writeToNBT();
   }
 
   @Override

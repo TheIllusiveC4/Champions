@@ -3,6 +3,7 @@ package top.theillusivec4.champions.client.util;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import java.util.Set;
+import java.util.stream.Collectors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.GameRenderer;
@@ -11,6 +12,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import top.theillusivec4.champions.Champions;
+import top.theillusivec4.champions.api.IAffix;
 import top.theillusivec4.champions.api.IChampion;
 import top.theillusivec4.champions.client.config.ClientChampionsConfig;
 import top.theillusivec4.champions.common.capability.ChampionCapability;
@@ -27,7 +29,8 @@ public class HUDHelper {
       IChampion.Client clientChampion = champion.getClient();
       return clientChampion.getRank().map(rank -> {
         int num = rank.getA();
-        Set<String> affixSet = clientChampion.getAffixes();
+        Set<String> affixSet = clientChampion.getAffixes().stream().map(IAffix::getIdentifier)
+            .collect(Collectors.toSet());
 
         if (num > 0 || affixSet.size() > 0) {
           Minecraft client = Minecraft.getInstance();

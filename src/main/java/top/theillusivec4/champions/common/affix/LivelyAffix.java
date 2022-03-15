@@ -25,7 +25,7 @@ public class LivelyAffix extends BasicAffix {
   }
 
   @Override
-  public void onServerUpdate(IChampion champion) {
+  public void onUpdate(IChampion champion) {
     LivingEntity livingEntity = champion.getLivingEntity();
 
     if (!livingEntity.getLevel().isClientSide() && livingEntity.tickCount % 20 == 0) {
