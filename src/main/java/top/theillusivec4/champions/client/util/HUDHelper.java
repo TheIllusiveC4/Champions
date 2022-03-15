@@ -73,7 +73,7 @@ public class HUDHelper {
             String count = "x" + num;
             GuiComponent.blit(matrixStack, startStarsX - client.font.width(count) / 2,
                 yOffset + 1, 0, 0, 9, 9, 9, 9);
-            client.font.draw(matrixStack, count,
+            client.font.drawShadow(matrixStack, count,
                 startStarsX + 10 - client.font.width(count) / 2.0F, yOffset + 2,
                 16777215);
           }
@@ -86,7 +86,7 @@ public class HUDHelper {
           } else {
             name = customName.getString();
           }
-          client.font.draw(matrixStack, name,
+          client.font.drawShadow(matrixStack, name,
               xOffset + (float) (i / 2 - client.font.width(name) / 2),
               yOffset + (float) (j - 9), color);
           RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -98,7 +98,7 @@ public class HUDHelper {
             builder.append(" ");
           }
           String affixes = builder.toString().trim();
-          client.font.draw(matrixStack, affixes,
+          client.font.drawShadow(matrixStack, affixes,
               xOffset + (float) (i / 2 - client.font.width(affixes) / 2),
               yOffset + (float) (j + 6), 16777215);
           RenderSystem.disableBlend();
