@@ -25,6 +25,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.EntityLeaveWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -34,6 +35,7 @@ import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
 import net.minecraftforge.event.entity.living.LivingHealEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import top.theillusivec4.champions.api.IChampion;
 import top.theillusivec4.champions.common.capability.ChampionCapability;
@@ -305,6 +307,15 @@ public class ChampionEventsHandler {
         }
       });
     });
+  }
+
+  @SubscribeEvent(priority = EventPriority.LOWEST)
+  public void invalidateCaps(final EntityLeaveWorldEvent evt) {
+    Entity entity = evt.getEntity();
+
+    if (ChampionHelper.isValidChampion(entity)) {
+      ChampionCapability.getCapability((LivingEntity) entity).invalidate();
+    }
   }
 
   @SubscribeEvent

@@ -8,13 +8,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.WeakHashMap;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -43,9 +46,16 @@ public class ChampionCapability {
   private static final String DATA_TAG = "data";
   private static final String ID_TAG = "identifier";
 
+  private static final Map<Entity, LazyOptional<IChampion>> SERVER_CACHE = new HashMap<>();
+  private static final Map<Entity, LazyOptional<IChampion>> CLIENT_CACHE = new HashMap<>();
+
   public static void register() {
     MinecraftForge.EVENT_BUS.register(new CapabilityEventHandler());
     MinecraftForge.EVENT_BUS.register(new ChampionEventsHandler());
+  }
+
+  private static Map<Entity, LazyOptional<IChampion>> getCache(Level level) {
+    return level.isClientSide() ? CLIENT_CACHE : SERVER_CACHE;
   }
 
   public static Provider createProvider(final LivingEntity livingEntity) {
@@ -53,7 +63,16 @@ public class ChampionCapability {
   }
 
   public static LazyOptional<IChampion> getCapability(final LivingEntity livingEntity) {
-    return livingEntity.getCapability(CHAMPION_CAP);
+    Level level = livingEntity.getLevel();
+    Map<Entity, LazyOptional<IChampion>> cache = getCache(level);
+    LazyOptional<IChampion> optional = cache.get(livingEntity);
+
+    if (optional == null) {
+      optional = livingEntity.getCapability(CHAMPION_CAP);
+      cache.put(livingEntity, optional);
+      optional.addListener(self -> cache.remove(livingEntity));
+    }
+    return optional;
   }
 
   public static class Champion implements IChampion {
