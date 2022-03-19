@@ -62,6 +62,11 @@ public class ChampionCapability {
     return new Provider(livingEntity);
   }
 
+  @Deprecated
+  public static LazyOptional<IChampion> getCapability(final LivingEntity entity) {
+    return getCapability((Entity) entity);
+  }
+
   public static LazyOptional<IChampion> getCapability(final Entity entity) {
 
     if (!ChampionHelper.isValidChampion(entity)) {
