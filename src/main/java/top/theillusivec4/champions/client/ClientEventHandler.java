@@ -4,9 +4,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import top.theillusivec4.champions.client.util.HUDHelper;
 import top.theillusivec4.champions.client.util.MouseHelper;
@@ -24,11 +24,10 @@ public class ClientEventHandler {
       livingEntity.ifPresent(entity -> {
         PoseStack matrixStack = evt.getMatrixStack();
 
-        if (HUDHelper.renderHealthBar(matrixStack, entity)) {
+        if (HUDHelper.renderHealthBar(matrixStack, entity) &&
+            evt.getType() == ElementType.BOSSINFO) {
           evt.setCanceled(true);
-          MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(matrixStack,
-              new RenderGameOverlayEvent(matrixStack, evt.getPartialTicks(), mc.getWindow()),
-              ElementType.BOSSINFO));
+          ForgeHooksClient.renderBossEventPost(matrixStack, mc.getWindow());
         }
       });
     }

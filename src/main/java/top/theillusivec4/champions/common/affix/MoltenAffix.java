@@ -61,10 +61,10 @@ public class MoltenAffix extends BasicAffix {
   }
 
   @Override
-  public void onUpdate(IChampion champion) {
+  public void onServerUpdate(IChampion champion) {
     LivingEntity livingEntity = champion.getLivingEntity();
 
-    if (!livingEntity.getLevel().isClientSide() && livingEntity.tickCount % 20 == 0) {
+    if (livingEntity.tickCount % 20 == 0) {
       //todo: figure out a better way to do this fire effect
       //livingEntity.setFire(10);
       livingEntity.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 40, 0, true, false));

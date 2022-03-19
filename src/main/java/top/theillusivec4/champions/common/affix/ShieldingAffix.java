@@ -18,30 +18,31 @@ public class ShieldingAffix extends BasicAffix {
   }
 
   @Override
-  public void onUpdate(IChampion champion) {
+  public void onClientUpdate(IChampion champion) {
+    LivingEntity livingEntity = champion.getLivingEntity();
+    AffixData.BooleanData shielding =
+        AffixData.getData(champion, this.getIdentifier(), AffixData.BooleanData.class);
+    Random random = livingEntity.getRandom();
+
+    if (shielding.mode) {
+      livingEntity.getLevel().addParticle(ParticleTypes.ENTITY_EFFECT,
+          livingEntity.position().x + (random.nextFloat() - 0.5D) * livingEntity.getBbWidth(),
+          livingEntity.position().y + random.nextFloat() * livingEntity.getBbHeight(),
+          livingEntity.position().z + (random.nextFloat() - 0.5D) * livingEntity.getBbWidth(),
+          1.0F, 1.0F, 1.0F);
+    }
+  }
+
+  @Override
+  public void onServerUpdate(IChampion champion) {
     LivingEntity livingEntity = champion.getLivingEntity();
 
-    if (!livingEntity.getLevel().isClientSide()) {
-
-      if (livingEntity.tickCount % 40 == 0 && livingEntity.getRandom().nextFloat() < 0.5F) {
-        AffixData.BooleanData shielding =
-            AffixData.getData(champion, this.getIdentifier(), AffixData.BooleanData.class);
-        shielding.mode = !shielding.mode;
-        shielding.saveData();
-        this.sync(champion);
-      }
-    } else {
+    if (livingEntity.tickCount % 40 == 0 && livingEntity.getRandom().nextFloat() < 0.5F) {
       AffixData.BooleanData shielding =
           AffixData.getData(champion, this.getIdentifier(), AffixData.BooleanData.class);
-      Random random = livingEntity.getRandom();
-
-      if (shielding.mode) {
-        livingEntity.getLevel().addParticle(ParticleTypes.ENTITY_EFFECT,
-            livingEntity.position().x + (random.nextFloat() - 0.5D) * livingEntity.getBbWidth(),
-            livingEntity.position().y + random.nextFloat() * livingEntity.getBbHeight(),
-            livingEntity.position().z + (random.nextFloat() - 0.5D) * livingEntity.getBbWidth(),
-            1.0F, 1.0F, 1.0F);
-      }
+      shielding.mode = !shielding.mode;
+      shielding.saveData();
+      this.sync(champion);
     }
   }
 

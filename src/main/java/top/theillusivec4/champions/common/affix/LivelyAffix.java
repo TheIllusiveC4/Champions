@@ -25,10 +25,10 @@ public class LivelyAffix extends BasicAffix {
   }
 
   @Override
-  public void onUpdate(IChampion champion) {
+  public void onServerUpdate(IChampion champion) {
     LivingEntity livingEntity = champion.getLivingEntity();
 
-    if (!livingEntity.getLevel().isClientSide() && livingEntity.tickCount % 20 == 0) {
+    if (livingEntity.tickCount % 20 == 0) {
       AffixData.IntegerData lastAttackTime =
           AffixData.getData(champion, this.getIdentifier(), AffixData.IntegerData.class);
 

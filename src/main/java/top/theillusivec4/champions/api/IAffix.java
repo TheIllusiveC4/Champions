@@ -18,7 +18,11 @@ public interface IAffix {
 
   }
 
-  default void onUpdate(IChampion champion) {
+  default void onServerUpdate(IChampion champion) {
+
+  }
+
+  default void onClientUpdate(IChampion champion) {
 
   }
 
