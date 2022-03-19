@@ -7,6 +7,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Position;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -126,7 +127,7 @@ public abstract class BaseBulletEntity extends Projectile {
     double d3 = (double) blockpos.getZ() + 0.5D;
     Direction direction = null;
 
-    if (!blockpos.closerToCenterThan(this.position(), 2.0D)) {
+    if (!this.closerToCenterThan(blockpos, this.position(), 2.0D)) {
       BlockPos blockpos1 = this.blockPosition();
       List<Direction> list = Lists.newArrayList();
 
@@ -191,6 +192,17 @@ public abstract class BaseBulletEntity extends Projectile {
 
     this.hasImpulse = true;
     this.flightSteps = 10 + this.random.nextInt(5) * 10;
+  }
+
+  private boolean closerToCenterThan(BlockPos pos, Position position, double distance) {
+    return this.distToCenterSqr(pos, position.x(), position.y(), position.z()) < Mth.square(distance);
+  }
+
+  private double distToCenterSqr(BlockPos pos, double x, double y, double z) {
+    double d0 = pos.getX() + 0.5D - x;
+    double d1 = pos.getY() + 0.5D - y;
+    double d2 = pos.getZ() + 0.5D - z;
+    return d0 * d0 + d1 * d1 + d2 * d2;
   }
 
   public void checkDespawn() {
