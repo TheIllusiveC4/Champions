@@ -8,11 +8,9 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.network.NetworkEvent;
 import top.theillusivec4.champions.api.IChampion;
 import top.theillusivec4.champions.common.capability.ChampionCapability;
-import top.theillusivec4.champions.common.util.ChampionHelper;
 
 public class SPacketSyncChampion {
 
@@ -57,14 +55,11 @@ public class SPacketSyncChampion {
 
       if (world != null) {
         Entity entity = world.getEntity(msg.entityId);
-
-        if (ChampionHelper.isValidChampion(entity)) {
-          ChampionCapability.getCapability((LivingEntity) entity).ifPresent(champion -> {
-            IChampion.Client clientChampion = champion.getClient();
-            clientChampion.setRank(new Tuple<>(msg.tier, msg.defaultColor));
-            clientChampion.setAffixes(msg.affixes);
-          });
-        }
+        ChampionCapability.getCapability(entity).ifPresent(champion -> {
+          IChampion.Client clientChampion = champion.getClient();
+          clientChampion.setRank(new Tuple<>(msg.tier, msg.defaultColor));
+          clientChampion.setAffixes(msg.affixes);
+        });
       }
     });
     ctx.get().setPacketHandled(true);

@@ -28,6 +28,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import top.theillusivec4.champions.Champions;
@@ -122,17 +123,20 @@ public class ChampionsCommand {
       throw UNKNOWN_ENTITY.create(resourceLocation);
     } else {
       final Entity sourceEntity = source.getEntity();
-      Entity entity = entityType.create((ServerLevel) sourceEntity.getLevel(), null, null, null,
-          pos != null ? pos : new BlockPos(sourceEntity.blockPosition()), MobSpawnType.COMMAND,
-          false, false);
 
-      if (entity instanceof LivingEntity) {
-        ChampionCapability.getCapability((LivingEntity) entity).ifPresent(
-            champion -> ChampionBuilder.spawnPreset(champion, tier, new ArrayList<>(affixes)));
-        source.getLevel().addFreshEntity(entity);
-        source.sendSuccess(new TranslatableComponent("commands.champions.summon.success",
-            new TranslatableComponent("rank.champions.title." + tier).getString() + " " + entity
-                .getDisplayName().getString()), false);
+      if (sourceEntity != null) {
+        Entity entity = entityType.create((ServerLevel) sourceEntity.getLevel(), null, null, null,
+            pos != null ? pos : new BlockPos(sourceEntity.blockPosition()), MobSpawnType.COMMAND,
+            false, false);
+
+        if (entity instanceof LivingEntity) {
+          ChampionCapability.getCapability(entity).ifPresent(
+              champion -> ChampionBuilder.spawnPreset(champion, tier, new ArrayList<>(affixes)));
+          source.getLevel().addFreshEntity(entity);
+          source.sendSuccess(new TranslatableComponent("commands.champions.summon.success",
+              new TranslatableComponent("rank.champions.title." + tier).getString() + " " + entity
+                  .getDisplayName().getString()), false);
+        }
       }
     }
 

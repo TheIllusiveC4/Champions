@@ -148,7 +148,7 @@ public class ChampionEggItem extends Item {
                 !Objects.equals(blockpos, blockpos1) && direction == Direction.UP);
 
         if (entity instanceof LivingEntity) {
-          ChampionCapability.getCapability((LivingEntity) entity)
+          ChampionCapability.getCapability(entity)
               .ifPresent(champion -> read(champion, itemstack));
           world.addFreshEntity(entity);
           itemstack.shrink(1);
@@ -186,7 +186,7 @@ public class ChampionEggItem extends Item {
                     MobSpawnType.SPAWN_EGG, false, false);
 
             if (entity instanceof LivingEntity) {
-              ChampionCapability.getCapability((LivingEntity) entity)
+              ChampionCapability.getCapability(entity)
                   .ifPresent(champion -> read(champion, itemstack));
               worldIn.addFreshEntity(entity);
 

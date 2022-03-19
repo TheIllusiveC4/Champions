@@ -3,6 +3,7 @@ package top.theillusivec4.champions.api;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import javax.annotation.Nonnull;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.LivingEntity;
@@ -46,5 +47,6 @@ public interface IChampion {
 
   Server getServer();
 
+  @Nonnull
   LivingEntity getLivingEntity();
 }

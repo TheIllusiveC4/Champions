@@ -6,11 +6,9 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.network.NetworkEvent;
 import top.theillusivec4.champions.api.IChampion;
 import top.theillusivec4.champions.common.capability.ChampionCapability;
-import top.theillusivec4.champions.common.util.ChampionHelper;
 
 public class SPacketSyncAffixData {
 
@@ -40,14 +38,11 @@ public class SPacketSyncAffixData {
 
       if (world != null) {
         Entity entity = world.getEntity(msg.entityId);
-
-        if (ChampionHelper.isValidChampion(entity)) {
-          ChampionCapability.getCapability((LivingEntity) entity).ifPresent(champion -> {
-            IChampion.Client clientChampion = champion.getClient();
-            clientChampion.getAffix(msg.id)
-                .ifPresent(affix -> affix.readSyncTag(champion, msg.data));
-          });
-        }
+        ChampionCapability.getCapability(entity).ifPresent(champion -> {
+          IChampion.Client clientChampion = champion.getClient();
+          clientChampion.getAffix(msg.id)
+              .ifPresent(affix -> affix.readSyncTag(champion, msg.data));
+        });
       }
     });
     ctx.get().setPacketHandled(true);

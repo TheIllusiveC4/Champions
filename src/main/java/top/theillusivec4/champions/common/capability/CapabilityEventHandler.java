@@ -37,7 +37,7 @@ public class CapabilityEventHandler {
   public void onSpecialSpawn(LivingSpawnEvent.SpecialSpawn evt) {
     LivingEntity entity = evt.getEntityLiving();
 
-    if (!entity.getLevel().isClientSide() && ChampionHelper.isValidChampion(entity)) {
+    if (!entity.getLevel().isClientSide()) {
       ChampionCapability.getCapability(entity).ifPresent(champion -> {
         IChampion.Server serverChampion = champion.getServer();
 
@@ -58,8 +58,8 @@ public class CapabilityEventHandler {
     Entity entity = evt.getTarget();
     Player playerEntity = evt.getPlayer();
 
-    if (playerEntity instanceof ServerPlayer && ChampionHelper.isValidChampion(entity)) {
-      ChampionCapability.getCapability((LivingEntity) entity).ifPresent(champion -> {
+    if (playerEntity instanceof ServerPlayer) {
+      ChampionCapability.getCapability(entity).ifPresent(champion -> {
         IChampion.Server serverChampion = champion.getServer();
         NetworkHandler.INSTANCE
             .send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) playerEntity),

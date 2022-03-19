@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import javax.annotation.Nonnull;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -30,6 +31,7 @@ import top.theillusivec4.champions.api.IChampion;
 import top.theillusivec4.champions.common.ChampionEventsHandler;
 import top.theillusivec4.champions.common.rank.Rank;
 import top.theillusivec4.champions.common.rank.RankManager;
+import top.theillusivec4.champions.common.util.ChampionHelper;
 
 public class ChampionCapability {
 
@@ -60,7 +62,12 @@ public class ChampionCapability {
     return new Provider(livingEntity);
   }
 
-  public static LazyOptional<IChampion> getCapability(final LivingEntity livingEntity) {
+  public static LazyOptional<IChampion> getCapability(final Entity entity) {
+
+    if (!ChampionHelper.isValidChampion(entity)) {
+      return LazyOptional.empty();
+    }
+    LivingEntity livingEntity = (LivingEntity) entity;
     Level level = livingEntity.getLevel();
     Map<Entity, LazyOptional<IChampion>> cache = getCache(level);
     LazyOptional<IChampion> optional = cache.get(livingEntity);
@@ -95,6 +102,7 @@ public class ChampionCapability {
       return this.server;
     }
 
+    @Nonnull
     @Override
     public LivingEntity getLivingEntity() {
       return this.champion;
