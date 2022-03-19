@@ -25,6 +25,7 @@ public class ClientEventHandler {
         PoseStack matrixStack = evt.getMatrixStack();
 
         if (HUDHelper.renderHealthBar(matrixStack, entity)) {
+          evt.setCanceled(true);
           MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(matrixStack,
               new RenderGameOverlayEvent(matrixStack, evt.getPartialTicks(), mc.getWindow()),
               ElementType.BOSSINFO));
