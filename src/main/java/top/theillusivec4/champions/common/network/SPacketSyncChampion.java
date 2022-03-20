@@ -6,7 +6,6 @@ import java.util.function.Supplier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Tuple;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
@@ -56,14 +55,11 @@ public class SPacketSyncChampion {
 
       if (world != null) {
         Entity entity = world.getEntityByID(msg.entityId);
-
-        if (entity instanceof LivingEntity) {
-          ChampionCapability.getCapability((LivingEntity) entity).ifPresent(champion -> {
-            IChampion.Client clientChampion = champion.getClient();
-            clientChampion.setRank(new Tuple<>(msg.tier, msg.defaultColor));
-            clientChampion.setAffixes(msg.affixes);
-          });
-        }
+        ChampionCapability.getCapability(entity).ifPresent(champion -> {
+          IChampion.Client clientChampion = champion.getClient();
+          clientChampion.setRank(new Tuple<>(msg.tier, msg.defaultColor));
+          clientChampion.setAffixes(msg.affixes);
+        });
       }
     });
     ctx.get().setPacketHandled(true);

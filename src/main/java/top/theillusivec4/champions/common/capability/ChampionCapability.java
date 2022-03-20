@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
@@ -17,6 +18,7 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
@@ -31,6 +33,7 @@ import top.theillusivec4.champions.api.IChampion;
 import top.theillusivec4.champions.common.ChampionEventsHandler;
 import top.theillusivec4.champions.common.rank.Rank;
 import top.theillusivec4.champions.common.rank.RankManager;
+import top.theillusivec4.champions.common.util.ChampionHelper;
 
 public class ChampionCapability {
 
@@ -44,8 +47,15 @@ public class ChampionCapability {
   private static final String DATA_TAG = "data";
   private static final String ID_TAG = "identifier";
 
+  private static final Map<Entity, LazyOptional<IChampion>> SERVER_CACHE = new HashMap<>();
+  private static final Map<Entity, LazyOptional<IChampion>> CLIENT_CACHE = new HashMap<>();
+
   static {
     CHAMPION_CAP = null;
+  }
+
+  private static Map<Entity, LazyOptional<IChampion>> getCache(World world) {
+    return world.isRemote() ? CLIENT_CACHE : SERVER_CACHE;
   }
 
   public static void register() {
@@ -71,7 +81,7 @@ public class ChampionCapability {
 
       @Override
       public void readNBT(Capability<IChampion> capability, IChampion instance, Direction side,
-          INBT nbt) {
+                          INBT nbt) {
         CompoundNBT compoundNBT = (CompoundNBT) nbt;
         IChampion.Server champion = instance.getServer();
 
@@ -107,8 +117,27 @@ public class ChampionCapability {
     return new Provider(livingEntity);
   }
 
+  @Deprecated
   public static LazyOptional<IChampion> getCapability(final LivingEntity livingEntity) {
-    return livingEntity.getCapability(CHAMPION_CAP);
+    return getCapability((Entity) livingEntity);
+  }
+
+  public static LazyOptional<IChampion> getCapability(final Entity entity) {
+
+    if (!ChampionHelper.isValidChampion(entity)) {
+      return LazyOptional.empty();
+    }
+    LivingEntity livingEntity = (LivingEntity) entity;
+    World world = livingEntity.getEntityWorld();
+    Map<Entity, LazyOptional<IChampion>> cache = getCache(world);
+    LazyOptional<IChampion> optional = cache.get(livingEntity);
+
+    if (optional == null) {
+      optional = livingEntity.getCapability(CHAMPION_CAP);
+      cache.put(livingEntity, optional);
+      optional.addListener(self -> cache.remove(livingEntity));
+    }
+    return optional;
   }
 
   public static class Champion implements IChampion {
@@ -230,6 +259,10 @@ public class ChampionCapability {
     @Override
     public void deserializeNBT(INBT nbt) {
       CHAMPION_CAP.readNBT(data, null, nbt);
+    }
+
+    public void invalidate() {
+      this.optional.invalidate();
     }
   }
 }

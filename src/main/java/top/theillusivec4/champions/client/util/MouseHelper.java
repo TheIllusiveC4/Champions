@@ -38,8 +38,8 @@ public class MouseHelper {
 
           if (entity1 instanceof LivingEntity) {
             LivingEntity livingEntity = (LivingEntity) entity1;
-            return ChampionCapability.getCapability(livingEntity).isPresent() ? Optional
-                .of(livingEntity) : Optional.empty();
+            return ChampionCapability.getCapability(entity1).isPresent() ?
+                Optional.of(livingEntity) : Optional.empty();
           }
         }
         mc.getProfiler().endSection();

@@ -118,7 +118,7 @@ public class Champions {
                 direction != Direction.UP);
 
             if (entity instanceof LivingEntity) {
-              ChampionCapability.getCapability((LivingEntity) entity)
+              ChampionCapability.getCapability(entity)
                   .ifPresent(champion -> ChampionEggItem.read(champion, stack));
               source.getWorld().addEntity(entity);
               stack.shrink(1);

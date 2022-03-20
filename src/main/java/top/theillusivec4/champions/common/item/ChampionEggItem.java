@@ -90,7 +90,7 @@ public class ChampionEggItem extends Item {
 
   @Override
   public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip,
-      ITooltipFlag flagIn) {
+                             ITooltipFlag flagIn) {
     boolean hasAffix = false;
 
     if (stack.hasTag()) {
@@ -140,8 +140,7 @@ public class ChampionEggItem extends Item {
                 !Objects.equals(blockpos, blockpos1) && direction == Direction.UP);
 
         if (entity instanceof LivingEntity) {
-          ChampionCapability.getCapability((LivingEntity) entity)
-              .ifPresent(champion -> read(champion, itemstack));
+          ChampionCapability.getCapability(entity).ifPresent(champion -> read(champion, itemstack));
           world.addEntity(entity);
           itemstack.shrink(1);
         }
@@ -153,7 +152,7 @@ public class ChampionEggItem extends Item {
   @Nonnull
   @Override
   public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn,
-      @Nonnull Hand handIn) {
+                                                  @Nonnull Hand handIn) {
     ItemStack itemstack = playerIn.getHeldItem(handIn);
 
     if (worldIn.isRemote()) {
@@ -178,7 +177,7 @@ public class ChampionEggItem extends Item {
                     SpawnReason.SPAWN_EGG, false, false);
 
             if (entity instanceof LivingEntity) {
-              ChampionCapability.getCapability((LivingEntity) entity)
+              ChampionCapability.getCapability(entity)
                   .ifPresent(champion -> read(champion, itemstack));
               worldIn.addEntity(entity);
 
@@ -240,7 +239,7 @@ public class ChampionEggItem extends Item {
   }
 
   public static void write(ItemStack stack, ResourceLocation entityId, int tier,
-      Collection<IAffix> affixes) {
+                           Collection<IAffix> affixes) {
     CompoundNBT tag = stack.hasTag() ? stack.getTag() : new CompoundNBT();
     assert tag != null;
 

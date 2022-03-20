@@ -27,8 +27,10 @@ public class CapabilityEventHandler {
     Entity entity = evt.getObject();
 
     if (ChampionHelper.isValidChampion(entity)) {
-      evt.addCapability(ChampionCapability.ID,
-          ChampionCapability.createProvider((LivingEntity) entity));
+      ChampionCapability.Provider provider =
+          ChampionCapability.createProvider((LivingEntity) entity);
+      evt.addCapability(ChampionCapability.ID, provider);
+      evt.addListener(provider::invalidate);
     }
   }
 
@@ -57,8 +59,8 @@ public class CapabilityEventHandler {
     Entity entity = evt.getTarget();
     PlayerEntity playerEntity = evt.getPlayer();
 
-    if (entity instanceof LivingEntity && playerEntity instanceof ServerPlayerEntity) {
-      ChampionCapability.getCapability((LivingEntity) entity).ifPresent(champion -> {
+    if (playerEntity instanceof ServerPlayerEntity) {
+      ChampionCapability.getCapability(entity).ifPresent(champion -> {
         IChampion.Server serverChampion = champion.getServer();
         NetworkHandler.INSTANCE
             .send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) playerEntity),

@@ -47,16 +47,14 @@ public class EntityIsChampion implements ILootCondition {
 
     if (entity == null) {
       return false;
-    } else if (entity instanceof LivingEntity) {
-      LivingEntity livingEntity = (LivingEntity) entity;
-      return ChampionCapability.getCapability(livingEntity).map(champion -> {
+    } else {
+      return ChampionCapability.getCapability(entity).map(champion -> {
         int tier = champion.getServer().getRank().map(Rank::getTier).orElse(0);
         boolean aboveMin = minTier == null ? tier >= 1 : tier >= minTier;
         boolean belowMax = maxTier == null || tier <= maxTier;
         return aboveMin && belowMax;
       }).orElse(false);
     }
-    return false;
   }
 
   @Nonnull

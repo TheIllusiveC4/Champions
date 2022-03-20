@@ -82,28 +82,28 @@ public class ChampionsCommand {
         Commands.argument("pos", BlockPosArgument.blockPos()).then(
             Commands.argument("entity", EntitySummonArgument.entitySummon())
                 .suggests(MONSTER_ENTITIES).then(
-                Commands.argument("tier", IntegerArgumentType.integer()).executes(
-                    context -> summon(context.getSource(),
-                        BlockPosArgument.getBlockPos(context, "pos"),
-                        EntitySummonArgument.getEntityId(context, "entity"),
-                        IntegerArgumentType.getInteger(context, "tier"), new ArrayList<>())).then(
-                    Commands.argument("affixes", AffixArgument.affix()).executes(
+                    Commands.argument("tier", IntegerArgumentType.integer()).executes(
                         context -> summon(context.getSource(),
                             BlockPosArgument.getBlockPos(context, "pos"),
                             EntitySummonArgument.getEntityId(context, "entity"),
-                            IntegerArgumentType.getInteger(context, "tier"),
-                            AffixArgument.getAffixes(context, "affixes"))))))));
+                            IntegerArgumentType.getInteger(context, "tier"), new ArrayList<>())).then(
+                        Commands.argument("affixes", AffixArgument.affix()).executes(
+                            context -> summon(context.getSource(),
+                                BlockPosArgument.getBlockPos(context, "pos"),
+                                EntitySummonArgument.getEntityId(context, "entity"),
+                                IntegerArgumentType.getInteger(context, "tier"),
+                                AffixArgument.getAffixes(context, "affixes"))))))));
 
     dispatcher.register(championsCommand);
   }
 
   private static int summon(CommandSource source, ResourceLocation resourceLocation, int tier,
-      Collection<IAffix> affixes) throws CommandSyntaxException {
+                            Collection<IAffix> affixes) throws CommandSyntaxException {
     return summon(source, null, resourceLocation, tier, affixes);
   }
 
   private static int summon(CommandSource source, @Nullable BlockPos pos,
-      ResourceLocation resourceLocation, int tier, Collection<IAffix> affixes)
+                            ResourceLocation resourceLocation, int tier, Collection<IAffix> affixes)
       throws CommandSyntaxException {
     EntityType<?> entityType = ForgeRegistries.ENTITIES.getValue(resourceLocation);
 
@@ -114,7 +114,7 @@ public class ChampionsCommand {
           pos != null ? pos : new BlockPos(source.getPos()), SpawnReason.COMMAND, false, false);
 
       if (entity instanceof LivingEntity) {
-        ChampionCapability.getCapability((LivingEntity) entity).ifPresent(
+        ChampionCapability.getCapability(entity).ifPresent(
             champion -> ChampionBuilder.spawnPreset(champion, tier, new ArrayList<>(affixes)));
         source.getWorld().addEntity(entity);
         source.sendFeedback(new TranslationTextComponent("commands.champions.summon.success",
@@ -126,7 +126,7 @@ public class ChampionsCommand {
   }
 
   private static int createEgg(CommandSource source, ResourceLocation resourceLocation, int tier,
-      Collection<IAffix> affixes) throws CommandSyntaxException {
+                               Collection<IAffix> affixes) throws CommandSyntaxException {
     EntityType<?> entity = ForgeRegistries.ENTITIES.getValue(resourceLocation);
 
     if (entity == null) {
