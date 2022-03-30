@@ -27,7 +27,7 @@ public class EnkindlingBulletEntity extends BaseBulletEntity {
 
     if (this.getOwner() != null) {
       target.hurt(
-          new IndirectEntityDamageSource("cinderBullet", this.getOwner(), this).setIsFire()
+          new IndirectEntityDamageSource("cinderBullet.indirect", this, this.getOwner()).setIsFire()
               .setMagic(), 1);
     } else {
       target.hurt(new EntityDamageSource("cinderBullet", this).setIsFire().setMagic(), 1);
