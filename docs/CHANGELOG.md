@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
+## [1.16.5-2.0.1.12] - 2022.04.09
+### Fixed
+- Fixed Enkindling affix bullet attacks doing too much damage
+
 ## [1.16.5-2.0.1.11] - 2022.04.08
 ### Fixed
 - Fixed `death.attack.cinderBullet` death messages lacking localization [#112](https://github.com/TheIllusiveC4/Champions/issues/112)

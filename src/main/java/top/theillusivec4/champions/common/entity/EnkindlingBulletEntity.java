@@ -34,10 +34,10 @@ public class EnkindlingBulletEntity extends AbstractBulletEntity {
 
     if (this.func_234616_v_() != null) {
       target.attackEntityFrom(new IndirectEntityDamageSource("cinderBullet.indirect", this,
-          this.func_234616_v_()).setFireDamage().setMagicDamage(), 1111);
+          this.func_234616_v_()).setFireDamage().setMagicDamage(), 1);
     } else {
       target.attackEntityFrom(
-          new EntityDamageSource("cinderBullet", this).setFireDamage().setMagicDamage(), 1111);
+          new EntityDamageSource("cinderBullet", this).setFireDamage().setMagicDamage(), 1);
     }
     target.setFire(8);
   }
