@@ -83,7 +83,7 @@ public class RankManager {
     }
     double chance;
 
-    if (rank.chance <= 0) {
+    if (rank.chance < 0) {
       throw new IllegalArgumentException("Non-positive chance");
     } else {
       chance = rank.chance;

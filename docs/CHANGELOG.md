@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
+## [1.18.2-2.1.2.3] - 2022.04.09
+### Changed
+- `chance` fields in `champions-ranks.toml` now accepts `0.0` as a valid value
+
 ## [1.18.2-2.1.2.2] - 2022.03.29
 ### Fixed
 - Fixed `death.attack.cinderBullet` death messages lacking localization [#112](https://github.com/TheIllusiveC4/Champions/issues/112)
