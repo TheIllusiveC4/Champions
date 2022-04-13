@@ -183,4 +183,15 @@ public class ChampionBuilder {
       attributeInstance.setBaseValue(newMax);
     }
   }
+
+  public static void copy(IChampion oldChampion, IChampion newChampion) {
+    IChampion.Server oldServer = oldChampion.getServer();
+    IChampion.Server newServer = newChampion.getServer();
+    Rank rank = oldServer.getRank().orElse(RankManager.getLowestRank());
+    newServer.setRank(rank);
+    ChampionBuilder.applyGrowth(newChampion.getLivingEntity(), rank.getGrowthFactor());
+    List<IAffix> oldAffixes = oldChampion.getServer().getAffixes();
+    newServer.setAffixes(oldAffixes);
+    oldAffixes.forEach(affix -> affix.onInitialSpawn(newChampion));
+  }
 }

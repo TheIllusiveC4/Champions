@@ -6,6 +6,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.entity.living.LivingConversionEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -50,6 +51,30 @@ public class CapabilityEventHandler {
           }
         }
       });
+    }
+  }
+
+  @SubscribeEvent
+  public void onLivingConvert(LivingConversionEvent.Post evt) {
+    LivingEntity entity = evt.getEntityLiving();
+
+    if (!entity.getLevel().isClientSide()) {
+      entity.reviveCaps();
+      LivingEntity outcome = evt.getOutcome();
+      ChampionCapability.getCapability(entity).ifPresent(
+          oldChampion -> ChampionCapability.getCapability(outcome)
+              .ifPresent(newChampion -> {
+                ChampionBuilder.copy(oldChampion, newChampion);
+                IChampion.Server serverChampion = newChampion.getServer();
+                NetworkHandler.INSTANCE
+                    .send(PacketDistributor.TRACKING_ENTITY.with(() -> outcome),
+                        new SPacketSyncChampion(outcome.getId(),
+                            serverChampion.getRank().map(Rank::getTier).orElse(0),
+                            serverChampion.getRank().map(Rank::getDefaultColor).orElse(0),
+                            serverChampion.getAffixes().stream().map(IAffix::getIdentifier)
+                                .collect(Collectors.toSet())));
+              }));
+      entity.invalidateCaps();
     }
   }
 

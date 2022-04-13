@@ -1,5 +1,9 @@
 package top.theillusivec4.champions.common.capability;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.common.cache.RemovalListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -7,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -16,7 +22,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -46,20 +51,52 @@ public class ChampionCapability {
   private static final String DATA_TAG = "data";
   private static final String ID_TAG = "identifier";
 
-  private static final Map<Entity, LazyOptional<IChampion>> SERVER_CACHE = new HashMap<>();
-  private static final Map<Entity, LazyOptional<IChampion>> CLIENT_CACHE = new HashMap<>();
+  private static final LoadingCache<Entity, LazyOptional<IChampion>> SERVER_CACHE = createCache();
+  private static final LoadingCache<Entity, LazyOptional<IChampion>> CLIENT_CACHE = createCache();
 
   public static void register() {
     MinecraftForge.EVENT_BUS.register(new CapabilityEventHandler());
     MinecraftForge.EVENT_BUS.register(new ChampionEventsHandler());
   }
 
-  private static Map<Entity, LazyOptional<IChampion>> getCache(Level level) {
-    return level.isClientSide() ? CLIENT_CACHE : SERVER_CACHE;
-  }
-
   public static Provider createProvider(final LivingEntity livingEntity) {
     return new Provider(livingEntity);
+  }
+
+  private static LoadingCache<Entity, LazyOptional<IChampion>> createCache() {
+    CacheLoader<Entity, LazyOptional<IChampion>> loader;
+    loader = new CacheLoader<>() {
+      @Nonnull
+      @Override
+      public LazyOptional<IChampion> load(@Nonnull Entity key) {
+        LazyOptional<IChampion> result = key.getCapability(CHAMPION_CAP);
+        result.addListener(self -> {
+          if (key.getLevel().isClientSide()) {
+            CLIENT_CACHE.invalidate(key);
+          } else {
+            SERVER_CACHE.invalidate(key);
+          }
+        });
+        return result;
+      }
+    };
+    RemovalListener<Entity, LazyOptional<IChampion>> listener;
+    listener = notification -> {
+      Entity entity = notification.getKey();
+
+      if (entity == null || entity.isRemoved()) {
+        LazyOptional<IChampion> maybeChampion = notification.getValue();
+
+        if (maybeChampion != null) {
+          maybeChampion.invalidate();
+        }
+      }
+    };
+    return CacheBuilder.newBuilder()
+        .maximumSize(1000)
+        .expireAfterAccess(10, TimeUnit.SECONDS)
+        .removalListener(listener)
+        .build(loader);
   }
 
   @Deprecated
@@ -72,17 +109,16 @@ public class ChampionCapability {
     if (!ChampionHelper.isValidChampion(entity)) {
       return LazyOptional.empty();
     }
-    LivingEntity livingEntity = (LivingEntity) entity;
-    Level level = livingEntity.getLevel();
-    Map<Entity, LazyOptional<IChampion>> cache = getCache(level);
-    LazyOptional<IChampion> optional = cache.get(livingEntity);
+    LazyOptional<IChampion> result = LazyOptional.empty();
 
-    if (optional == null) {
-      optional = livingEntity.getCapability(CHAMPION_CAP);
-      cache.put(livingEntity, optional);
-      optional.addListener(self -> cache.remove(livingEntity));
+    try {
+      result =
+          entity.getLevel().isClientSide() ? CLIENT_CACHE.get(entity) : SERVER_CACHE.get(entity);
+    } catch (ExecutionException e) {
+      Champions.LOGGER.error("Unknown error accessing Champion capability!");
+      e.printStackTrace();
     }
-    return optional;
+    return result;
   }
 
   public static class Champion implements IChampion {
