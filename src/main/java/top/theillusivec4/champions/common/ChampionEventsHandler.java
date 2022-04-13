@@ -8,6 +8,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
@@ -44,6 +45,7 @@ import top.theillusivec4.champions.common.rank.Rank;
 import top.theillusivec4.champions.common.registry.ChampionsRegistry;
 import top.theillusivec4.champions.common.registry.RegistryReference;
 import top.theillusivec4.champions.common.util.ChampionBuilder;
+import top.theillusivec4.champions.server.advancement.ChampionsCriterionTriggers;
 
 @SuppressWarnings("unused")
 public class ChampionEventsHandler {
@@ -276,7 +278,9 @@ public class ChampionEventsHandler {
         }
       });
       serverChampion.getRank().ifPresent(rank -> {
-        if (!evt.isCanceled() && evt.getSource().getDirectEntity() instanceof Player) {
+        if (!evt.isCanceled() && evt.getSource().getEntity() instanceof ServerPlayer player) {
+          ChampionsCriterionTriggers.CHAMPION_KILLED_BY_PLAYER.trigger(player, livingEntity, rank.getTier(), serverChampion.getAffixes());
+
           int messageTier = ChampionsConfig.deathMessageTier;
 
           if (messageTier > 0 && rank.getTier() >= messageTier) {
