@@ -19,13 +19,16 @@
 
 package top.theillusivec4.champions;
 
-import com.electronwill.nightconfig.core.CommentedConfig;
-import com.google.gson.JsonObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 import javax.annotation.Nonnull;
+import com.electronwill.nightconfig.core.CommentedConfig;
+import com.google.gson.JsonObject;
+import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.commands.synchronization.ArgumentSerializer;
 import net.minecraft.commands.synchronization.ArgumentTypes;
@@ -56,9 +59,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
-import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import top.theillusivec4.champions.api.IChampion;
 import top.theillusivec4.champions.api.IChampionsApi;
 import top.theillusivec4.champions.api.impl.ChampionsApiImpl;
@@ -76,6 +76,7 @@ import top.theillusivec4.champions.common.rank.RankManager;
 import top.theillusivec4.champions.common.registry.ChampionsRegistry;
 import top.theillusivec4.champions.common.registry.RegistryReference;
 import top.theillusivec4.champions.common.util.EntityManager;
+import top.theillusivec4.champions.server.advancement.ChampionsCriterionTriggers;
 import top.theillusivec4.champions.server.command.AffixArgument;
 import top.theillusivec4.champions.server.command.ChampionsCommand;
 
@@ -102,6 +103,7 @@ public class Champions {
     eventBus.addListener(this::registerCaps);
     MinecraftForge.EVENT_BUS.addListener(this::registerCommands);
     scalingHealthLoaded = ModList.get().isLoaded("scalinghealth");
+    ChampionsCriterionTriggers.init();
   }
 
   private void setup(final FMLCommonSetupEvent evt) {
