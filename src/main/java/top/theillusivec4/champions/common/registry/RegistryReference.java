@@ -11,5 +11,6 @@ public class RegistryReference {
   public static final String ARCTIC_BULLET = Champions.MODID + ":arctic_bullet";
   public static final String ENKINDLING_BULLET = Champions.MODID + ":enkindling_bullet";
   public static final String IS_CHAMPION = Champions.MODID + ":entity_champion";
+  public static final String CHAMPION_PROPERTIES = Champions.MODID + ":champion_properties";
   public static final String CHAMPION_LOOT = Champions.MODID + ":champion_loot";
 }

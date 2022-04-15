@@ -29,5 +29,7 @@
   "affix.champions.wounding": "Wounding",
   "affix.champions.shielding": "Shielding",
   "affix.champions.arctic": "Arctic",
-  "affix.champions.enkindling": "Enkindling"
+  "affix.champions.enkindling": "Enkindling",
+  "advancements.champions.kill_a_champion.title": "Champion Hunter",
+  "advancements.champions.kill_a_champion.description": "Kill a special hostile monster"
 }

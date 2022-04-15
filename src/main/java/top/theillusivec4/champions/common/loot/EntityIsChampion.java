@@ -17,10 +17,11 @@ import org.jetbrains.annotations.NotNull;
 import top.theillusivec4.champions.common.capability.ChampionCapability;
 import top.theillusivec4.champions.common.rank.Rank;
 
+@Deprecated
 public class EntityIsChampion implements LootItemCondition {
 
   public static LootItemConditionType type =
-      new LootItemConditionType(new EntityIsChampion.Serializer());
+    new LootItemConditionType(new EntityIsChampion.Serializer());
 
   @Nullable
   private final Integer minTier;
@@ -43,7 +44,7 @@ public class EntityIsChampion implements LootItemCondition {
 
   @Override
   public boolean test(LootContext context) {
-    Entity entity = context.getParam(this.target.getParam());
+    Entity entity = context.getParamOrNull(this.target.getParam());
 
     if (entity == null) {
       return false;
@@ -64,7 +65,7 @@ public class EntityIsChampion implements LootItemCondition {
   }
 
   public static class Serializer
-      implements net.minecraft.world.level.storage.loot.Serializer<EntityIsChampion> {
+    implements net.minecraft.world.level.storage.loot.Serializer<EntityIsChampion> {
 
     @Override
     public void serialize(final JsonObject json, final EntityIsChampion value,
@@ -77,13 +78,13 @@ public class EntityIsChampion implements LootItemCondition {
     @Nonnull
     @Override
     public EntityIsChampion deserialize(
-        JsonObject json,
-        @Nonnull JsonDeserializationContext context) {
+      JsonObject json,
+      @Nonnull JsonDeserializationContext context) {
       Integer minTier = json.has("minTier") ? GsonHelper.getAsInt(json, "minTier") : null;
       Integer maxTier = json.has("maxTier") ? GsonHelper.getAsInt(json, "maxTier") : null;
 
       return new EntityIsChampion(minTier, maxTier,
-          GsonHelper.getAsObject(json, "entity", context, LootContext.EntityTarget.class));
+        GsonHelper.getAsObject(json, "entity", context, LootContext.EntityTarget.class));
     }
   }
 }

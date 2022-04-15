@@ -19,16 +19,13 @@
 
 package top.theillusivec4.champions;
 
+import com.electronwill.nightconfig.core.CommentedConfig;
+import com.google.gson.JsonObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 import javax.annotation.Nonnull;
-import com.electronwill.nightconfig.core.CommentedConfig;
-import com.google.gson.JsonObject;
-import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.commands.synchronization.ArgumentSerializer;
 import net.minecraft.commands.synchronization.ArgumentTypes;
@@ -57,6 +54,9 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
+import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import top.theillusivec4.champions.api.IChampion;
 import top.theillusivec4.champions.api.IChampionsApi;
 import top.theillusivec4.champions.api.impl.ChampionsApiImpl;
@@ -68,12 +68,12 @@ import top.theillusivec4.champions.common.capability.ChampionCapability;
 import top.theillusivec4.champions.common.config.ChampionsConfig;
 import top.theillusivec4.champions.common.item.ChampionEggItem;
 import top.theillusivec4.champions.common.loot.EntityIsChampion;
+import top.theillusivec4.champions.common.loot.LootItemChampionPropertyCondition;
 import top.theillusivec4.champions.common.network.NetworkHandler;
 import top.theillusivec4.champions.common.rank.RankManager;
 import top.theillusivec4.champions.common.registry.ChampionsRegistry;
 import top.theillusivec4.champions.common.registry.RegistryReference;
 import top.theillusivec4.champions.common.util.EntityManager;
-import top.theillusivec4.champions.server.advancement.ChampionsCriterionTriggers;
 import top.theillusivec4.champions.server.command.AffixArgument;
 import top.theillusivec4.champions.server.command.ChampionsCommand;
 
@@ -99,7 +99,6 @@ public class Champions {
     eventBus.addListener(this::registerCaps);
     MinecraftForge.EVENT_BUS.addListener(this::registerCommands);
     scalingHealthLoaded = ModList.get().isLoaded("scalinghealth");
-    ChampionsCriterionTriggers.init();
   }
 
   private void setup(final FMLCommonSetupEvent evt) {
@@ -108,18 +107,21 @@ public class Champions {
     AffixManager.register();
     evt.enqueueWork(() -> {
       Registry.register(Registry.LOOT_CONDITION_TYPE,
-          new ResourceLocation(RegistryReference.IS_CHAMPION), EntityIsChampion.type);
+        new ResourceLocation(RegistryReference.IS_CHAMPION), EntityIsChampion.type);
+      Registry.register(Registry.LOOT_CONDITION_TYPE,
+        new ResourceLocation(RegistryReference.CHAMPION_PROPERTIES),
+        LootItemChampionPropertyCondition.INSTANCE);
       DispenseItemBehavior dispenseBehavior = (source, stack) -> {
         Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
         Optional<EntityType<?>> entitytype = ChampionEggItem.getType(stack);
         entitytype.ifPresent(type -> {
           Entity entity = type.create(source.getLevel(), stack.getTag(), null, null,
-              source.getPos().relative(direction), MobSpawnType.DISPENSER, true,
-              direction != Direction.UP);
+            source.getPos().relative(direction), MobSpawnType.DISPENSER, true,
+            direction != Direction.UP);
 
           if (entity instanceof LivingEntity) {
             ChampionCapability.getCapability(entity)
-                .ifPresent(champion -> ChampionEggItem.read(champion, stack));
+              .ifPresent(champion -> ChampionEggItem.read(champion, stack));
             source.getLevel().addFreshEntity(entity);
             stack.shrink(1);
           }
@@ -128,25 +130,25 @@ public class Champions {
       };
       DispenserBlock.registerBehavior(ChampionsRegistry.EGG, dispenseBehavior);
       ArgumentTypes.register(Champions.MODID + ":affix", AffixArgument.class,
-          new ArgumentSerializer<>() {
-            @Override
-            public void serializeToNetwork(@Nonnull final AffixArgument argument,
-                                           @Nonnull final FriendlyByteBuf buffer) {
-              // NO-OP
-            }
+        new ArgumentSerializer<>() {
+          @Override
+          public void serializeToNetwork(@Nonnull final AffixArgument argument,
+                                         @Nonnull final FriendlyByteBuf buffer) {
+            // NO-OP
+          }
 
-            @Nonnull
-            @Override
-            public AffixArgument deserializeFromNetwork(@Nonnull final FriendlyByteBuf buffer) {
-              return new AffixArgument();
-            }
+          @Nonnull
+          @Override
+          public AffixArgument deserializeFromNetwork(@Nonnull final FriendlyByteBuf buffer) {
+            return new AffixArgument();
+          }
 
-            @Override
-            public void serializeToJson(@Nonnull final AffixArgument argument,
-                                        @Nonnull final JsonObject json) {
-              // NO-OP
-            }
-          });
+          @Override
+          public void serializeToJson(@Nonnull final AffixArgument argument,
+                                      @Nonnull final JsonObject json) {
+            // NO-OP
+          }
+        });
     });
   }
 
@@ -155,7 +157,7 @@ public class Champions {
     MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
     MinecraftForge.EVENT_BUS.register(new ClientAffixEventsHandler());
     Minecraft.getInstance().getItemColors()
-        .register(ChampionEggItem::getColor, ChampionsRegistry.EGG);
+      .register(ChampionEggItem::getColor, ChampionsRegistry.EGG);
   }
 
   private void registerCaps(final RegisterCapabilitiesEvent evt) {
@@ -197,8 +199,8 @@ public class Champions {
     if (!defaults.exists()) {
       try {
         FileUtils.copyInputStreamToFile(
-            Objects.requireNonNull(Champions.class.getClassLoader().getResourceAsStream(fileName)),
-            defaults);
+          Objects.requireNonNull(Champions.class.getClassLoader().getResourceAsStream(fileName)),
+          defaults);
       } catch (IOException e) {
         LOGGER.error("Error creating default config for " + fileName);
       }

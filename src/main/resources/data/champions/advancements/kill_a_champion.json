@@ -1,0 +1,40 @@
+{
+  "parent": "minecraft:adventure/kill_a_mob",
+  "display": {
+    "icon": {
+      "item": "minecraft:iron_sword",
+      "nbt": "{Damage:0,Enchantments:[{id:\"minecraft:sharpness\",lvl:4}]}"
+    },
+    "title": {
+      "translate": "advancements.champions.kill_a_champion.title"
+    },
+    "description": {
+      "translate": "advancements.champions.kill_a_champion.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "kill_a_champion": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": [
+          {
+            "condition": "champions:champion_properties",
+            "tier": {
+              "min": 1
+            },
+            "entity": "this"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "kill_a_champion"
+    ]
+  ]
+}
