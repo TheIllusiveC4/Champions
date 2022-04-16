@@ -47,6 +47,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -55,6 +56,7 @@ import net.minecraftforge.fml.config.ModConfig.Type;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 import top.theillusivec4.champions.api.IChampion;
@@ -66,6 +68,7 @@ import top.theillusivec4.champions.client.config.ClientChampionsConfig;
 import top.theillusivec4.champions.common.affix.core.AffixManager;
 import top.theillusivec4.champions.common.capability.ChampionCapability;
 import top.theillusivec4.champions.common.config.ChampionsConfig;
+import top.theillusivec4.champions.common.integration.theoneprobe.TheOneProbePlugin;
 import top.theillusivec4.champions.common.item.ChampionEggItem;
 import top.theillusivec4.champions.common.loot.EntityIsChampion;
 import top.theillusivec4.champions.common.network.NetworkHandler;
@@ -87,6 +90,7 @@ public class Champions {
   public static boolean scalingHealthLoaded = false;
 
   public Champions() {
+    FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
     ModLoadingContext.get().registerConfig(Type.CLIENT, ClientChampionsConfig.CLIENT_SPEC);
     ModLoadingContext.get().registerConfig(Type.SERVER, ChampionsConfig.SERVER_SPEC);
     createServerConfig(ChampionsConfig.RANKS_SPEC, "ranks");
@@ -202,6 +206,14 @@ public class Champions {
       } catch (IOException e) {
         LOGGER.error("Error creating default config for " + fileName);
       }
+    }
+  }
+
+  private void enqueueIMC(final InterModEnqueueEvent event) {
+    // register TheOneProbe integration
+    if(ModList.get().isLoaded("theoneprobe")) {
+      Champions.LOGGER.info("Champions detected TheOneProbe, registering plugin now");
+      InterModComms.sendTo(MODID, "theoneprobe", "getTheOneProbe", () -> new TheOneProbePlugin.GetTheOneProbe());
     }
   }
 }
