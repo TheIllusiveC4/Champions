@@ -213,9 +213,10 @@ public class Champions {
 
   private void enqueueIMC(final InterModEnqueueEvent event) {
     // register TheOneProbe integration
-    if(ModList.get().isLoaded("theoneprobe")) {
+    if (ModList.get().isLoaded("theoneprobe")) {
       Champions.LOGGER.info("Champions detected TheOneProbe, registering plugin now");
-      InterModComms.sendTo(MODID, "theoneprobe", "getTheOneProbe", () -> new TheOneProbePlugin.GetTheOneProbe());
+      InterModComms.sendTo(MODID, "theoneprobe", "getTheOneProbe",
+        TheOneProbePlugin.GetTheOneProbe::new);
     }
   }
 }

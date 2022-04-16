@@ -35,7 +35,7 @@ public class ChampionsConfig {
 
   static {
     final Pair<ServerConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder()
-        .configure(ServerConfig::new);
+      .configure(ServerConfig::new);
     SERVER_SPEC = specPair.getRight();
     SERVER = specPair.getLeft();
   }
@@ -51,6 +51,7 @@ public class ChampionsConfig {
     public final EnumValue<ConfigEnums.Permission> entitiesPermission;
     public final BooleanValue showHud;
     public final BooleanValue showParticles;
+    public final BooleanValue enableTOPIntegration;
 
     public final BooleanValue fakeLoot;
     public final EnumValue<ConfigEnums.LootSource> lootSource;
@@ -118,299 +119,303 @@ public class ChampionsConfig {
       builder.push("general");
 
       beaconProtectionRange = builder
-          .comment("The range from an active beacon where no champions will spawn (0 to disable)")
-          .translation(CONFIG_PREFIX + "beaconProtectionRange")
-          .defineInRange("beaconProtectionRange", 64, 0, 1000);
+        .comment("The range from an active beacon where no champions will spawn (0 to disable)")
+        .translation(CONFIG_PREFIX + "beaconProtectionRange")
+        .defineInRange("beaconProtectionRange", 64, 0, 1000);
 
       championSpawners = builder.comment("Set to true to enable champions from mob spawners")
-          .translation(CONFIG_PREFIX + "championSpawners").define("championSpawners", false);
+        .translation(CONFIG_PREFIX + "championSpawners").define("championSpawners", false);
 
       deathMessageTier = builder.comment(
-              "The minimum tier of champions that will have death messages sent out upon defeat (0 to disable)")
-          .translation(CONFIG_PREFIX + "deathMessageTier")
-          .defineInRange("deathMessageTier", 0, 0, Integer.MAX_VALUE);
+          "The minimum tier of champions that will have death messages sent out upon defeat (0 to disable)")
+        .translation(CONFIG_PREFIX + "deathMessageTier")
+        .defineInRange("deathMessageTier", 0, 0, Integer.MAX_VALUE);
 
       dimensionList = builder
-          .comment("A list of dimension names that are blacklisted/whitelisted for champions")
-          .translation(CONFIG_PREFIX + "dimensionList")
-          .defineList("dimensionList", new ArrayList<>(), s -> s instanceof String);
+        .comment("A list of dimension names that are blacklisted/whitelisted for champions")
+        .translation(CONFIG_PREFIX + "dimensionList")
+        .defineList("dimensionList", new ArrayList<>(), s -> s instanceof String);
 
       dimensionPermission = builder
-          .comment("Set whether the dimension list is a blacklist or whitelist")
-          .translation(CONFIG_PREFIX + "dimensionPermission")
-          .defineEnum("dimensionPermission", Permission.BLACKLIST);
+        .comment("Set whether the dimension list is a blacklist or whitelist")
+        .translation(CONFIG_PREFIX + "dimensionPermission")
+        .defineEnum("dimensionPermission", Permission.BLACKLIST);
 
       entitiesList = builder
-          .comment("A list of entities that are blacklisted/whitelisted for champions")
-          .translation(CONFIG_PREFIX + "entitiesList")
-          .defineListAllowEmpty(Lists.newArrayList("entitiesList"), ArrayList::new,
-              s -> s instanceof String);
+        .comment("A list of entities that are blacklisted/whitelisted for champions")
+        .translation(CONFIG_PREFIX + "entitiesList")
+        .defineListAllowEmpty(Lists.newArrayList("entitiesList"), ArrayList::new,
+          s -> s instanceof String);
 
       entitiesPermission = builder
-          .comment("Set whether the entities list is a blacklist or whitelist")
-          .translation(CONFIG_PREFIX + "entitiesPermission")
-          .defineEnum("entitiesPermission", Permission.BLACKLIST);
+        .comment("Set whether the entities list is a blacklist or whitelist")
+        .translation(CONFIG_PREFIX + "entitiesPermission")
+        .defineEnum("entitiesPermission", Permission.BLACKLIST);
 
       showHud = builder.comment(
-              "Set to true to show HUD display for champions, including health, affixes, and tier")
-          .translation(CONFIG_PREFIX + "showHud").define("showHud", true);
+          "Set to true to show HUD display for champions, including health, affixes, and tier")
+        .translation(CONFIG_PREFIX + "showHud").define("showHud", true);
 
       showParticles = builder.comment(
-              "Set to true to have champions generate a colored particle effect indicating their rank")
-          .translation(CONFIG_PREFIX + "showParticles").define("showParticles", true);
+          "Set to true to have champions generate a colored particle effect indicating their rank")
+        .translation(CONFIG_PREFIX + "showParticles").define("showParticles", true);
+
+      enableTOPIntegration =
+        builder.comment("Set to true to show champion tier and affixes in The One Probe overlay")
+          .translation(CONFIG_PREFIX + "enableTOPIntegration").define("enableTOPIntegration", true);
 
       builder.pop();
 
       builder.push("loot");
 
       fakeLoot = builder.comment("Set to true to allow fake players to generate champion loot")
-          .translation(CONFIG_PREFIX + "fakeLoot").define("fakeLoot", false);
+        .translation(CONFIG_PREFIX + "fakeLoot").define("fakeLoot", false);
 
       lootSource = builder.comment("Set the source of champion mob drops")
-          .translation(CONFIG_PREFIX + "lootSource")
-          .defineEnum("lootSource", LootSource.LOOT_TABLE);
+        .translation(CONFIG_PREFIX + "lootSource")
+        .defineEnum("lootSource", LootSource.LOOT_TABLE);
 
       lootDrops = builder.comment(
-              "List of loot drops from champions if sourced from config\nFormat: [tier];[modid:name];[amount];[enchant(true/false)];[weight]")
-          .translation(CONFIG_PREFIX + "lootDrops")
-          .defineList("lootDrops", new ArrayList<>(), s -> s instanceof String);
+          "List of loot drops from champions if sourced from config\nFormat: [tier];[modid:name];[amount];[enchant(true/false)];[weight]")
+        .translation(CONFIG_PREFIX + "lootDrops")
+        .defineList("lootDrops", new ArrayList<>(), s -> s instanceof String);
 
       lootScaling = builder.comment(
-              "Set to true to scale amount of loot drops from champions to tier if sourced from config")
-          .translation(CONFIG_PREFIX + "lootScaling").define("lootScaling", false);
+          "Set to true to scale amount of loot drops from champions to tier if sourced from config")
+        .translation(CONFIG_PREFIX + "lootScaling").define("lootScaling", false);
 
       builder.pop();
 
       builder.push("growth");
 
       healthGrowth = builder
-          .comment("The percent increase in health multiplied by the growth factor")
-          .translation(CONFIG_PREFIX + "healthGrowth")
-          .defineInRange("healthGrowth", 0.35D, 0.0D, Double.MAX_VALUE);
+        .comment("The percent increase in health multiplied by the growth factor")
+        .translation(CONFIG_PREFIX + "healthGrowth")
+        .defineInRange("healthGrowth", 0.35D, 0.0D, Double.MAX_VALUE);
 
       attackGrowth = builder
-          .comment("The percent increase in attack damage multiplied by the growth factor")
-          .translation(CONFIG_PREFIX + "attackGrowth")
-          .defineInRange("attackGrowth", 0.5D, 0.0D, Double.MAX_VALUE);
+        .comment("The percent increase in attack damage multiplied by the growth factor")
+        .translation(CONFIG_PREFIX + "attackGrowth")
+        .defineInRange("attackGrowth", 0.5D, 0.0D, Double.MAX_VALUE);
 
       armorGrowth = builder.comment("The increase in armor multiplied by the growth factor")
-          .translation(CONFIG_PREFIX + "armorGrowth")
-          .defineInRange("armorGrowth", 2.0D, 0.0D, 30.0D);
+        .translation(CONFIG_PREFIX + "armorGrowth")
+        .defineInRange("armorGrowth", 2.0D, 0.0D, 30.0D);
 
       toughnessGrowth = builder
-          .comment("The increase in armor toughness multiplied by the growth factor")
-          .translation(CONFIG_PREFIX + "toughnessGrowth")
-          .defineInRange("toughnessGrowth", 1.0D, 0.0D, 30.0D);
+        .comment("The increase in armor toughness multiplied by the growth factor")
+        .translation(CONFIG_PREFIX + "toughnessGrowth")
+        .defineInRange("toughnessGrowth", 1.0D, 0.0D, 30.0D);
 
       knockbackResistanceGrowth = builder
-          .comment("The increase in knockback resistance multiplied by the growth factor")
-          .translation(CONFIG_PREFIX + "knockbackResistanceGrowth")
-          .defineInRange("knockbackResistanceGrowth", 0.05D, 0.0D, 1.0D);
+        .comment("The increase in knockback resistance multiplied by the growth factor")
+        .translation(CONFIG_PREFIX + "knockbackResistanceGrowth")
+        .defineInRange("knockbackResistanceGrowth", 0.05D, 0.0D, 1.0D);
 
       experienceGrowth = builder
-          .comment("The increase in experience multiplied by the growth factor")
-          .translation(CONFIG_PREFIX + "experienceGrowth")
-          .defineInRange("experienceGrowth", 1, 0, Integer.MAX_VALUE);
+        .comment("The increase in experience multiplied by the growth factor")
+        .translation(CONFIG_PREFIX + "experienceGrowth")
+        .defineInRange("experienceGrowth", 1, 0, Integer.MAX_VALUE);
 
       explosionGrowth = builder
-          .comment("The increase in explosive range multiplied by the growth factor")
-          .translation(CONFIG_PREFIX + "explosionGrowth")
-          .defineInRange("explosionGrowth", 2, 0, 100);
+        .comment("The increase in explosive range multiplied by the growth factor")
+        .translation(CONFIG_PREFIX + "explosionGrowth")
+        .defineInRange("explosionGrowth", 2, 0, 100);
 
       builder.pop();
 
       builder.push("affixes");
 
       affixTargetRange = builder.comment(
-              "Set the maximum distance that mobs can use their targeted abilities from, 0 to disable")
-          .translation(CONFIG_PREFIX + "affixTargetRange")
-          .defineInRange("affixTargetRange", 0.0D, 0.0D, 100.0D);
+          "Set the maximum distance that mobs can use their targeted abilities from, 0 to disable")
+        .translation(CONFIG_PREFIX + "affixTargetRange")
+        .defineInRange("affixTargetRange", 0.0D, 0.0D, 100.0D);
 
       builder.push("adaptable");
 
       adaptableDamageReductionIncrement = builder.comment(
-              "The increase in damage reduction for each consecutive attack of the same damage type")
-          .translation(CONFIG_PREFIX + "adaptableDamageReductionIncrement")
-          .defineInRange("adaptableDamageReductionIncrement", 0.15D, 0.0D, 1.0D);
+          "The increase in damage reduction for each consecutive attack of the same damage type")
+        .translation(CONFIG_PREFIX + "adaptableDamageReductionIncrement")
+        .defineInRange("adaptableDamageReductionIncrement", 0.15D, 0.0D, 1.0D);
 
       adaptableMaxDamageReduction = builder.comment("The maximum damage reduction")
-          .translation(CONFIG_PREFIX + "adaptableMaxDamageReduction")
-          .defineInRange("adaptableMaxDamageReduction", 0.9D, 0.0D, 1.0D);
+        .translation(CONFIG_PREFIX + "adaptableMaxDamageReduction")
+        .defineInRange("adaptableMaxDamageReduction", 0.9D, 0.0D, 1.0D);
 
       builder.pop();
 
       builder.push("arctic");
 
       arcticAttackInterval = builder
-          .comment("How often the champion will shoot projectiles (in seconds)")
-          .translation(CONFIG_PREFIX + "arcticAttackInterval")
-          .defineInRange("arcticAttackInterval", 1, 1, 100);
+        .comment("How often the champion will shoot projectiles (in seconds)")
+        .translation(CONFIG_PREFIX + "arcticAttackInterval")
+        .defineInRange("arcticAttackInterval", 1, 1, 100);
 
       builder.pop();
 
       builder.push("dampened");
 
       dampenedDamageReduction = builder
-          .comment("The amount of damage reduction to apply to indirect attacks")
-          .translation(CONFIG_PREFIX + "dampenedDamageReduction")
-          .defineInRange("dampenedDamageReduction", 0.8D, 0.0D, 1.0D);
+        .comment("The amount of damage reduction to apply to indirect attacks")
+        .translation(CONFIG_PREFIX + "dampenedDamageReduction")
+        .defineInRange("dampenedDamageReduction", 0.8D, 0.0D, 1.0D);
 
       builder.pop();
 
       builder.push("desecrating");
 
       desecratingCloudInterval = builder.comment("How long (in seconds) between cloud placements")
-          .translation(CONFIG_PREFIX + "desecratingCloudInterval")
-          .defineInRange("desecratingCloudInterval", 3, 1, Integer.MAX_VALUE);
+        .translation(CONFIG_PREFIX + "desecratingCloudInterval")
+        .defineInRange("desecratingCloudInterval", 3, 1, Integer.MAX_VALUE);
 
       desecratingCloudActivationTime = builder.comment(
-              "How long (in seconds) it takes for the effect cloud to activate after being placed")
-          .translation(CONFIG_PREFIX + "desecratingCloudActivationTime")
-          .defineInRange("desecratingCloudActivationTime", 1, 0, Integer.MAX_VALUE);
+          "How long (in seconds) it takes for the effect cloud to activate after being placed")
+        .translation(CONFIG_PREFIX + "desecratingCloudActivationTime")
+        .defineInRange("desecratingCloudActivationTime", 1, 0, Integer.MAX_VALUE);
 
       desecratingCloudRadius = builder.comment("The radius of the cloud effect")
-          .translation(CONFIG_PREFIX + "desecratingCloudRadius")
-          .defineInRange("desecratingCloudRadius", 4.0D, 1.0D, Double.MAX_VALUE);
+        .translation(CONFIG_PREFIX + "desecratingCloudRadius")
+        .defineInRange("desecratingCloudRadius", 4.0D, 1.0D, Double.MAX_VALUE);
 
       desecratingCloudDuration = builder.comment("The duration (in seconds) of the cloud effect")
-          .translation(CONFIG_PREFIX + "desecratingCloudDuration")
-          .defineInRange("desecratingCloudDuration", 10, 1, Integer.MAX_VALUE);
+        .translation(CONFIG_PREFIX + "desecratingCloudDuration")
+        .defineInRange("desecratingCloudDuration", 10, 1, Integer.MAX_VALUE);
 
       builder.pop();
 
       builder.push("enkindling");
 
       enkindlingAttackInterval = builder
-          .comment("How often the champion will shoot projectiles (in seconds)")
-          .translation(CONFIG_PREFIX + "enkindlingAttackInterval")
-          .defineInRange("enkindlingAttackInterval", 1, 1, 100);
+        .comment("How often the champion will shoot projectiles (in seconds)")
+        .translation(CONFIG_PREFIX + "enkindlingAttackInterval")
+        .defineInRange("enkindlingAttackInterval", 1, 1, 100);
 
       builder.pop();
 
       builder.push("hasty");
 
       hastyMovementBonus = builder.comment("The base movement speed bonus")
-          .translation(CONFIG_PREFIX + "hastyMovementBonus")
-          .defineInRange("hastyMovementBonus", 0.25D, 0.0D, Double.MAX_VALUE);
+        .translation(CONFIG_PREFIX + "hastyMovementBonus")
+        .defineInRange("hastyMovementBonus", 0.25D, 0.0D, Double.MAX_VALUE);
 
       builder.pop();
 
       builder.push("infested");
 
       infestedAmount = builder.comment("The amount of parasites to spawn per interval")
-          .translation(CONFIG_PREFIX + "infestedAmount").defineInRange("infestedAmount", 2, 1, 100);
+        .translation(CONFIG_PREFIX + "infestedAmount").defineInRange("infestedAmount", 2, 1, 100);
 
       infestedInterval = builder.comment("The time (in seconds) between parasite spawns")
-          .translation(CONFIG_PREFIX + "infestedInterval")
-          .defineInRange("infestedInterval", 3, 1, 100);
+        .translation(CONFIG_PREFIX + "infestedInterval")
+        .defineInRange("infestedInterval", 3, 1, 100);
 
       infestedPerHealth = builder
-          .comment("The amount of parasites to infest per health point of the champion")
-          .translation(CONFIG_PREFIX + "infestedPerHealth")
-          .defineInRange("infestedPerHealth", 0.5D, 0.0D, Double.MAX_VALUE);
+        .comment("The amount of parasites to infest per health point of the champion")
+        .translation(CONFIG_PREFIX + "infestedPerHealth")
+        .defineInRange("infestedPerHealth", 0.5D, 0.0D, Double.MAX_VALUE);
 
       infestedTotal = builder.comment("The total amount of parasites a champion can house at once")
-          .translation(CONFIG_PREFIX + "infestedTotal")
-          .defineInRange("infestedTotal", 20, 1, Integer.MAX_VALUE);
+        .translation(CONFIG_PREFIX + "infestedTotal")
+        .defineInRange("infestedTotal", 20, 1, Integer.MAX_VALUE);
 
       infestedParasite = builder.comment("The mob to use as a parasite for infestation")
-          .translation(CONFIG_PREFIX + "infestedParasite")
-          .define("infestedParasite", "minecraft:silverfish");
+        .translation(CONFIG_PREFIX + "infestedParasite")
+        .define("infestedParasite", "minecraft:silverfish");
 
       infestedEnderParasite = builder
-          .comment("The mob to use as a parasite for infestation of ender mob")
-          .translation(CONFIG_PREFIX + "infestedEnderParasite")
-          .define("infestedEnderParasite", "minecraft:endermite");
+        .comment("The mob to use as a parasite for infestation of ender mob")
+        .translation(CONFIG_PREFIX + "infestedEnderParasite")
+        .define("infestedEnderParasite", "minecraft:endermite");
 
       builder.pop();
 
       builder.push("paralyzing");
 
       paralyzingChance = builder.comment("The percent chance that an attack will paralyze targets")
-          .translation(CONFIG_PREFIX + "paralyzingChance")
-          .defineInRange("paralyzingChance", 0.2D, 0.0D, 1.0D);
+        .translation(CONFIG_PREFIX + "paralyzingChance")
+        .defineInRange("paralyzingChance", 0.2D, 0.0D, 1.0D);
 
       builder.pop();
 
       builder.push("knocking");
 
       knockingMultiplier = builder.comment("The multiplier to apply to the knockback strength")
-          .translation(CONFIG_PREFIX + "knockingMultiplier")
-          .defineInRange("knockingMultiplier", 5.0D, 0.0D, Double.MAX_VALUE);
+        .translation(CONFIG_PREFIX + "knockingMultiplier")
+        .defineInRange("knockingMultiplier", 5.0D, 0.0D, Double.MAX_VALUE);
 
       builder.pop();
 
       builder.push("lively");
 
       livelyHealAmount = builder.comment("The amount of health per second regeneration")
-          .translation(CONFIG_PREFIX + "livelyHealAmount")
-          .defineInRange("livelyHealAmount", 1.0D, 0.0D, Double.MAX_VALUE);
+        .translation(CONFIG_PREFIX + "livelyHealAmount")
+        .defineInRange("livelyHealAmount", 1.0D, 0.0D, Double.MAX_VALUE);
 
       livelyPassiveMultiplier = builder
-          .comment("Multiplier to health regeneration when not aggressive")
-          .translation(CONFIG_PREFIX + "livelyPassiveMultiplier")
-          .defineInRange("livelyPassiveMultiplier", 5.0D, 1.0D, Double.MAX_VALUE);
+        .comment("Multiplier to health regeneration when not aggressive")
+        .translation(CONFIG_PREFIX + "livelyPassiveMultiplier")
+        .defineInRange("livelyPassiveMultiplier", 5.0D, 1.0D, Double.MAX_VALUE);
 
       livelyCooldown = builder
-          .comment("Set cooldown (in seconds) for regeneration after getting attacked")
-          .translation(CONFIG_PREFIX + "livelyCooldown")
-          .defineInRange("livelyCooldown", 3, 1, Integer.MAX_VALUE);
+        .comment("Set cooldown (in seconds) for regeneration after getting attacked")
+        .translation(CONFIG_PREFIX + "livelyCooldown")
+        .defineInRange("livelyCooldown", 3, 1, Integer.MAX_VALUE);
 
       builder.pop();
 
       builder.push("molten");
 
       moltenWaterResistance = builder
-          .comment("Set to true to have Molten champions not be damaged by water")
-          .translation(CONFIG_PREFIX + "moltenWaterResistance")
-          .define("moltenWaterResistance", false);
+        .comment("Set to true to have Molten champions not be damaged by water")
+        .translation(CONFIG_PREFIX + "moltenWaterResistance")
+        .define("moltenWaterResistance", false);
 
       builder.pop();
 
       builder.push("plagued");
 
       plaguedEffect = builder
-          .comment("The effect that will be spread\nFormat:[effect];[power];[duration(secs)]")
-          .translation(CONFIG_PREFIX + "plaguedEffect")
-          .define("plaguedEffect", "minecraft:poison;15;1");
+        .comment("The effect that will be spread\nFormat:[effect];[power];[duration(secs)]")
+        .translation(CONFIG_PREFIX + "plaguedEffect")
+        .define("plaguedEffect", "minecraft:poison;15;1");
 
       plaguedRange = builder.comment("The range of the plagued effect")
-          .translation(CONFIG_PREFIX + "plaguedRange").defineInRange("plaguedRange", 5, 1, 100);
+        .translation(CONFIG_PREFIX + "plaguedRange").defineInRange("plaguedRange", 5, 1, 100);
 
       builder.pop();
 
       builder.push("reflective");
 
       reflectiveMinPercent = builder.comment("The minimum percent of damage to reflect back")
-          .translation(CONFIG_PREFIX + "reflectiveMinPercent")
-          .defineInRange("reflectiveMinPercent", 0.1D, 0.0D, 1.0D);
+        .translation(CONFIG_PREFIX + "reflectiveMinPercent")
+        .defineInRange("reflectiveMinPercent", 0.1D, 0.0D, 1.0D);
 
       reflectiveMaxPercent = builder.comment("The maximum percent of damage to reflect back")
-          .translation(CONFIG_PREFIX + "reflectiveMaxPercent")
-          .defineInRange("reflectiveMaxPercent", 0.35D, 0.0D, 1.0D);
+        .translation(CONFIG_PREFIX + "reflectiveMaxPercent")
+        .defineInRange("reflectiveMaxPercent", 0.35D, 0.0D, 1.0D);
 
       reflectiveMax = builder.comment("The maximum amount of damage to reflect back")
-          .translation(CONFIG_PREFIX + "reflectiveMax")
-          .defineInRange("reflectiveMax", 100, 0, Integer.MAX_VALUE);
+        .translation(CONFIG_PREFIX + "reflectiveMax")
+        .defineInRange("reflectiveMax", 100, 0, Integer.MAX_VALUE);
 
       reflectiveLethal = builder.comment("Set to true to enable deadly reflected strikes")
-          .translation(CONFIG_PREFIX + "reflectiveLethal").define("reflectiveLethal", true);
+        .translation(CONFIG_PREFIX + "reflectiveLethal").define("reflectiveLethal", true);
 
       builder.pop();
 
       builder.push("magnetic");
 
       magneticStrength = builder.comment("Strength of the magnetic pulling effect")
-          .translation(CONFIG_PREFIX + "magneticStrength")
-          .defineInRange("magneticStrength", 0.05D, 0.0D, 100.0D);
+        .translation(CONFIG_PREFIX + "magneticStrength")
+        .defineInRange("magneticStrength", 0.05D, 0.0D, 100.0D);
 
       builder.pop();
 
       builder.push("wounding");
 
       woundingChance = builder.comment("The percent chance that an attack will wound targets")
-          .translation(CONFIG_PREFIX + "woundingChance")
-          .defineInRange("woundingChance", 0.4D, 0.0D, 1.0D);
+        .translation(CONFIG_PREFIX + "woundingChance")
+        .defineInRange("woundingChance", 0.4D, 0.0D, 1.0D);
 
       builder.pop();
 
@@ -419,9 +424,9 @@ public class ChampionsConfig {
       builder.push("integrations");
 
       scalingHealthSpawnModifiers = builder.comment(
-              "Scaling Health\nList of tiers with numbers to multiply spawn rates by difficulty\nFormat: [tier];[percent increase]")
-          .translation(CONFIG_PREFIX + "scalingHealthSpawnModifiers")
-          .defineList("scalingHealthSpawnModifiers", new ArrayList<>(), s -> s instanceof String);
+          "Scaling Health\nList of tiers with numbers to multiply spawn rates by difficulty\nFormat: [tier];[percent increase]")
+        .translation(CONFIG_PREFIX + "scalingHealthSpawnModifiers")
+        .defineList("scalingHealthSpawnModifiers", new ArrayList<>(), s -> s instanceof String);
 
       builder.pop();
     }
@@ -432,7 +437,7 @@ public class ChampionsConfig {
 
   static {
     final Pair<Ranks, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder()
-        .configure(Ranks::new);
+      .configure(Ranks::new);
     RANKS_SPEC = specPair.getRight();
     RANKS = specPair.getLeft();
   }
@@ -452,7 +457,7 @@ public class ChampionsConfig {
 
   static {
     final Pair<Affixes, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder()
-        .configure(Affixes::new);
+      .configure(Affixes::new);
     AFFIXES_SPEC = specPair.getRight();
     AFFIXES = specPair.getLeft();
   }
@@ -472,7 +477,7 @@ public class ChampionsConfig {
 
   static {
     final Pair<Entities, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder()
-        .configure(Entities::new);
+      .configure(Entities::new);
     ENTITIES_SPEC = specPair.getRight();
     ENTITIES = specPair.getLeft();
   }
@@ -515,6 +520,7 @@ public class ChampionsConfig {
   public static Permission entitiesPermission;
   public static boolean showHud;
   public static boolean showParticles;
+  public static boolean enableTOPIntegration;
 
   public static boolean fakeLoot;
   public static LootSource lootSource;
@@ -587,6 +593,7 @@ public class ChampionsConfig {
     entitiesPermission = SERVER.entitiesPermission.get();
     showHud = SERVER.showHud.get();
     showParticles = SERVER.showParticles.get();
+    enableTOPIntegration = SERVER.enableTOPIntegration.get();
 
     fakeLoot = SERVER.fakeLoot.get();
     lootSource = SERVER.lootSource.get();
@@ -625,11 +632,11 @@ public class ChampionsConfig {
     infestedInterval = SERVER.infestedInterval.get();
 
     EntityType<?> type = ForgeRegistries.ENTITIES
-        .getValue(new ResourceLocation(SERVER.infestedParasite.get()));
+      .getValue(new ResourceLocation(SERVER.infestedParasite.get()));
     infestedParasite = type != null ? type : EntityType.SILVERFISH;
 
     type = ForgeRegistries.ENTITIES
-        .getValue(new ResourceLocation(SERVER.infestedEnderParasite.get()));
+      .getValue(new ResourceLocation(SERVER.infestedEnderParasite.get()));
     infestedEnderParasite = type != null ? type : EntityType.ENDERMITE;
 
     paralyzingChance = SERVER.paralyzingChance.get();
@@ -664,7 +671,7 @@ public class ChampionsConfig {
         plaguedEffect = new MobEffectInstance(effect, Integer.parseInt(s[1]) * 20);
       } else {
         plaguedEffect = new MobEffectInstance(effect, Integer.parseInt(s[1]) * 20,
-            Integer.parseInt(s[2]) - 1);
+          Integer.parseInt(s[2]) - 1);
       }
     } catch (IllegalArgumentException e) {
       plaguedEffect = new MobEffectInstance(MobEffects.POISON, 300, 0);
