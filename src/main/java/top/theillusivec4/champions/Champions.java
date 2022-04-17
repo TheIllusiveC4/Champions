@@ -69,6 +69,7 @@ import top.theillusivec4.champions.common.affix.core.AffixManager;
 import top.theillusivec4.champions.common.capability.ChampionCapability;
 import top.theillusivec4.champions.common.config.ChampionsConfig;
 import top.theillusivec4.champions.common.integration.theoneprobe.TheOneProbePlugin;
+import top.theillusivec4.champions.common.integration.waila.WailaPlugin;
 import top.theillusivec4.champions.common.item.ChampionEggItem;
 import top.theillusivec4.champions.common.loot.EntityIsChampion;
 import top.theillusivec4.champions.common.loot.LootItemChampionPropertyCondition;
@@ -106,6 +107,10 @@ public class Champions {
   }
 
   private void setup(final FMLCommonSetupEvent evt) {
+
+    if (ModList.get().isLoaded("waila")) {
+      WailaPlugin.setup();
+    }
     ChampionCapability.register();
     NetworkHandler.register();
     AffixManager.register();

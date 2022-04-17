@@ -14,22 +14,35 @@ import top.theillusivec4.champions.common.config.ChampionsConfig;
 
 public class ClientEventHandler {
 
+  public static boolean isRendering = false;
+  public static int startX = 0;
+  public static int startY = 0;
+
   @SubscribeEvent
-  public void renderChampionHealth(RenderGameOverlayEvent.BossInfo.Pre evt) {
+  public void renderChampionHealth(final RenderGameOverlayEvent.BossInfo.Pre evt) {
 
     if (ChampionsConfig.showHud) {
       Minecraft mc = Minecraft.getInstance();
       Optional<LivingEntity> livingEntity =
-          MouseHelper.getMouseOverChampion(mc, evt.getPartialTicks());
+        MouseHelper.getMouseOverChampion(mc, evt.getPartialTicks());
       livingEntity.ifPresent(entity -> {
         PoseStack matrixStack = evt.getMatrixStack();
 
-        if (HUDHelper.renderHealthBar(matrixStack, entity) &&
-            evt.getType() == ElementType.BOSSINFO) {
-          evt.setCanceled(true);
-          ForgeHooksClient.renderBossEventPost(matrixStack, mc.getWindow());
+        if (HUDHelper.renderHealthBar(matrixStack, entity)) {
+          isRendering = true;
+
+          if (evt.getType() == ElementType.BOSSINFO) {
+            evt.setCanceled(true);
+            ForgeHooksClient.renderBossEventPost(matrixStack, mc.getWindow());
+          }
+        } else {
+          isRendering = false;
         }
       });
+
+      if (livingEntity.isEmpty()) {
+        isRendering = false;
+      }
     }
   }
 }

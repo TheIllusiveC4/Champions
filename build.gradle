@@ -71,6 +71,7 @@ dependencies {
     compileOnly fg.deobf("curse.maven:silent-lib-242998:${cf_silentlib}")
     compileOnly fg.deobf("curse.maven:scalinghealth-248027:${cf_scalinghealth}")
     compileOnly fg.deobf("curse.maven:TOP-245211:${cf_theoneprobe}")
+    compileOnly fg.deobf("curse.maven:jade-324717:${cf_jade}")
 }
 
 sourceSets {

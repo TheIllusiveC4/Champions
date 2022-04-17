@@ -14,15 +14,16 @@ import net.minecraft.world.entity.LivingEntity;
 import top.theillusivec4.champions.Champions;
 import top.theillusivec4.champions.api.IAffix;
 import top.theillusivec4.champions.api.IChampion;
+import top.theillusivec4.champions.client.ClientEventHandler;
 import top.theillusivec4.champions.client.config.ClientChampionsConfig;
 import top.theillusivec4.champions.common.capability.ChampionCapability;
 
 public class HUDHelper {
 
   private static final ResourceLocation GUI_BAR_TEXTURES = new ResourceLocation(
-      "textures/gui/bars.png");
+    "textures/gui/bars.png");
   private static final ResourceLocation GUI_STAR = new ResourceLocation(Champions.MODID,
-      "textures/gui/staricon.png");
+    "textures/gui/staricon.png");
 
   public static boolean renderHealthBar(PoseStack matrixStack, final LivingEntity livingEntity) {
     return ChampionCapability.getCapability(livingEntity).map(champion -> {
@@ -30,7 +31,7 @@ public class HUDHelper {
       return clientChampion.getRank().map(rank -> {
         int num = rank.getA();
         Set<String> affixSet = clientChampion.getAffixes().stream().map(IAffix::getIdentifier)
-            .collect(Collectors.toSet());
+          .collect(Collectors.toSet());
 
         if (num > 0 || affixSet.size() > 0) {
           Minecraft client = Minecraft.getInstance();
@@ -49,14 +50,16 @@ public class HUDHelper {
           RenderSystem.enableBlend();
           RenderSystem.setShader(GameRenderer::getPositionTexShader);
           RenderSystem.setShaderTexture(0, GUI_BAR_TEXTURES);
+          ClientEventHandler.startX = xOffset + k;
+          ClientEventHandler.startY = yOffset + 1;
 
           GuiComponent.blit(matrixStack, xOffset + k, yOffset + j, 0, 60, 182, 5, 256, 256);
           int healthOffset =
-              (int) ((livingEntity.getHealth() / livingEntity.getMaxHealth()) * 183.0F);
+            (int) ((livingEntity.getHealth() / livingEntity.getMaxHealth()) * 183.0F);
 
           if (healthOffset > 0) {
             GuiComponent.blit(matrixStack, xOffset + k, yOffset + j, 0, 65, healthOffset, 5, 256,
-                256);
+              256);
           }
 
           RenderSystem.setShaderTexture(0, GUI_STAR);
@@ -72,10 +75,10 @@ public class HUDHelper {
             int startStarsX = xOffset + i / 2 - 5;
             String count = "x" + num;
             GuiComponent.blit(matrixStack, startStarsX - client.font.width(count) / 2,
-                yOffset + 1, 0, 0, 9, 9, 9, 9);
+              yOffset + 1, 0, 0, 9, 9, 9, 9);
             client.font.drawShadow(matrixStack, count,
-                startStarsX + 10 - client.font.width(count) / 2.0F, yOffset + 2,
-                16777215);
+              startStarsX + 10 - client.font.width(count) / 2.0F, yOffset + 2,
+              16777215);
           }
           Component customName = livingEntity.getCustomName();
           String name;
@@ -87,20 +90,20 @@ public class HUDHelper {
             name = customName.getString();
           }
           client.font.drawShadow(matrixStack, name,
-              xOffset + (float) (i / 2 - client.font.width(name) / 2),
-              yOffset + (float) (j - 9), color);
+            xOffset + (float) (i / 2 - client.font.width(name) / 2),
+            yOffset + (float) (j - 9), color);
           RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
           StringBuilder builder = new StringBuilder();
 
           for (String affix : affixSet) {
             builder.append(
-                new TranslatableComponent("affix." + Champions.MODID + "." + affix).getString());
+              new TranslatableComponent("affix." + Champions.MODID + "." + affix).getString());
             builder.append(" ");
           }
           String affixes = builder.toString().trim();
           client.font.drawShadow(matrixStack, affixes,
-              xOffset + (float) (i / 2 - client.font.width(affixes) / 2),
-              yOffset + (float) (j + 6), 16777215);
+            xOffset + (float) (i / 2 - client.font.width(affixes) / 2),
+            yOffset + (float) (j + 6), 16777215);
           RenderSystem.disableBlend();
           return true;
         }
