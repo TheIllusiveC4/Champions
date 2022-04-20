@@ -31,5 +31,6 @@
   "affix.champions.arctic": "극점",
   "affix.champions.enkindling": "맹화",
   "advancements.champions.kill_a_champion.title": "챔피언 사냥꾼",
-  "advancements.champions.kill_a_champion.description": "특별한 적대적 몬스터를 죽이세요"
+  "advancements.champions.kill_a_champion.description": "강력한 적대적 몬스터를 죽이세요"
+  "stat.champions.champion_mobs_killed": "챔피언 처치"
 }
