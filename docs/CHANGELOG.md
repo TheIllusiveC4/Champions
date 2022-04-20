@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
+## [1.18.2-2.1.5.0] - 2022.04.19
+### Added
+- Added "Champion Mobs Killed" to stats screen
+- Added `champions` entity selector option when using commands
+### Changed
+- Updated `ko_kr` localization (thanks PixVoxel!) [#116](https://github.com/TheIllusiveC4/Champions/pull/116)
+### Fixed
+- Fixed `champions:champion_properties` loot condition potentially applying to non-champion entities
+- Fixed Shielding affix preventing Creative damage
+
 ## [1.18.2-2.1.4.0] - 2022.04.17
 ### Added
 - Added integration with WAILA-based mods: Jade and WTHIT
