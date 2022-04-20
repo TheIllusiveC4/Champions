@@ -62,6 +62,10 @@ public class ShieldingAffix extends BasicAffix {
 
   @Override
   public boolean onAttacked(IChampion champion, DamageSource source, float amount) {
+
+    if (source == DamageSource.OUT_OF_WORLD) {
+      return true;
+    }
     AffixData.BooleanData shielding =
         AffixData.getData(champion, this.getIdentifier(), AffixData.BooleanData.class);
 
