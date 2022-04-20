@@ -44,8 +44,12 @@ public record LootItemChampionPropertyCondition(LootContext.EntityTarget target,
     return ChampionCapability.getCapability(entity).map(champion -> {
       IChampion.Server server = champion.getServer();
       int tier = server.getRank().map(Rank::getTier).orElse(0);
+
+      if (tier <= 0 || !this.tier.matches(tier)) {
+        return false;
+      }
       List<IAffix> affixes = server.getAffixes();
-      return this.tier.matches(tier) && this.affixes.matches(affixes);
+      return this.affixes.matches(affixes);
     }).orElse(false);
   }
 
