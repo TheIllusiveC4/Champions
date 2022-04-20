@@ -77,6 +77,7 @@ import top.theillusivec4.champions.common.network.NetworkHandler;
 import top.theillusivec4.champions.common.rank.RankManager;
 import top.theillusivec4.champions.common.registry.ChampionsRegistry;
 import top.theillusivec4.champions.common.registry.RegistryReference;
+import top.theillusivec4.champions.common.stat.ChampionsStats;
 import top.theillusivec4.champions.common.util.EntityManager;
 import top.theillusivec4.champions.server.command.AffixArgument;
 import top.theillusivec4.champions.server.command.ChampionSelectorOptions;
@@ -116,6 +117,7 @@ public class Champions {
     NetworkHandler.register();
     AffixManager.register();
     evt.enqueueWork(() -> {
+      ChampionsStats.setup();
       ChampionSelectorOptions.setup();
       Registry.register(Registry.LOOT_CONDITION_TYPE,
         new ResourceLocation(RegistryReference.IS_CHAMPION), EntityIsChampion.type);

@@ -31,5 +31,6 @@
   "affix.champions.arctic": "Arctic",
   "affix.champions.enkindling": "Enkindling",
   "advancements.champions.kill_a_champion.title": "Champion Hunter",
-  "advancements.champions.kill_a_champion.description": "Kill a special hostile monster"
+  "advancements.champions.kill_a_champion.description": "Kill a powerful hostile monster",
+  "stat.champions.champion_mobs_killed": "Champion Mobs Killed"
 }
