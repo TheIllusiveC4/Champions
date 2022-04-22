@@ -7,6 +7,8 @@
   "effect.champions.paralysis": "麻痹",
   "effect.champions.wound": "创伤",
   "death.attack.reflection": "%1$s遭报应了!",
+  "death.attack.cinderBullet": "%1$s被火焰击中",
+  "death.attack.cinderBullet.indirect": "%1$s在与%2$s的战斗中被火焰击中",
   "rank.champions.title.0": "普通",
   "rank.champions.title.1": "稀有",
   "rank.champions.title.2": "精英",
@@ -27,5 +29,8 @@
   "affix.champions.wounding": "创伤",
   "affix.champions.shielding": "保护",
   "affix.champions.arctic": "极寒",
-  "affix.champions.enkindling": "点燃"
+  "affix.champions.enkindling": "点燃",
+  "advancements.champions.kill_a_champion.title": "冠军猎人",
+  "advancements.champions.kill_a_champion.description": "击杀一个强大的敌对怪物",
+  "stat.champions.champion_mobs_killed": "冠军怪物击杀数"
 }
