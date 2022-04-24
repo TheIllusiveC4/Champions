@@ -23,7 +23,13 @@ public class ChampionHelper {
   }
 
   private static boolean isValidEntity(final LivingEntity livingEntity) {
-    String entity = livingEntity.getType().toString();
+    ResourceLocation rl = livingEntity.getType().getRegistryName();
+
+    if (rl == null) {
+      return false;
+    }
+    String entity = rl.toString();
+
     if (ChampionsConfig.entitiesPermission == Permission.BLACKLIST) {
       return !ChampionsConfig.entitiesList.contains(entity);
     } else {
