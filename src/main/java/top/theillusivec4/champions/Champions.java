@@ -109,10 +109,6 @@ public class Champions {
   }
 
   private void setup(final FMLCommonSetupEvent evt) {
-
-    if (ModList.get().isLoaded("waila")) {
-      WailaPlugin.setup();
-    }
     ChampionCapability.register();
     NetworkHandler.register();
     AffixManager.register();
@@ -171,6 +167,10 @@ public class Champions {
     MinecraftForge.EVENT_BUS.register(new ClientAffixEventsHandler());
     Minecraft.getInstance().getItemColors()
       .register(ChampionEggItem::getColor, ChampionsRegistry.EGG);
+
+    if (ModList.get().isLoaded("waila")) {
+      WailaPlugin.setup();
+    }
   }
 
   private void registerCaps(final RegisterCapabilitiesEvent evt) {
