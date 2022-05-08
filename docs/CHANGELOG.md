@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
+## [1.18.2-2.1.5.4] - 2022.05.08
+### Fixed
+- Fixed crash when using `champions:champion_mobs_killed` stat with FTBQuests [#120](https://github.com/TheIllusiveC4/Champions/issues/120)
+
 ## [1.18.2-2.1.5.3] - 2022.04.25
 ### Fixed
 - Fixed dedicated server crash with Jade [#119](https://github.com/TheIllusiveC4/Champions/issues/119)

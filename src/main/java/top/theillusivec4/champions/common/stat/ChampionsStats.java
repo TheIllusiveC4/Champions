@@ -16,7 +16,7 @@ public class ChampionsStats {
 
   private static ResourceLocation makeCustomStat(String key, StatFormatter formatter) {
     ResourceLocation resourcelocation = new ResourceLocation(Champions.MODID, key);
-    Registry.register(Registry.CUSTOM_STAT, key, resourcelocation);
+    Registry.register(Registry.CUSTOM_STAT, resourcelocation.toString(), resourcelocation);
     Stats.CUSTOM.get(resourcelocation, formatter);
     return resourcelocation;
   }
