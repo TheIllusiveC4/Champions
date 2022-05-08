@@ -5,8 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
 ## [1.18.2-2.1.5.4] - 2022.05.08
+### Changed
+- "Champion Mobs Killed" stat has been reset to address a potential crash
 ### Fixed
-- Fixed crash when using `champions:champion_mobs_killed` stat with FTBQuests [#120](https://github.com/TheIllusiveC4/Champions/issues/120)
+- Fixed crash when using "Champion Mobs Killed" stat with FTBQuests [#120](https://github.com/TheIllusiveC4/Champions/issues/120)
 
 ## [1.18.2-2.1.5.3] - 2022.04.25
 ### Fixed
