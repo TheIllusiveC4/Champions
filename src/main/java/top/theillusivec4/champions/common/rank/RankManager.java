@@ -55,6 +55,8 @@ public class RankManager {
       try {
         Rank newRank = getRankFromConfig(rank);
         RANKS.put(newRank.getTier(), newRank);
+      } catch (NullPointerException e) {
+        Champions.LOGGER.error("Null rank found with tier {} while building rank, skipping...", rank.tier);
       } catch (IllegalArgumentException e) {
         Champions.LOGGER.error("Invalid attribute found while building rank, skipping...");
       }
