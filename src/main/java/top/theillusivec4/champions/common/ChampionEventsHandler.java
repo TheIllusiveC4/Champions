@@ -51,63 +51,6 @@ import top.theillusivec4.champions.common.util.ChampionBuilder;
 public class ChampionEventsHandler {
 
   @SubscribeEvent
-  public void onLivingDrops(LivingDropsEvent evt) {
-    LivingEntity livingEntity = evt.getEntityLiving();
-
-    if (!livingEntity.getLevel().getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT) ||
-      (!ChampionsConfig.fakeLoot && evt.getSource().getDirectEntity() instanceof FakePlayer)) {
-      return;
-    }
-    ChampionCapability.getCapability(livingEntity).ifPresent(champion -> {
-      IChampion.Server serverChampion = champion.getServer();
-      ServerLevel serverWorld = (ServerLevel) livingEntity.getLevel();
-
-      if (ChampionsConfig.lootSource != LootSource.CONFIG) {
-        LootTable lootTable = serverWorld.getServer().getLootTables()
-          .get(new ResourceLocation(RegistryReference.CHAMPION_LOOT));
-        DamageSource source = evt.getSource();
-        LootContext.Builder lootcontext$builder = (new LootContext.Builder(serverWorld)
-          .withRandom(livingEntity.getRandom())
-          .withParameter(LootContextParams.THIS_ENTITY, livingEntity)
-          .withParameter(LootContextParams.ORIGIN, livingEntity.position())
-          .withParameter(LootContextParams.DAMAGE_SOURCE, source)
-          .withOptionalParameter(LootContextParams.KILLER_ENTITY, source.getDirectEntity())
-          .withOptionalParameter(LootContextParams.DIRECT_KILLER_ENTITY,
-            source.getDirectEntity()));
-        LivingEntity attackingEntity = livingEntity.getKillCredit();
-
-        if (attackingEntity instanceof Player) {
-          lootcontext$builder = lootcontext$builder
-            .withParameter(LootContextParams.LAST_DAMAGE_PLAYER, (Player) attackingEntity)
-            .withLuck(((Player) attackingEntity).getLuck());
-        }
-        List<ItemStack> stacks = lootTable
-          .getRandomItems(lootcontext$builder.create(LootContextParamSets.ENTITY));
-        stacks.forEach(stack -> {
-          ItemEntity itemEntity = new ItemEntity(serverWorld, livingEntity.position().x,
-            livingEntity.position().y, livingEntity.position().z, stack);
-          itemEntity.setDefaultPickUpDelay();
-          evt.getDrops().add(itemEntity);
-        });
-      }
-
-      if (ChampionsConfig.lootSource != LootSource.LOOT_TABLE) {
-        List<ItemStack> loot = ConfigLoot
-          .getLootDrops(serverChampion.getRank().map(Rank::getTier).orElse(0));
-
-        if (!loot.isEmpty()) {
-          loot.forEach(stack -> {
-            ItemEntity itemEntity = new ItemEntity(serverWorld, livingEntity.position().x,
-              livingEntity.position().y, livingEntity.position().z, stack);
-            itemEntity.setDefaultPickUpDelay();
-            evt.getDrops().add(itemEntity);
-          });
-        }
-      }
-    });
-  }
-
-  @SubscribeEvent
   public void onLivingXpDrop(LivingExperienceDropEvent evt) {
     LivingEntity livingEntity = evt.getEntityLiving();
     ChampionCapability.getCapability(livingEntity)
