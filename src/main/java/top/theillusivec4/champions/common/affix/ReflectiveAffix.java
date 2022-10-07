@@ -2,7 +2,6 @@ package top.theillusivec4.champions.common.affix;
 
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.EntityDamageSource;
-import net.minecraft.world.damagesource.IndirectEntityDamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -32,22 +31,16 @@ public class ReflectiveAffix extends BasicAffix {
 
   @Override
   public float onDamage(IChampion champion, DamageSource source, float amount, float newAmount) {
+
     if (source.getDirectEntity() instanceof LivingEntity sourceEntity) {
 
       if (source.getMsgId().equals(REFLECTION_DAMAGE) ||
-          (source instanceof EntityDamageSource && ((EntityDamageSource) source).isThorns())) {
+        (source instanceof EntityDamageSource && ((EntityDamageSource) source).isThorns())) {
         return newAmount;
       }
-      DamageSource newSource = new DamageSource(REFLECTION_DAMAGE);
-
-      if (source instanceof IndirectEntityDamageSource && source.getDirectEntity() != null) {
-        newSource = new IndirectEntityDamageSource(REFLECTION_DAMAGE, source.getDirectEntity(),
-            source.getDirectEntity());
-        ((IndirectEntityDamageSource) newSource).setThorns();
-      } else if (source instanceof EntityDamageSource) {
-        newSource = new EntityDamageSource(REFLECTION_DAMAGE, source.getDirectEntity());
-        ((EntityDamageSource) newSource).setThorns();
-      }
+      EntityDamageSource newSource =
+        new EntityDamageSource(REFLECTION_DAMAGE, champion.getLivingEntity());
+      newSource.setThorns();
       float min = (float) ChampionsConfig.reflectiveMinPercent;
 
       if (source.isFire()) {
@@ -82,9 +75,9 @@ public class ReflectiveAffix extends BasicAffix {
         newSource.bypassInvul();
       }
       float damage = (float) Math.min(
-          amount *
-              (sourceEntity.getRandom().nextFloat() * (ChampionsConfig.reflectiveMaxPercent - min)
-                  + min), ChampionsConfig.reflectiveMax);
+        amount *
+          (sourceEntity.getRandom().nextFloat() * (ChampionsConfig.reflectiveMaxPercent - min)
+            + min), ChampionsConfig.reflectiveMax);
       sourceEntity.hurt(newSource, damage);
     }
     return newAmount;
