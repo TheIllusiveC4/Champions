@@ -6,6 +6,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.level.block.entity.BeaconBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.TickingBlockEntity;
 import top.theillusivec4.champions.common.config.ChampionsConfig;
 import top.theillusivec4.champions.common.config.ConfigEnums.Permission;
@@ -56,9 +57,10 @@ public class ChampionHelper {
 
     for (TickingBlockEntity te : livingEntity.getLevel().blockEntityTickers) {
       BlockPos pos = te.getPos();
+      BlockEntity blockEntity = livingEntity.getLevel().getBlockEntity(pos);
 
       if (Math.sqrt(livingEntity.distanceToSqr(pos.getX(), pos.getY(), pos.getZ())) <= range
-          && te instanceof BeaconBlockEntity beacon) {
+          && blockEntity instanceof BeaconBlockEntity beacon) {
 
         if (beacon.levels > 0) {
           return true;
