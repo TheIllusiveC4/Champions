@@ -5,31 +5,19 @@ import java.util.Optional;
 import net.minecraft.Util;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Tuple;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.GameRules;
-import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
 import net.minecraftforge.event.entity.living.LivingHealEvent;
@@ -39,11 +27,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import top.theillusivec4.champions.api.IChampion;
 import top.theillusivec4.champions.common.capability.ChampionCapability;
 import top.theillusivec4.champions.common.config.ChampionsConfig;
-import top.theillusivec4.champions.common.config.ConfigEnums.LootSource;
-import top.theillusivec4.champions.common.config.ConfigLoot;
 import top.theillusivec4.champions.common.rank.Rank;
 import top.theillusivec4.champions.common.registry.ChampionsRegistry;
-import top.theillusivec4.champions.common.registry.RegistryReference;
 import top.theillusivec4.champions.common.stat.ChampionsStats;
 import top.theillusivec4.champions.common.util.ChampionBuilder;
 
@@ -60,7 +45,7 @@ public class ChampionEventsHandler {
         if (growth > 0) {
           evt.setDroppedExperience(
             (growth * ChampionsConfig.experienceGrowth * evt.getOriginalExperience() +
-              evt.getOriginalExperience()));
+              evt.getDroppedExperience()));
         }
       }));
   }
