@@ -104,7 +104,7 @@ public class Champions {
 
     if (gameStagesLoaded) {
       ModLoadingContext.get()
-        .registerConfig(Type.SERVER, ChampionsConfig.STAGE_SPEC, "champions-stages.toml");
+        .registerConfig(Type.SERVER, ChampionsConfig.STAGE_SPEC, "champions-gamestages.toml");
     }
     IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
     eventBus.addListener(this::config);
