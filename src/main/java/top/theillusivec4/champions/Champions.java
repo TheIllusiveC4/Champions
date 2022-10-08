@@ -189,21 +189,25 @@ public class Champions {
   }
 
   private void config(final ModConfigEvent evt) {
-    if (evt.getConfig().getModId().equals(MODID)) {
-      if (evt.getConfig().getType() == Type.SERVER) {
-        ChampionsConfig.bake();
-        IConfigSpec<?> spec = evt.getConfig().getSpec();
-        CommentedConfig commentedConfig = evt.getConfig().getConfigData();
 
-        if (spec == ChampionsConfig.RANKS_SPEC) {
-          ChampionsConfig.transformRanks(commentedConfig);
-          RankManager.buildRanks();
-        } else if (spec == ChampionsConfig.AFFIXES_SPEC) {
-          ChampionsConfig.transformAffixes(commentedConfig);
-          AffixManager.buildAffixSettings();
-        } else if (spec == ChampionsConfig.ENTITIES_SPEC) {
-          ChampionsConfig.transformEntities(commentedConfig);
-          EntityManager.buildEntitySettings();
+    if (evt.getConfig().getModId().equals(MODID)) {
+
+      if (evt.getConfig().getType() == Type.SERVER) {
+        synchronized (this) {
+          ChampionsConfig.bake();
+          IConfigSpec<?> spec = evt.getConfig().getSpec();
+          CommentedConfig commentedConfig = evt.getConfig().getConfigData();
+
+          if (spec == ChampionsConfig.RANKS_SPEC) {
+            ChampionsConfig.transformRanks(commentedConfig);
+            RankManager.buildRanks();
+          } else if (spec == ChampionsConfig.AFFIXES_SPEC) {
+            ChampionsConfig.transformAffixes(commentedConfig);
+            AffixManager.buildAffixSettings();
+          } else if (spec == ChampionsConfig.ENTITIES_SPEC) {
+            ChampionsConfig.transformEntities(commentedConfig);
+            EntityManager.buildEntitySettings();
+          }
         }
       } else if (evt.getConfig().getType() == Type.CLIENT) {
         ClientChampionsConfig.bake();
