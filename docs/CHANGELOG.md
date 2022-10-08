@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
+## [1.18.2-2.1.6.0] - 2022.10.08
+### Added
+- Added Game Stages integration through the new `champions-gamestages.toml` configuration file [#135](https://github.com/TheIllusiveC4/Champions/issues/135)
+### Changed
+- Updated Russian `ru_ru` localization (thanks MiniRaptor!) [#127](https://github.com/TheIllusiveC4/Champions/pull/127)
+- Changed Reflective affix's reflected damage to list the champion as the source rather than the player to avoid recursive [#133](https://github.com/TheIllusiveC4/Champions/issues/133)
+player effects
+### Fixed
+- Fixed experience drop growth from champions stacking incorrectly with other mods [#134](https://github.com/TheIllusiveC4/Champions/issues/134)
+- Fixed crash with Scaling Health 6.3.0 or above [#131](https://github.com/TheIllusiveC4/Champions/issues/131)
+- Fixed champions ignoring configured beacon protection range [#130](https://github.com/TheIllusiveC4/Champions/issues/130)
+- Fixed champions HUD disappearing or desyncing after player death [#129](https://github.com/TheIllusiveC4/Champions/issues/129)
+- Fixed potential race condition crash with configuration files [#126](https://github.com/TheIllusiveC4/Champions/issues/126)
+
 ## [1.18.2-2.1.5.6] - 2022.06.20
 ### Fixed
 - Fixed Global Loot Modifiers running twice when generating champion loot [#125](https://github.com/TheIllusiveC4/Champions/issues/125)
