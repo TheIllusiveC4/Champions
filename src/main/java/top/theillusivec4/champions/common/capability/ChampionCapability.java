@@ -51,9 +51,6 @@ public class ChampionCapability {
   private static final String DATA_TAG = "data";
   private static final String ID_TAG = "identifier";
 
-  private static final LoadingCache<Entity, LazyOptional<IChampion>> SERVER_CACHE = createCache();
-  private static final LoadingCache<Entity, LazyOptional<IChampion>> CLIENT_CACHE = createCache();
-
   public static void register() {
     MinecraftForge.EVENT_BUS.register(new CapabilityEventHandler());
     MinecraftForge.EVENT_BUS.register(new ChampionEventsHandler());
@@ -61,42 +58,6 @@ public class ChampionCapability {
 
   public static Provider createProvider(final LivingEntity livingEntity) {
     return new Provider(livingEntity);
-  }
-
-  private static LoadingCache<Entity, LazyOptional<IChampion>> createCache() {
-    CacheLoader<Entity, LazyOptional<IChampion>> loader;
-    loader = new CacheLoader<>() {
-      @Nonnull
-      @Override
-      public LazyOptional<IChampion> load(@Nonnull Entity key) {
-        LazyOptional<IChampion> result = key.getCapability(CHAMPION_CAP);
-        result.addListener(self -> {
-          if (key.getLevel().isClientSide()) {
-            CLIENT_CACHE.invalidate(key);
-          } else {
-            SERVER_CACHE.invalidate(key);
-          }
-        });
-        return result;
-      }
-    };
-    RemovalListener<Entity, LazyOptional<IChampion>> listener;
-    listener = notification -> {
-      Entity entity = notification.getKey();
-
-      if (entity == null || entity.isRemoved()) {
-        LazyOptional<IChampion> maybeChampion = notification.getValue();
-
-        if (maybeChampion != null) {
-          maybeChampion.invalidate();
-        }
-      }
-    };
-    return CacheBuilder.newBuilder()
-        .maximumSize(1000)
-        .expireAfterAccess(10, TimeUnit.SECONDS)
-        .removalListener(listener)
-        .build(loader);
   }
 
   @Deprecated
@@ -109,16 +70,7 @@ public class ChampionCapability {
     if (!ChampionHelper.isValidChampion(entity)) {
       return LazyOptional.empty();
     }
-    LazyOptional<IChampion> result = LazyOptional.empty();
-
-    try {
-      result =
-          entity.getLevel().isClientSide() ? CLIENT_CACHE.get(entity) : SERVER_CACHE.get(entity);
-    } catch (ExecutionException e) {
-      Champions.LOGGER.error("Unknown error accessing Champion capability!");
-      e.printStackTrace();
-    }
-    return result;
+    return entity.getCapability(CHAMPION_CAP);
   }
 
   public static class Champion implements IChampion {
