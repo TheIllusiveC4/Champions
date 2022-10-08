@@ -14,14 +14,18 @@ description='''
 Creates elite mobs of different rarities, with enhanced stats and extra abilities.
 '''
 [[dependencies.champions]]
-    modId="forge"
-    mandatory=true
-    versionRange="${forge_version_range}"
-    ordering="NONE"
-    side="BOTH"
+  modId="forge"
+  mandatory=true
+  versionRange="${forge_version_range}"
+  ordering="NONE"
+  side="BOTH"
 [[dependencies.champions]]
-    modId="minecraft"
-    mandatory=true
-    versionRange="${mc_version_range}"
-    ordering="NONE"
-    side="BOTH"
+  modId="minecraft"
+  mandatory=true
+  versionRange="${mc_version_range}"
+  ordering="NONE"
+  side="BOTH"
+[[dependencies.champions]]
+  modId="scalinghealth"
+  mandatory=false
+  versionRange="[6.3.0,)"

@@ -1,17 +1,17 @@
 buildscript {
-    repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
-        maven { url = 'https://plugins.gradle.org/m2/' }
-        maven { url = 'https://maven.parchmentmc.org' }
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
+  repositories {
+    maven { url = 'https://files.minecraftforge.net/maven' }
+    maven { url = 'https://plugins.gradle.org/m2/' }
+    maven { url = 'https://maven.parchmentmc.org' }
+    maven {
+      url "https://plugins.gradle.org/m2/"
     }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-        classpath group: 'gradle.plugin.com.matthewprenger', name: 'CurseGradle', version: '1.4.0'
-        classpath group: 'org.parchmentmc', name: 'librarian', version: '1.+'
-    }
+  }
+  dependencies {
+    classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+    classpath group: 'gradle.plugin.com.matthewprenger', name: 'CurseGradle', version: '1.4.0'
+    classpath group: 'org.parchmentmc', name: 'librarian', version: '1.+'
+  }
 }
 
 apply plugin: 'net.minecraftforge.gradle'
@@ -26,115 +26,127 @@ archivesBaseName = "champions-forge"
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 minecraft {
-    mappings channel: 'parchment', version: '2022.03.13-1.18.2'
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+  mappings channel: 'parchment', version: '2022.03.13-1.18.2'
+  accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
-    runs {
-        client {
-            workingDirectory project.file('run')
+  runs {
+    client {
+      workingDirectory project.file('run')
 
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
+      property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+      property 'forge.logging.console.level', 'debug'
+      property 'mixin.env.remapRefMap', 'true'
+      property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 
-            mods {
-                champions {
-                    source sourceSets.main
-                }
-            }
+      mods {
+        champions {
+          source sourceSets.main
         }
-
-        server {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                champions {
-                    source sourceSets.main
-                }
-            }
-        }
+      }
     }
+
+    server {
+      workingDirectory project.file('run')
+
+      property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+      property 'forge.logging.console.level', 'debug'
+      property 'mixin.env.remapRefMap', 'true'
+      property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+
+      mods {
+        champions {
+          source sourceSets.main
+        }
+      }
+    }
+  }
 }
 
 repositories {
-    maven {
-        name = "CurseMaven"
-        url = "https://www.cursemaven.com"
-    }
+  maven {
+    name = "CurseMaven"
+    url = "https://www.cursemaven.com"
+  }
+  maven {
+    name = "GameStages"
+    url = "https://maven.blamejared.com"
+  }
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${forge_version}"
+  minecraft "net.minecraftforge:forge:${forge_version}"
 
-    compileOnly fg.deobf("curse.maven:silent-lib-242998:${cf_silentlib}")
-    compileOnly fg.deobf("curse.maven:scalinghealth-248027:${cf_scalinghealth}")
-    compileOnly fg.deobf("curse.maven:TOP-245211:${cf_theoneprobe}")
-    compileOnly fg.deobf("curse.maven:jade-324717:${cf_jade}")
+  implementation fg.deobf("net.darkhax.gamestages:GameStages-Forge-1.18.2:${gamestages_version}")
+
+  compileOnly fg.deobf("curse.maven:silent-lib-242998:${cf_silentlib}")
+  compileOnly fg.deobf("curse.maven:scalinghealth-248027:${cf_scalinghealth}")
+  compileOnly fg.deobf("curse.maven:TOP-245211:${cf_theoneprobe}")
+  compileOnly fg.deobf("curse.maven:jade-324717:${cf_jade}")
+
+  runtimeOnly fg.deobf("net.darkhax.bookshelf:Bookshelf-Forge-1.18.2:${bookshelf_version}")
 }
 
 sourceSets {
-    main {
-        resources {
-            srcDirs += 'docs'
-        }
+  main {
+    resources {
+      srcDirs += 'docs'
     }
+  }
 }
 
 jar {
-    manifest {
-        attributes(["Specification-Title"     : "Champions",
-                    "Specification-Vendor"    : "C4",
-                    "Specification-Version"   : "1",
-                    "Implementation-Title"    : "Champions",
-                    "Implementation-Version"  : "${getArchiveVersion()}",
-                    "Implementation-Vendor"   : "C4",
-                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")])
-    }
+  manifest {
+    attributes(["Specification-Title"     : "Champions",
+                "Specification-Vendor"    : "C4",
+                "Specification-Version"   : "1",
+                "Implementation-Title"    : "Champions",
+                "Implementation-Version"  : "${getArchiveVersion()}",
+                "Implementation-Vendor"   : "C4",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")])
+  }
 }
 
 def replaceResources = tasks.register("replaceResources", Copy) {
-    it.outputs.upToDateWhen { false }
+  it.outputs.upToDateWhen { false }
 
-    it.from(sourceSets.main.resources) {
-        include "META-INF/mods.toml"
-        expand 'version': version, 'mc_version_range': mc_version_range, 'forge_version_range': forge_version_range, "loader_version": loader_version
-    }
-    it.into "$buildDir/resources/main/"
+  it.from(sourceSets.main.resources) {
+    include "META-INF/mods.toml"
+    expand 'version': version, 'mc_version_range': mc_version_range, 'forge_version_range': forge_version_range, "loader_version": loader_version
+  }
+  it.into "$buildDir/resources/main/"
 }
 
 processResources {
-    duplicatesStrategy(DuplicatesStrategy.FAIL)
-    exclude('META-INF/mods.toml')
-    configure { finalizedBy(replaceResources) }
+  duplicatesStrategy(DuplicatesStrategy.FAIL)
+  exclude('META-INF/mods.toml')
+  configure { finalizedBy(replaceResources) }
 }
 
 task sourcesJar(type: Jar) {
-    archiveClassifier.set('sources')
-    from sourceSets.main.allJava
+  archiveClassifier.set('sources')
+  from sourceSets.main.allJava
 }
 
 artifacts {
-    archives sourcesJar
+  archives sourcesJar
 }
 
 jar.finalizedBy('reobfJar')
 
 curseforge {
 
-    project {
-        apiKey = findProperty('curseKey') ?: 0
-        id = "307152"
-        releaseType = "${curse_release}"
-        changelogType = 'markdown'
-        changelog = file('docs/CHANGELOG.md')
-        addArtifact(sourcesJar)
-        "${curse_versions}".split(',').each {
-            addGameVersion "${it}"
-        }
-        relations {
-            optionalDependency 'scaling-health'
-        }
+  project {
+    apiKey = findProperty('curseKey') ?: 0
+    id = "307152"
+    releaseType = "${curse_release}"
+    changelogType = 'markdown'
+    changelog = file('docs/CHANGELOG.md')
+    addArtifact(sourcesJar)
+    "${curse_versions}".split(',').each {
+      addGameVersion "${it}"
     }
+    relations {
+      optionalDependency 'scaling-health'
+    }
+  }
 }

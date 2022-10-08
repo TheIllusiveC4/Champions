@@ -24,6 +24,7 @@ import top.theillusivec4.champions.common.config.ConfigEnums.LootSource;
 import top.theillusivec4.champions.common.config.ConfigEnums.Permission;
 import top.theillusivec4.champions.common.config.EntitiesConfig.EntityConfig;
 import top.theillusivec4.champions.common.config.RanksConfig.RankConfig;
+import top.theillusivec4.champions.common.integration.gamestages.GameStagesPlugin;
 import top.theillusivec4.champions.common.integration.scalinghealth.ScalingHealthPlugin;
 
 public class ChampionsConfig {
@@ -33,11 +34,40 @@ public class ChampionsConfig {
   public static final ForgeConfigSpec SERVER_SPEC;
   public static final ServerConfig SERVER;
 
+  public static final ForgeConfigSpec STAGE_SPEC;
+  public static final StageConfig STAGE;
+
   static {
     final Pair<ServerConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder()
       .configure(ServerConfig::new);
     SERVER_SPEC = specPair.getRight();
     SERVER = specPair.getLeft();
+    final Pair<StageConfig, ForgeConfigSpec> specPair2 = new ForgeConfigSpec.Builder()
+      .configure(StageConfig::new);
+    STAGE_SPEC = specPair2.getRight();
+    STAGE = specPair2.getLeft();
+  }
+
+  public static class StageConfig {
+
+    public final ConfigValue<List<? extends String>> entityStages;
+    public final ConfigValue<List<? extends String>> tierStages;
+
+    public StageConfig(ForgeConfigSpec.Builder builder) {
+      entityStages = builder
+        .comment("""
+          A list of entity stages in the format: "stage;modid:entity" or "stage;modid:entity;modid:dimension"
+          Example: "test_stage;minecraft:zombie" or "test_stage;minecraft:spider;minecraft:the_nether\"""")
+        .translation(CONFIG_PREFIX + "entityStages")
+        .defineList("entityStages", new ArrayList<>(), s -> s instanceof String);
+
+      tierStages = builder
+        .comment("""
+          A list of tier stages in the format: "stage;tier" or "stage;tier;modid:dimension"
+          Example: "test_stage;2" or "test_stage;3;minecraft:the_nether\"""")
+        .translation(CONFIG_PREFIX + "tierStages")
+        .defineList("tierStages", new ArrayList<>(), s -> s instanceof String);
+    }
   }
 
   public static class ServerConfig {
@@ -582,6 +612,8 @@ public class ChampionsConfig {
   public static double woundingChance;
 
   public static List<? extends String> scalingHealthSpawnModifiers;
+  public static List<? extends String> entityStages;
+  public static List<? extends String> tierStages;
 
   public static void bake() {
     beaconProtectionRange = SERVER.beaconProtectionRange.get();
@@ -685,10 +717,15 @@ public class ChampionsConfig {
 
     woundingChance = SERVER.woundingChance.get();
 
-    scalingHealthSpawnModifiers = SERVER.scalingHealthSpawnModifiers.get();
-
     if (Champions.scalingHealthLoaded) {
+      scalingHealthSpawnModifiers = SERVER.scalingHealthSpawnModifiers.get();
       ScalingHealthPlugin.buildModifiers();
+    }
+
+    if (Champions.gameStagesLoaded) {
+      entityStages = STAGE.entityStages.get();
+      tierStages = STAGE.tierStages.get();
+      GameStagesPlugin.buildStages();
     }
   }
 }

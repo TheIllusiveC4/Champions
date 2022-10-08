@@ -8,8 +8,10 @@ import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.level.block.entity.BeaconBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.TickingBlockEntity;
+import top.theillusivec4.champions.Champions;
 import top.theillusivec4.champions.common.config.ChampionsConfig;
 import top.theillusivec4.champions.common.config.ConfigEnums.Permission;
+import top.theillusivec4.champions.common.integration.gamestages.GameStagesPlugin;
 
 public class ChampionHelper {
 
@@ -19,8 +21,9 @@ public class ChampionHelper {
 
   public static boolean checkPotential(final LivingEntity livingEntity) {
     return isValidEntity(livingEntity) &&
-        isValidDimension(livingEntity.getLevel().dimension().location()) &&
-        !nearActiveBeacon(livingEntity);
+      isValidDimension(livingEntity.getLevel().dimension().location()) &&
+      !nearActiveBeacon(livingEntity) &&
+      (!Champions.gameStagesLoaded || GameStagesPlugin.hasEntityStage(livingEntity));
   }
 
   private static boolean isValidEntity(final LivingEntity livingEntity) {
@@ -60,7 +63,7 @@ public class ChampionHelper {
       BlockEntity blockEntity = livingEntity.getLevel().getBlockEntity(pos);
 
       if (Math.sqrt(livingEntity.distanceToSqr(pos.getX(), pos.getY(), pos.getZ())) <= range
-          && blockEntity instanceof BeaconBlockEntity beacon) {
+        && blockEntity instanceof BeaconBlockEntity beacon) {
 
         if (beacon.levels > 0) {
           return true;

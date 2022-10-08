@@ -21,6 +21,7 @@ import top.theillusivec4.champions.api.IChampion;
 import top.theillusivec4.champions.common.affix.core.AffixManager;
 import top.theillusivec4.champions.common.affix.core.AffixManager.AffixSettings;
 import top.theillusivec4.champions.common.config.ChampionsConfig;
+import top.theillusivec4.champions.common.integration.gamestages.GameStagesPlugin;
 import top.theillusivec4.champions.common.integration.scalinghealth.ScalingHealthPlugin;
 import top.theillusivec4.champions.common.rank.Rank;
 import top.theillusivec4.champions.common.rank.RankManager;
@@ -54,7 +55,7 @@ public class ChampionBuilder {
     int size = rank.getNumAffixes();
     List<IAffix> affixesToAdd = new ArrayList<>();
     Optional<EntitySettings> entitySettings = EntityManager
-        .getSettings(champion.getLivingEntity().getType());
+      .getSettings(champion.getLivingEntity().getType());
 
     if (size > 0) {
       entitySettings.ifPresent(settings -> {
@@ -79,9 +80,9 @@ public class ChampionBuilder {
     allAffixes.forEach((k, v) -> validAffixes.get(k).addAll(v.stream().filter(affix -> {
       Optional<AffixSettings> settings = AffixManager.getSettings(affix.getIdentifier());
       return !affixesToAdd.contains(affix) && entitySettings
-          .map(entitySettings1 -> entitySettings1.canApply(affix)).orElse(true) && settings
-          .map(affixSettings -> affixSettings.canApply(champion)).orElse(true) && affix
-          .canApply(champion);
+        .map(entitySettings1 -> entitySettings1.canApply(affix)).orElse(true) && settings
+        .map(affixSettings -> affixSettings.canApply(champion)).orElse(true) && affix
+        .canApply(champion);
     }).collect(Collectors.toList())));
     List<IAffix> randomList = new ArrayList<>();
     validAffixes.forEach((k, v) -> randomList.addAll(v));
@@ -91,8 +92,8 @@ public class ChampionBuilder {
       IAffix randomAffix = randomList.get(randomIndex);
 
       if (affixesToAdd.stream().allMatch(affix -> affix.isCompatible(randomAffix) && (
-          randomAffix.getCategory() == AffixCategory.OFFENSE || (affix.getCategory() != randomAffix
-              .getCategory())))) {
+        randomAffix.getCategory() == AffixCategory.OFFENSE || (affix.getCategory() != randomAffix
+          .getCategory())))) {
         affixesToAdd.add(randomAffix);
       }
       randomList.remove(randomIndex);
@@ -109,7 +110,7 @@ public class ChampionBuilder {
 
     if (ranks.isEmpty()) {
       Champions.LOGGER.error(
-          "No rank configuration found! Please check the 'champions-ranks.toml' file in the 'serverconfigs'.");
+        "No rank configuration found! Please check the 'champions-ranks.toml' file in the 'serverconfigs'.");
       return RankManager.getLowestRank();
     }
     Integer[] tierRange = new Integer[] {null, null};
@@ -124,7 +125,7 @@ public class ChampionBuilder {
 
     if (result == null) {
       Champions.LOGGER.error("Tier {} cannot be found in {}! Assigning lowest available rank to {}",
-          firstTier, ranks, livingEntity);
+        firstTier, ranks, livingEntity);
       return RankManager.getLowestRank();
     }
 
@@ -140,7 +141,8 @@ public class ChampionBuilder {
         chance += ScalingHealthPlugin.getSpawnIncrease(rank.getTier(), livingEntity);
       }
 
-      if (RAND.nextFloat() < chance) {
+      if (RAND.nextFloat() < chance && (!Champions.gameStagesLoaded ||
+        GameStagesPlugin.hasTierStage(rank.getTier(), livingEntity))) {
         result = rank;
       } else {
         return result;
@@ -155,22 +157,22 @@ public class ChampionBuilder {
       return;
     }
     grow(livingEntity, Attributes.MAX_HEALTH, ChampionsConfig.healthGrowth * growthFactor,
-        AttributeModifier.Operation.MULTIPLY_TOTAL);
+      AttributeModifier.Operation.MULTIPLY_TOTAL);
     livingEntity.setHealth(livingEntity.getMaxHealth());
     grow(livingEntity, Attributes.ATTACK_DAMAGE, ChampionsConfig.attackGrowth * growthFactor,
-        AttributeModifier.Operation.MULTIPLY_TOTAL);
+      AttributeModifier.Operation.MULTIPLY_TOTAL);
     grow(livingEntity, Attributes.ARMOR, ChampionsConfig.armorGrowth * growthFactor,
-        AttributeModifier.Operation.ADDITION);
+      AttributeModifier.Operation.ADDITION);
     grow(livingEntity, Attributes.ARMOR_TOUGHNESS, ChampionsConfig.toughnessGrowth * growthFactor,
-        AttributeModifier.Operation.ADDITION);
+      AttributeModifier.Operation.ADDITION);
     grow(livingEntity, Attributes.KNOCKBACK_RESISTANCE,
-        ChampionsConfig.knockbackResistanceGrowth * growthFactor,
-        AttributeModifier.Operation.ADDITION);
+      ChampionsConfig.knockbackResistanceGrowth * growthFactor,
+      AttributeModifier.Operation.ADDITION);
   }
 
   private static void grow(
-      final LivingEntity livingEntity, Attribute attribute, double amount,
-      AttributeModifier.Operation operation) {
+    final LivingEntity livingEntity, Attribute attribute, double amount,
+    AttributeModifier.Operation operation) {
     AttributeInstance attributeInstance = livingEntity.getAttribute(attribute);
 
     if (attributeInstance != null) {

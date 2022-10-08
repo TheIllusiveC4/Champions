@@ -91,6 +91,7 @@ public class Champions {
   public static final IChampionsApi API = ChampionsApiImpl.getInstance();
 
   public static boolean scalingHealthLoaded = false;
+  public static boolean gameStagesLoaded = false;
 
   public Champions() {
     FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
@@ -99,6 +100,12 @@ public class Champions {
     createServerConfig(ChampionsConfig.RANKS_SPEC, "ranks");
     createServerConfig(ChampionsConfig.AFFIXES_SPEC, "affixes");
     createServerConfig(ChampionsConfig.ENTITIES_SPEC, "entities");
+    gameStagesLoaded = ModList.get().isLoaded("gamestages");
+
+    if (gameStagesLoaded) {
+      ModLoadingContext.get()
+        .registerConfig(Type.SERVER, ChampionsConfig.STAGE_SPEC, "champions-stages.toml");
+    }
     IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
     eventBus.addListener(this::config);
     eventBus.addListener(this::setup);
