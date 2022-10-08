@@ -47,15 +47,8 @@ public class ChampionCapability {
   private static final String DATA_TAG = "data";
   private static final String ID_TAG = "identifier";
 
-  private static final Map<Entity, LazyOptional<IChampion>> SERVER_CACHE = new HashMap<>();
-  private static final Map<Entity, LazyOptional<IChampion>> CLIENT_CACHE = new HashMap<>();
-
   static {
     CHAMPION_CAP = null;
-  }
-
-  private static Map<Entity, LazyOptional<IChampion>> getCache(World world) {
-    return world.isRemote() ? CLIENT_CACHE : SERVER_CACHE;
   }
 
   public static void register() {
@@ -127,17 +120,7 @@ public class ChampionCapability {
     if (!ChampionHelper.isValidChampion(entity)) {
       return LazyOptional.empty();
     }
-    LivingEntity livingEntity = (LivingEntity) entity;
-    World world = livingEntity.getEntityWorld();
-    Map<Entity, LazyOptional<IChampion>> cache = getCache(world);
-    LazyOptional<IChampion> optional = cache.get(livingEntity);
-
-    if (optional == null) {
-      optional = livingEntity.getCapability(CHAMPION_CAP);
-      cache.put(livingEntity, optional);
-      optional.addListener(self -> cache.remove(livingEntity));
-    }
-    return optional;
+    return entity.getCapability(CHAMPION_CAP);
   }
 
   public static class Champion implements IChampion {

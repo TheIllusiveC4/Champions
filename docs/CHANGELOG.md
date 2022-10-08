@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
+## [1.16.5-2.0.1.14] - 2022.10.08
+### Changed
+- Changed Reflective affix's reflected damage to list the champion as the source rather than the player to avoid recursive
+  player effects [#133](https://github.com/TheIllusiveC4/Champions/issues/133)
+### Fixed
+- Fixed experience drop growth from champions stacking incorrectly with other mods [#134](https://github.com/TheIllusiveC4/Champions/issues/134)
+- Fixed champions HUD disappearing or desyncing after player death [#129](https://github.com/TheIllusiveC4/Champions/issues/129)
+- Fixed potential race condition crash with configuration files [#126](https://github.com/TheIllusiveC4/Champions/issues/126)
+
 ## [1.16.5-2.0.1.13] - 2022.04.09
 ### Changed
 - `chance` fields in `champions-ranks.toml` now accepts `0.0` as a valid value

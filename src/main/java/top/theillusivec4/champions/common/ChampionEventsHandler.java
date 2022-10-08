@@ -119,8 +119,8 @@ public class ChampionEventsHandler {
 
           if (growth > 0) {
             evt.setDroppedExperience(
-                growth * ChampionsConfig.experienceGrowth * evt.getOriginalExperience() + evt
-                    .getOriginalExperience());
+                growth * ChampionsConfig.experienceGrowth * evt.getOriginalExperience() +
+                    evt.getDroppedExperience());
           }
         }));
   }

@@ -3,7 +3,6 @@ package top.theillusivec4.champions.common.affix;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
-import net.minecraft.util.IndirectEntityDamageSource;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import top.theillusivec4.champions.api.AffixCategory;
@@ -42,16 +41,9 @@ public class ReflectiveAffix extends BasicAffix {
           && ((EntityDamageSource) source).getIsThornsDamage())) {
         return newAmount;
       }
-      DamageSource newSource = new DamageSource(REFLECTION_DAMAGE);
-
-      if (source instanceof IndirectEntityDamageSource && source.getImmediateSource() != null) {
-        newSource = new IndirectEntityDamageSource(REFLECTION_DAMAGE, source.getImmediateSource(),
-            source.getTrueSource());
-        ((IndirectEntityDamageSource) newSource).setIsThornsDamage();
-      } else if (source instanceof EntityDamageSource) {
-        newSource = new EntityDamageSource(REFLECTION_DAMAGE, source.getTrueSource());
-        ((EntityDamageSource) newSource).setIsThornsDamage();
-      }
+      EntityDamageSource newSource =
+          new EntityDamageSource(REFLECTION_DAMAGE, champion.getLivingEntity());
+      newSource.setIsThornsDamage();
       float min = (float) ChampionsConfig.reflectiveMinPercent;
 
       if (source.isFireDamage()) {
