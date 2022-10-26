@@ -13,7 +13,10 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.block.entity.BeaconBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
@@ -22,6 +25,8 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
 import net.minecraftforge.event.entity.living.LivingHealEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.server.ServerAboutToStartEvent;
+import net.minecraftforge.event.server.ServerStoppedEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import top.theillusivec4.champions.api.IChampion;
@@ -31,6 +36,7 @@ import top.theillusivec4.champions.common.rank.Rank;
 import top.theillusivec4.champions.common.registry.ChampionsRegistry;
 import top.theillusivec4.champions.common.stat.ChampionsStats;
 import top.theillusivec4.champions.common.util.ChampionBuilder;
+import top.theillusivec4.champions.common.util.ChampionHelper;
 
 @SuppressWarnings("unused")
 public class ChampionEventsHandler {
@@ -228,6 +234,26 @@ public class ChampionEventsHandler {
         }
       });
     });
+  }
+
+  @SubscribeEvent
+  public void onServerStart(ServerAboutToStartEvent evt) {
+    ChampionHelper.setServer(evt.getServer());
+  }
+
+  @SubscribeEvent
+  public void onServerClose(ServerStoppedEvent evt) {
+    ChampionHelper.setServer(null);
+    ChampionHelper.clearBeacons();
+  }
+
+  @SubscribeEvent
+  public void onBeaconStart(AttachCapabilitiesEvent<BlockEntity> evt) {
+    BlockEntity blockEntity = evt.getObject();
+
+    if (blockEntity instanceof BeaconBlockEntity beaconBlockEntity) {
+      ChampionHelper.addBeacon(blockEntity.getBlockPos());
+    }
   }
 
   @SubscribeEvent
