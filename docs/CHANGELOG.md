@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project does not adhere to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 This project uses MCVERSION-MAJORMOD.MAJORAPI.MINOR.PATCH.
 
+## [1.18.2-2.1.6.1] - 2022.11.02
+### Added
+- Added Champion summoning through NBT tags [#138](https://github.com/TheIllusiveC4/Champions/issues/138)
+### Fixed
+- Fixed performance issues with beacon checks [#140](https://github.com/TheIllusiveC4/Champions/issues/140)
+- Fixed crash related to beacon checks [#142](https://github.com/TheIllusiveC4/Champions/issues/142)
+
 ## [1.18.2-2.1.6.0] - 2022.10.08
 ### Added
 - Added Game Stages integration through the new `champions-gamestages.toml` configuration file [#135](https://github.com/TheIllusiveC4/Champions/issues/135)
