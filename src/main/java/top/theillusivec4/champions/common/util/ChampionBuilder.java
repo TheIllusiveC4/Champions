@@ -32,6 +32,10 @@ public class ChampionBuilder {
   private static final Random RAND = new Random();
 
   public static void spawn(final IChampion champion) {
+
+    if (ChampionData.read(champion)) {
+      return;
+    }
     LivingEntity entity = champion.getLivingEntity();
     Rank newRank = ChampionBuilder.createRank(entity);
     champion.getServer().setRank(newRank);
