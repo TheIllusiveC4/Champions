@@ -14,6 +14,7 @@ import net.minecraft.world.entity.LivingEntity;
 import top.theillusivec4.champions.Champions;
 import top.theillusivec4.champions.api.IAffix;
 import top.theillusivec4.champions.api.IChampion;
+import top.theillusivec4.champions.client.ChampionsOverlay;
 import top.theillusivec4.champions.client.ClientEventHandler;
 import top.theillusivec4.champions.client.config.ClientChampionsConfig;
 import top.theillusivec4.champions.common.capability.ChampionCapability;
@@ -50,8 +51,8 @@ public class HUDHelper {
           RenderSystem.enableBlend();
           RenderSystem.setShader(GameRenderer::getPositionTexShader);
           RenderSystem.setShaderTexture(0, GUI_BAR_TEXTURES);
-          ClientEventHandler.startX = xOffset + k;
-          ClientEventHandler.startY = yOffset + 1;
+          ChampionsOverlay.startX = xOffset + k;
+          ChampionsOverlay.startY = yOffset + 1;
 
           GuiComponent.blit(matrixStack, xOffset + k, yOffset + j, 0, 60, 182, 5, 256, 256);
           int healthOffset =

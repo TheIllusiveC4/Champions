@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.Rect2i;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.ModList;
 import top.theillusivec4.champions.Champions;
+import top.theillusivec4.champions.client.ChampionsOverlay;
 import top.theillusivec4.champions.client.ClientEventHandler;
 import top.theillusivec4.champions.client.config.ClientChampionsConfig;
 
@@ -25,7 +26,7 @@ public class WailaPlugin {
 
   private static void onRenderJade(final WailaRenderEvent.Pre evt) {
 
-    if (ClientChampionsConfig.enableWailaIntegration && ClientEventHandler.isRendering &&
+    if (ClientChampionsConfig.enableWailaIntegration && ChampionsOverlay.isRendering &&
       !jade(evt)) {
       Champions.LOGGER.error("Error invoking Jade plugin!");
     }
@@ -33,7 +34,7 @@ public class WailaPlugin {
 
   private static void onRenderWhat(final WailaRenderEvent.Pre evt) {
 
-    if (ClientChampionsConfig.enableWailaIntegration && ClientEventHandler.isRendering &&
+    if (ClientChampionsConfig.enableWailaIntegration && ChampionsOverlay.isRendering &&
       !wthit(evt)) {
       Champions.LOGGER.error("Error invoking WTHIT plugin!");
     }
@@ -68,9 +69,9 @@ public class WailaPlugin {
 
   private static boolean inBounds(int x, int y) {
 
-    if (x >= ClientEventHandler.startX && x <= ClientEventHandler.startX + 182) {
+    if (x >= ChampionsOverlay.startX && x <= ChampionsOverlay.startX + 182) {
 
-      if (y >= ClientEventHandler.startY - 1 && y <= ClientEventHandler.startY + 40) {
+      if (y >= ChampionsOverlay.startY - 1 && y <= ChampionsOverlay.startY + 40) {
         return true;
       }
     }

@@ -39,6 +39,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
@@ -62,6 +63,7 @@ import org.apache.logging.log4j.Logger;
 import top.theillusivec4.champions.api.IChampion;
 import top.theillusivec4.champions.api.IChampionsApi;
 import top.theillusivec4.champions.api.impl.ChampionsApiImpl;
+import top.theillusivec4.champions.client.ChampionsOverlay;
 import top.theillusivec4.champions.client.ClientEventHandler;
 import top.theillusivec4.champions.client.affix.ClientAffixEventsHandler;
 import top.theillusivec4.champions.client.config.ClientChampionsConfig;
@@ -178,6 +180,9 @@ public class Champions {
     if (ModList.get().isLoaded("waila")) {
       WailaPlugin.setup();
     }
+    evt.enqueueWork(() -> {
+      OverlayRegistry.registerOverlayTop("Champions Health Bar", new ChampionsOverlay());
+    });
   }
 
   private void registerCaps(final RegisterCapabilitiesEvent evt) {
