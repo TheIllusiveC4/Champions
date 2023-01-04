@@ -86,7 +86,6 @@ public class ChampionData {
         ChampionBuilder.applyGrowth(livingEntity, rank.getGrowthFactor());
         champion.getServer().setAffixes(affixes);
         affixes.forEach(affix -> affix.onInitialSpawn(champion));
-        tag.remove(CHAMPION_KEY);
         return true;
       }
     }
